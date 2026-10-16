@@ -1,3 +1,43 @@
+# --- Maven ---
+/target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+.mvn/timing.properties
+.mvn/wrapper/maven-wrapper.properties
+
+# --- IntelliJ IDEA ---
+.idea/
+*.iml
+*.iws
+*.ipr
+out/
+
+# --- Eclipse / STS ---
+.project
+.classpath
+.settings/
+
+# --- Visual Studio Code ---
+.vscode/
+
+# --- Sistema Operativo ---
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# --- Logs y Archivos temporales ---
+logs/
+*.log
+
 # Compiled class file
 *.class
 
