@@ -8,9 +8,9 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
-@Repository("PedidoRepository")
+@Repository("platoRepository")
 public interface IPlatoRepository extends JpaRepository<Plato, Long> {
 
-    public abstract Optional<Pedido> findById(long id);
+    public abstract Optional<Plato> findById(long id);
 
 }

@@ -6,7 +6,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
-@Repository("PedidoRepository")
+@Repository("unidadVentaRepository")
 public interface IUnidadVentaRepository extends JpaRepository<UnidadVenta, Long> {
 
     public abstract Optional<UnidadVenta> findById(long id);
