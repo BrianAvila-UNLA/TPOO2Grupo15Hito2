@@ -1,0 +1,18 @@
+package com.unla.grupo15.services;
+
+import com.unla.grupo15.entities.Plato;
+
+import java.util.List;
+import java.util.Optional;
+
+public interface IPlatoService {
+
+    List<Plato> getAll();
+
+    Optional<Plato> findById(long id);
+
+    Plato insertOrUpdate(Plato plato);
+
+    void delete(long id);
+
+}
