@@ -29,6 +29,10 @@ public abstract class UnidadVenta {
 
     protected String codigoUnico;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_festival")
+    protected Festival festival;
+
     @OneToMany(mappedBy = "unidadVenta", cascade = CascadeType.ALL, orphanRemoval = true)
     protected Set<Plato> platos = new HashSet<>();
 
@@ -43,5 +47,6 @@ public abstract class UnidadVenta {
         this.responsableCargo = responsableCargo;
         this.superficie = superficie;
         this.codigoUnico = codigoUnico;
+        this.festival = festival;
     }
 }

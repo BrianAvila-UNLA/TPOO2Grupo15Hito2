@@ -34,6 +34,10 @@ public abstract class Personal {
 
     protected LocalDate fechaIngreso;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_unidad_venta")
+    protected UnidadVenta unidadVenta;
+
     public Personal(String nombre, String apellido, int dni, String email,
                     Usuario credenciales, LocalDate fechaNacimiento, LocalDate fechaIngreso) {
         this.nombre = nombre;
@@ -43,5 +47,6 @@ public abstract class Personal {
         this.credenciales = credenciales;
         this.fechaNacimiento = fechaNacimiento;
         this.fechaIngreso = fechaIngreso;
+        this.unidadVenta = unidadVenta;
     }
 }

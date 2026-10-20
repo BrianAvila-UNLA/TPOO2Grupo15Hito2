@@ -7,7 +7,7 @@ import lombok.Setter;
 
 @Entity
 @Getter @Setter @NoArgsConstructor
-public class FoodTruck {
+public class FoodTruck extends UnidadVenta{
 
     private String patente;
 

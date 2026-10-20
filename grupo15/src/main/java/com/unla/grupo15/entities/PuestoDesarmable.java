@@ -7,10 +7,11 @@ import lombok.Setter;
 
 @Entity
 @Getter @Setter @NoArgsConstructor
-public class PuestoDesarmable {
+public class PuestoDesarmable extends UnidadVenta{
 
     private long cantidadCarpas;
 
     private long tiempoMontaje; //Tiene que ser en minutos
 
 }
+

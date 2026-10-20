@@ -25,7 +25,17 @@ public class Plato {
 
     private BigDecimal costoProduccion;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_unidad_venta")
+    protected UnidadVenta unidadVenta;
+
     @OneToMany(mappedBy = "plato", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<DetallePedido> detalles = new HashSet<>();
 
+    public Plato(String nombrePlato, BigDecimal precioVenta, BigDecimal costoProduccion, UnidadVenta unidadVenta) {
+        this.nombrePlato = nombrePlato;
+        this.precioVenta = precioVenta;
+        this.costoProduccion = costoProduccion;
+        this.unidadVenta = unidadVenta;
+    }
 }

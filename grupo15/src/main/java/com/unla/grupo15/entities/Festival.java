@@ -32,7 +32,6 @@ public class Festival {
     private Costo costo;
 
     @OneToMany(fetch=FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy ="festival")
-    @JoinColumn(name = "id_festival")
     private Set<UnidadVenta> unidadesVenta = new HashSet<>();
 
     public Festival(String nombre, String temporada, LocalDate fechaInicio, LocalDate fechaFin, Costo costo) {
