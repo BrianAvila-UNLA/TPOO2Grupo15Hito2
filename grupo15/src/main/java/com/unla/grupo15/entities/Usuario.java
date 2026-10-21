@@ -19,6 +19,9 @@ public class Usuario {
     @Column(unique = true, nullable = false, length = 45)
     private String nombre;
 
+    @Column(unique = true, nullable = false, length = 120)
+    private String email;
+
     @Column(nullable = false, length = 60)
     private String contrasenia;
 

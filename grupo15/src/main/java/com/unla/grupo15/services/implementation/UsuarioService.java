@@ -10,7 +10,6 @@ import java.util.Optional;
 
 @Service("usuarioService")
 @SuppressWarnings("unused")
-@Service
 public class UsuarioService implements IUsuarioService {
 
     private final IUsuarioRepository usuarioRepository;

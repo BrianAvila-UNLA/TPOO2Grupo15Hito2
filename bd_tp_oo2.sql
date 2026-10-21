@@ -1,1 +1,0 @@
-create database bd_tp_oo2;

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Inicio | Epicentro Gourmet</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+    <header class="site-header">
+        <div class="container navigation">
+            <a class="brand" th:href="@{/}">
+                <span class="brand-mark">EG</span>
+                <span>Epicentro Gourmet</span>
+            </a>
+            <nav class="main-nav" aria-label="Navegación principal">
+                <a class="active" th:href="@{/}">Inicio</a>
+                <a th:href="@{/unidades/registrar}">Registrar una unidad de venta</a>
+                <a th:href="@{/usuarios/login}">Iniciar sesión</a>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div class="container hero-content">
+                <div>
+                    <p class="eyebrow">Gestión gastronómica</p>
+                    <h1>Sabores que se encuentran.</h1>
+                    <p class="hero-text">
+                        Organizá festivales, unidades de venta, platos, pedidos y equipos
+                        desde un solo lugar.
+                    </p>
+                    <a class="button button-primary" th:href="@{/festivales}">
+                        Ver festivales
+                    </a>
+                </div>
+                <div class="hero-icon" aria-hidden="true">✦</div>
+            </div>
+        </section>
+
+        <section class="container content-section">
+            <div class="section-heading">
+                <div>
+                    <p class="eyebrow">Agenda</p>
+                    <h2>Próximos festivales</h2>
+                </div>
+            </div>
+
+            <div class="festival-grid" th:if="${not #lists.isEmpty(festivales)}">
+                <article class="festival-card" th:each="festival : ${festivales}">
+                    <div class="card-accent"></div>
+                    <div class="card-content">
+                        <span class="tag" th:text="${festival.temporada}">Temporada</span>
+                        <h3 th:text="${festival.nombre}">Nombre del festival</h3>
+                        <div class="date-row">
+                            <span>Desde</span>
+                            <strong th:text="${festival.fechaInicio}">Fecha de inicio</strong>
+                        </div>
+                        <div class="date-row">
+                            <span>Hasta</span>
+                            <strong th:text="${festival.fechaFin}">Fecha de fin</strong>
+                        </div>
+                        <a class="card-link" th:href="@{/festivales}">
+                            Ver detalle <span aria-hidden="true">→</span>
+                        </a>
+                    </div>
+                </article>
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <span>Epicentro Gourmet</span>
+            <span>Gestión de festivales gastronómicos</span>
+        </div>
+    </footer>
+</body>
+</html>
