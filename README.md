@@ -16,6 +16,7 @@ Paso 2:
     Ejecutar Spring con la version de Java 17 con estos comandos:
         $env:JAVA_HOME="C:\Program Files\Java\jdk-17.0.20.1" (Generalmente se guarda aca el JDK, si no es así, modificar el campo)
         $env:Path="$env:JAVA_HOME\bin;$env:Path"
+        $env:DB_PASSWORD="" (Password de MySQL)
         $env:MAIL_USERNAME="ignaciodavidvega@gmail.com" (Configuracion del correo del Proyecto para el envio de correos)
         $env:MAIL_PASSWORD="iskhrpsanbolaufw" (Contraseña)
         .\grupo15\mvnw.cmd -f .\grupo15\pom.xml spring-boot:run (Ejecuta Spring)
