@@ -8,7 +8,15 @@ release.properties
 dependency-reduced-pom.xml
 buildNumber.properties
 .mvn/timing.properties
-.mvn/wrapper/maven-wrapper.properties
+
+# --- Configuración local y secretos ---
+.env
+.env.*
+!.env.example
+application-local.yaml
+application-local.yml
+application-*.local.yaml
+application-*.local.yml
 
 # --- IntelliJ IDEA ---
 .idea/

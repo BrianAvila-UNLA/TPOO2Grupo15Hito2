@@ -6,10 +6,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-
-
 @Controller
-@RequestMapping("/")
+@RequestMapping("/festivales")
 public class FestivalController {
 
     private final IFestivalService festivalService;

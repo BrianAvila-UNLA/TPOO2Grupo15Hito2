@@ -3,9 +3,9 @@ spring:
     name: Epicentro_Gourmet
 
   datasource:
-    url: ${DB_URL}
-    username: ${USERNAME}
-    password: ${PASSWORD}
+    url: ${DB_URL:jdbc:mysql://localhost:3306/bd_tp_oo2}
+    username: ${DB_USERNAME:root}
+    password: root
     driver-class-name: com.mysql.cj.jdbc.Driver
 
   jpa:
@@ -19,6 +19,18 @@ spring:
 
   thymeleaf:
     cache: ${THYMELEAF_CACHE:false}
+
+  mail:
+    host: ${MAIL_HOST:smtp.gmail.com}
+    port: ${MAIL_PORT:587}
+    username: ${MAIL_USERNAME:}
+    password: ${MAIL_PASSWORD:}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
 
 server:
   port: ${SERVER_PORT:8080}

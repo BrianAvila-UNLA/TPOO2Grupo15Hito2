@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Registrar unidad | Epicentro Gourmet</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+<header class="site-header">
+    <div class="container navigation">
+        <a class="brand" th:href="@{/}">
+            <span class="brand-mark">EG</span>
+            <span>Epicentro Gourmet</span>
+        </a>
+        <nav class="main-nav" aria-label="Navegación principal">
+            <a th:href="@{/}">Inicio</a>
+            <a class="active" th:href="@{/unidades/registrar}">Registrar una unidad de venta</a>
+            <a th:href="@{/usuarios/login}">Iniciar sesión</a>
+        </nav>
+    </div>
+</header>
+
+<main class="container form-page">
+    <p class="eyebrow">Registro</p>
+    <h1>Registrar una unidad de venta</h1>
+    <p class="form-intro">
+        Se creará un usuario responsable y se enviará una contraseña temporal al correo indicado.
+    </p>
+
+    <div class="success-message" th:if="${param.enviado}">
+        La unidad fue registrada. Revisá el correo indicado para obtener la contraseña del responsable.
+    </div>
+    <div class="error-message" th:if="${error}" th:text="${error}"></div>
+
+    <form class="registration-form" th:action="@{/unidades/registrar}"
+          th:object="${registro}" method="post">
+        <label for="tipo">Tipo de unidad</label>
+        <select id="tipo" th:field="*{tipo}" required>
+            <option value="FOODTRUCK">Food Truck</option>
+            <option value="PUESTO">Puesto desarmable</option>
+        </select>
+
+        <label for="nombreComercial">Nombre comercial</label>
+        <input id="nombreComercial" type="text" th:field="*{nombreComercial}" required>
+
+        <label for="superficie">Superficie (m²)</label>
+        <input id="superficie" type="number" min="1" th:field="*{superficie}" required>
+
+        <label for="codigoUnico">Código único</label>
+        <input id="codigoUnico" type="text" th:field="*{codigoUnico}" required>
+
+        <label for="email">Correo del responsable</label>
+        <input id="email" type="email" th:field="*{email}" required>
+        <small>La contraseña temporal se enviará a este correo.</small>
+
+        <label for="patente">Patente (Food Truck)</label>
+        <input id="patente" type="text" th:field="*{patente}">
+
+        <label class="checkbox-label" for="conexionElectrica">
+            <input id="conexionElectrica" type="checkbox" th:field="*{conexionElectrica}">
+            Tiene conexión eléctrica
+        </label>
+
+        <label for="cantidadCarpas">Cantidad de carpas (Puesto desarmable)</label>
+        <input id="cantidadCarpas" type="number" min="0" th:field="*{cantidadCarpas}">
+
+        <label for="tiempoMontaje">Tiempo de montaje en minutos</label>
+        <input id="tiempoMontaje" type="number" min="0" th:field="*{tiempoMontaje}">
+
+        <button class="button button-secondary" type="submit">Registrar unidad y enviar contraseña</button>
+    </form>
+</main>
+</body>
+</html>
