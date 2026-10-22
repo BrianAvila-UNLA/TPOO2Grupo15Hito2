@@ -11,4 +11,9 @@ public interface IPersonalRepository extends JpaRepository<Personal, Long> {
 
     public abstract Optional<Personal> findById(long id);
 
+    Optional<Personal> findByCredencialesEmail(String email);
+
 }
+
+
+

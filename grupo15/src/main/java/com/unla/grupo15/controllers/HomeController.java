@@ -37,6 +37,8 @@ public class HomeController {
             Usuario usuario = usuarioService.findByEmail(email).orElse(null);
 
             if (usuario != null) {
+                model.addAttribute("usuario", usuario);
+
                 UnidadVenta unidadVenta = unidadVentaService.findByResponsableCargo(usuario);
                 if (unidadVenta != null) {
                     return "redirect:/responsable";

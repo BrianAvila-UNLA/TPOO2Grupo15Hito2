@@ -15,4 +15,6 @@ public interface IPersonalService {
 
     void delete(long id);
 
+    Optional<Personal> findByEmail(String email);
+
 }

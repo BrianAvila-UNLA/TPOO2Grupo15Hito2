@@ -38,4 +38,9 @@ public class PersonalService implements IPersonalService {
         personalRepository.deleteById(id);
     }
 
+    @Override
+    public Optional<Personal> findByEmail(String email) {
+        return personalRepository.findByCredencialesEmail(email);
+    }
+
 }

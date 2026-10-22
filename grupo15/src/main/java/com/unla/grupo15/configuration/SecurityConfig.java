@@ -24,22 +24,24 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-            .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/", "/css/**", "/usuarios/login", "/unidades/registrar").permitAll()
-                .anyRequest().authenticated()
-            )
-            .formLogin(form -> form
-                .loginPage("/usuarios/login")
-                .loginProcessingUrl("/login")
-                .defaultSuccessUrl("/", true)
-                .failureUrl("/usuarios/login?error")
-                .permitAll()
-            )
-            .logout(logout -> logout
-                .logoutSuccessUrl("/")
-                .permitAll()
-            )
-            .csrf(csrf -> csrf.disable());
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/", "/css/**", "/usuarios/login", "/unidades/registrar").permitAll()
+                        .anyRequest().authenticated()
+                )
+                .formLogin(form -> form
+                        .loginPage("/usuarios/login")
+                        .loginProcessingUrl("/login")
+                        .usernameParameter("email")
+                        .passwordParameter("contrasenia")
+                        .defaultSuccessUrl("/", true)
+                        .failureUrl("/usuarios/login?error")
+                        .permitAll()
+                )
+                .logout(logout -> logout
+                        .logoutSuccessUrl("/")
+                        .permitAll()
+                )
+                .csrf(csrf -> csrf.disable());
 
         return http.build();
     }
