@@ -25,6 +25,10 @@ $env:JAVA_HOME="C:\Program Files\Java\jdk-17.0.20.1"
 
 $env:Path="$env:JAVA_HOME\bin;$env:Path"
 
+$env:DB_URL="jdbc:mysql://localhost:3306/bd_tp_oo2"
+
+$env:DB_USERNAME="TU_USUARIO_MYSQL"
+
 $env:DB_PASSWORD="TU_PASSWORD_MYSQL"
 
 $env:MAIL_USERNAME="TU_CORREO@gmail.com"
@@ -48,6 +52,7 @@ Ingresar desde el navegador a:
 http://localhost:8080/
 
 
-Casos de Uso Implementados - Pull Request
-https://github.com/BrianAvila-UNLA/TPOO2Grupo15Hito2/pull/2
-(Romero Gabriel Omar)
+## Casos de Uso Implementados - Pull Request
+
+https://github.com/BrianAvila-UNLA/TPOO2Grupo15Hito2/pull/1 (Ignacio David Vega)
+https://github.com/BrianAvila-UNLA/TPOO2Grupo15Hito2/pull/2 (Romero Gabriel Omar)
