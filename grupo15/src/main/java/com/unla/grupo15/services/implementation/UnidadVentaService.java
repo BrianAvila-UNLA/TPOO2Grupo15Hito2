@@ -1,6 +1,7 @@
 package com.unla.grupo15.services.implementation;
 
 import com.unla.grupo15.entities.UnidadVenta;
+import com.unla.grupo15.entities.Usuario;
 import com.unla.grupo15.repositories.IUnidadVentaRepository;
 import com.unla.grupo15.services.IUnidadVentaService;
 import org.modelmapper.ModelMapper;
@@ -39,6 +40,11 @@ public class UnidadVentaService implements IUnidadVentaService {
     @Override
     public void delete(long id) {
         unidadVentaRepository.deleteById(id);
+    }
+
+    @Override
+    public UnidadVenta findByResponsableCargo(Usuario responsableCargo) {
+        return unidadVentaRepository.findByResponsableCargo(responsableCargo);
     }
 
 }

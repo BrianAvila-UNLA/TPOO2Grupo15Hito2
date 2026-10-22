@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Panel de Responsable | Epicentro Gourmet</title>
+        <link rel="stylesheet" th:href="@{/css/styles.css}">
+    </head>
+    <body>
+        <header class="site-header">
+            <div class="container navigation">
+                <a class="brand" th:href="@{/responsable}">
+                    <span class="brand-mark">EG</span>
+                    <span>Epicentro Gourmet</span>
+                </a>
+                <nav class="main-nav" aria-label="Navegación principal">
+                        <span style="display:inline-flex; align-items:center; gap:10px;">
+                            <span th:text="${usuario.nombre}" style="font-weight: 500;">Nombre</span>
+                            <form th:action="@{/logout}" method="post" style="margin:0;">
+                                <button type="submit" class="button" style="padding: 4px 10px; font-size: 0.9rem;">Cerrar sesión</button>
+                            </form>
+                        </span>
+                </nav>
+            </div>
+        </header>
+
+        <main class="container content-section" style="background-color: #f8f9fa; padding: 2rem; border-radius: 8px; margin-top: 2rem;">
+            <div class="section-heading">
+                <div>
+                    <p class="eyebrow">Panel de Responsable</p>
+                    <h2 th:text="${unidadVenta.nombreComercial}">Nombre de la Unidad de Venta</h2>
+                </div>
+            </div>
+
+            <p style="margin-bottom: 1.5rem;">Desde aquí podés registrar los platos correspondientes a tu unidad.</p>
+
+            <div style="margin-bottom: 2rem;">
+                <a th:href="@{/platos/nuevo}" class="button button-primary">Registrar Nuevo Plato</a>
+            </div>
+
+            <h3 style="margin-bottom: 1rem;">Menú actual</h3>
+
+            <div class="festival-grid" th:if="${not #lists.isEmpty(platos)}">
+                <article class="festival-card" th:each="plato : ${platos}">
+                    <div class="card-accent"></div>
+                    <div class="card-content">
+                        <h4 th:text="${plato.nombrePlato}">Nombre del plato</h4>
+                        <div style="margin-top: 0.8rem; font-size: 0.95rem;">
+                            <span>Precio de Venta: </span><strong th:text="${'$' + plato.precioVenta}">$0.00</strong><br>
+                            <span>Costo de Producción: </span><strong th:text="${'$' + plato.costoProduccion}">$0.00</strong>
+                        </div>
+                    </div>
+                </article>
+            </div>
+
+            <p th:if="${#lists.isEmpty(platos)}" style="color: #666; font-style: italic;">
+                Aún no hay platos registrados para esta unidad.
+            </p>
+        </main>
+    </body>
+</html>

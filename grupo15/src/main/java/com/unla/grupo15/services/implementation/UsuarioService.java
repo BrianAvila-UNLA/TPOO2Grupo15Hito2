@@ -37,4 +37,7 @@ public class UsuarioService implements IUsuarioService {
     public void delete(long id) {
         usuarioRepository.deleteById(id);
     }
+
+    @Override
+    public Optional<Usuario> findByEmail(String email){return usuarioRepository.findByEmail(email);}
 }
