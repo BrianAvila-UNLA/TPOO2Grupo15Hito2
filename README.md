@@ -46,3 +46,8 @@ Una vez iniciada la aplicación, ejecutar el resto del script correspondiente a 
 Ingresar desde el navegador a:
 
 http://localhost:8080/
+
+
+Casos de Uso Implementados - Pull Request
+https://github.com/BrianAvila-UNLA/TPOO2Grupo15Hito2/pull/2
+(Romero Gabriel Omar)
