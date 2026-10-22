@@ -91,12 +91,19 @@ public class UnidadVentaRegistrationService {
         message.setTo(email);
         message.setSubject("Alta de responsable - Epicentro Gourmet");
         message.setText("""
-                Tu usuario de responsable fue creado en Epicentro Gourmet.
+
+                Hola. Te damos la bienvenida a Epicentro Gourmet. Gracias por su registro!
+                Tu usuario de responsable fue creado con éxito. A continuación te compartimos tus datos de acceso.
 
                 Usuario: %s
                 Contraseña temporal: %s
 
-                Usá estos datos para iniciar sesión.
+                Usá estos datos para iniciar sesión. Luego usted podrá cambiar la contraseña desde su panel.
+
+                Recordá que nadie del equipo le solicitará sus datos personales.
+
+                Saludos,
+                El equipo de Epicentro Gourmet
                 """.formatted(email, password));
         mailSender.send(message);
     }
