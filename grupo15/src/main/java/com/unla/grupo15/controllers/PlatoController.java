@@ -1,7 +1,12 @@
 package com.unla.grupo15.controllers;
 
 import com.unla.grupo15.entities.Plato;
+import com.unla.grupo15.entities.UnidadVenta;
+import com.unla.grupo15.entities.Usuario;
 import com.unla.grupo15.services.IPlatoService;
+import com.unla.grupo15.services.IUnidadVentaService;
+import com.unla.grupo15.services.IUsuarioService;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -12,8 +17,14 @@ public class PlatoController {
 
     private final IPlatoService platoService;
 
-    public PlatoController(IPlatoService platoService) {
+    private final IUsuarioService usuarioService;
+
+    private final IUnidadVentaService unidadVentaService;
+
+    public PlatoController(IPlatoService platoService, IUsuarioService usuarioService, IUnidadVentaService unidadVentaService) {
         this.platoService = platoService;
+        this.usuarioService = usuarioService;
+        this.unidadVentaService = unidadVentaService;
     }
 
     @GetMapping("")
@@ -23,15 +34,35 @@ public class PlatoController {
     }
 
     @GetMapping("/nuevo")
-    public String nuevo(Model model) {
-        model.addAttribute("plato", new Plato());
-        return "plato/nuevo";
+    public String mostrarFormularioRegistro(Model model, Authentication authentication) {
+        String email = authentication.getName();
+        Usuario usuario = usuarioService.findByEmail(email).orElse(null);
+        UnidadVenta unidadVenta = unidadVentaService.findByResponsableCargo(usuario);
+
+        if (unidadVenta == null) {
+            return "redirect:/";
+        }
+
+        Plato plato = new Plato();
+        plato.setUnidadVenta(unidadVenta);
+
+        model.addAttribute("plato", plato);
+        model.addAttribute("unidadVenta", unidadVenta);
+        return "plato/registrar-plato";
     }
 
     @PostMapping("/guardar")
-    public String guardar(@ModelAttribute("plato") Plato plato) {
-        platoService.insertOrUpdate(plato);
-        return "redirect:/platos";
+    public String registrarPlato(@ModelAttribute Plato plato, Authentication authentication) {
+        String email = authentication.getName();
+        Usuario usuario = usuarioService.findByEmail(email).orElse(null);
+        UnidadVenta unidadVenta = unidadVentaService.findByResponsableCargo(usuario);
+
+        if (unidadVenta != null) {
+            plato.setUnidadVenta(unidadVenta);
+            platoService.insertOrUpdate(plato);
+        }
+
+        return "redirect:/responsable?exitoPlato";
     }
 
     @GetMapping("/eliminar/{id}")
@@ -39,4 +70,6 @@ public class PlatoController {
         platoService.delete(id);
         return "redirect:/platos";
     }
+
+
 }

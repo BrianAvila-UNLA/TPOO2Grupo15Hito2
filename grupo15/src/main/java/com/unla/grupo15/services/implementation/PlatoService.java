@@ -1,6 +1,7 @@
 package com.unla.grupo15.services.implementation;
 
 import com.unla.grupo15.entities.Plato;
+import com.unla.grupo15.entities.UnidadVenta;
 import com.unla.grupo15.repositories.IPlatoRepository;
 import com.unla.grupo15.services.IPlatoService;
 import org.modelmapper.ModelMapper;
@@ -39,6 +40,11 @@ public class PlatoService implements IPlatoService {
     @Override
     public void delete(long id) {
         platoRepository.deleteById(id);
+    }
+
+    @Override
+    public List<Plato> findByUnidadVenta(UnidadVenta unidadVenta) {
+        return platoRepository.findByUnidadVenta(unidadVenta);
     }
 
 }

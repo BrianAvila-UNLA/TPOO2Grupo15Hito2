@@ -10,6 +10,8 @@ public interface IUsuarioService {
 
     Optional<Usuario> findById(long id);
 
+    Optional<Usuario> findByEmail(String email);
+
     Usuario insertOrUpdate(Usuario usuario);
 
     void delete(long id);
