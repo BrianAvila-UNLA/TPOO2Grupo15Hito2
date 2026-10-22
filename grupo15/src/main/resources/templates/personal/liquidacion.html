@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Liquidación de Sueldo | Epicentro Gourmet</title>
+  <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+<header class="site-header">
+  <div class="container navigation">
+    <a class="brand" th:href="@{/}">
+      <span class="brand-mark">EG</span>
+      <span>Epicentro Gourmet</span>
+    </a>
+    <nav class="main-nav" aria-label="Navegación principal">
+      <a th:href="@{/}">Inicio</a>
+      <a th:href="@{/unidades/registrar}">Registrar una unidad de venta</a>
+      <a class="active" th:href="@{/personal/liquidacion}">Mi Liquidación</a>
+      <a th:href="@{/logout}">Cerrar sesión</a>
+    </nav>
+  </div>
+</header>
+
+<main class="container form-page">
+  <p class="eyebrow">Recibo digital</p>
+  <h1>Liquidación de Sueldo</h1>
+  <p class="form-intro">
+    Detalle de haberes y cálculo correspondiente al periodo actual.
+  </p>
+
+  <div class="error-message" th:if="${errorLiquidacion}" th:text="${errorLiquidacion}"></div>
+
+  <div class="card" th:if="${personal}">
+    <h3>Datos del Empleado</h3>
+    <p><strong>Nombre y Apellido:</strong> <span th:text="${personal.nombre + ' ' + personal.apellido}">Juan Pérez</span></p>
+    <p><strong>DNI:</strong> <span th:text="${personal.dni}">12345678</span></p>
+    <p><strong>Email:</strong> <span th:text="${personal.email}">correo@example.com</span></p>
+    <p><strong>Fecha de Ingreso:</strong> <span th:text="${personal.fechaIngreso}">2026-01-01</span></p>
+
+    <hr style="margin: 20px 0; border: 0; border-top: 1px solid #ddd;">
+
+    <h3>Conceptos Liquidativos</h3>
+    <p style="margin-bottom: 10px;"><strong>Duración del Festival Evaluado:</strong> <span th:text="${diasFestival}">20</span> días</p>
+
+    <table style="width: 100%; border-collapse: collapse; margin-top: 10px;">
+      <tr style="font-weight: bold; font-size: 1.1em; border-top: 2px solid #333; border-bottom: 2px solid #333;">
+        <td style="padding: 15px 0;">Total Neto a Cobrar</td>
+        <td style="padding: 15px 0; text-align: right;" th:text="${'$' + totalNeto}">$500000.0</td>
+      </tr>
+    </table>
+  </div>
+</main>
+</body>
+</html>

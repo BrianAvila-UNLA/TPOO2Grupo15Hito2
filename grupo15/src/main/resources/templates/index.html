@@ -20,6 +20,7 @@
                 <a th:if="${usuario == null}" th:href="@{/usuarios/login}">Iniciar sesión</a>
 
                 <span th:if="${usuario != null}" style="display:inline-flex; align-items:center; gap:10px;">
+                    <a th:href="@{/personal/liquidacion}" style="font-weight: 500;">Mi Liquidación</a>
                     <span th:text="${usuario.email}" style="font-weight: 500;">correo@user.com</span>
                     <form th:action="@{/logout}" method="post" style="margin:0;">
                          <button type="submit" class="button" style="padding: 4px 10px; font-size: 0.9rem;">Cerrar sesión</button>
