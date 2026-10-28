@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -49,4 +50,7 @@ public abstract class UnidadVenta {
         this.codigoUnico = codigoUnico;
         this.festival = festival;
     }
+
+    public abstract BigDecimal calcularCanon();
+
 }

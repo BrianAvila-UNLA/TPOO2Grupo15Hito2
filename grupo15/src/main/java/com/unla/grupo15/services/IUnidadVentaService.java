@@ -3,6 +3,7 @@ package com.unla.grupo15.services;
 import com.unla.grupo15.entities.UnidadVenta;
 import com.unla.grupo15.entities.Usuario;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,5 +18,7 @@ public interface IUnidadVentaService {
     UnidadVenta insertOrUpdate(UnidadVenta unidadVenta);
 
     void delete(long id);
+
+    BigDecimal calcularCanonDeUnidad(Long unidadId);
 
 }

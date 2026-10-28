@@ -32,6 +32,17 @@
                 </div>
             </div>
 
+            <div style="background: #fff; padding: 1.5rem; border-radius: 6px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); margin-bottom: 2rem; display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                    <h3 style="margin: 0; font-size: 1.1rem; color: #333;">Canon a pagar por la unidad</h3>
+                    <p style="margin: 0.3rem 0 0 0; font-size: 0.9rem; color: #666;">Calculado según la superficie y costos del festival</p>
+                </div>
+                <div>
+                    <span style="font-size: 1.5rem; font-weight: bold; color: #2c3e50;"
+                          th:text="${'$' + #numbers.formatDecimal(canon, 1, 'DEFAULT', 2, 'DEFAULT')}">$0.00</span>
+                </div>
+            </div>
+
             <p style="margin-bottom: 1.5rem;">Desde aquí podés registrar los platos correspondientes a tu unidad.</p>
 
             <div style="margin-bottom: 2rem;">
