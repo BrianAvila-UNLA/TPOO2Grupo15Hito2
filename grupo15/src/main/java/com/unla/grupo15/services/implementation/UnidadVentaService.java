@@ -7,6 +7,7 @@ import com.unla.grupo15.services.IUnidadVentaService;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -45,6 +46,13 @@ public class UnidadVentaService implements IUnidadVentaService {
     @Override
     public UnidadVenta findByResponsableCargo(Usuario responsableCargo) {
         return unidadVentaRepository.findByResponsableCargo(responsableCargo);
+    }
+
+    @Override
+    public BigDecimal calcularCanonDeUnidad(Long unidadId) {
+        UnidadVenta unidad = unidadVentaRepository.findById(unidadId)
+                .orElseThrow(() -> new RuntimeException("Unidad de venta no encontrada"));
+        return unidad.calcularCanon();
     }
 
 }
