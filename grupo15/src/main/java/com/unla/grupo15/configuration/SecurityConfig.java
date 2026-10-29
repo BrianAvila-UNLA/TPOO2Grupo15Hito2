@@ -2,8 +2,12 @@ package com.unla.grupo15.configuration;
 
 import com.unla.grupo15.entities.Usuario;
 import com.unla.grupo15.repositories.IUsuarioRepository;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -11,6 +15,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+
+import java.io.IOException;
 
 @Configuration
 public class SecurityConfig {
@@ -26,6 +33,8 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/", "/css/**", "/usuarios/login", "/unidades/registrar").permitAll()
+                        .requestMatchers("/admin/**").hasRole("ADMINISTRADOR")
+                        .requestMatchers("/responsable/**").hasRole("RESPONSABLE")
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form
@@ -33,7 +42,7 @@ public class SecurityConfig {
                         .loginProcessingUrl("/login")
                         .usernameParameter("email")
                         .passwordParameter("contrasenia")
-                        .defaultSuccessUrl("/", true)
+                        .successHandler(customAuthenticationSuccessHandler()) // Usamos el manejador por roles
                         .failureUrl("/usuarios/login?error")
                         .permitAll()
                 )
@@ -44,6 +53,24 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable());
 
         return http.build();
+    }
+
+    @Bean
+    public AuthenticationSuccessHandler customAuthenticationSuccessHandler() {
+        return (HttpServletRequest request, HttpServletResponse response, Authentication authentication) -> {
+            String redirectUrl = "/";
+
+            for (GrantedAuthority authority : authentication.getAuthorities()) {
+                String role = authority.getAuthority();
+
+                if (role.equals("ROLE_RESPONSABLE")) {
+                    redirectUrl = "/responsable";
+                    break;
+                }
+            }
+
+            response.sendRedirect(redirectUrl);
+        };
     }
 
     @Bean

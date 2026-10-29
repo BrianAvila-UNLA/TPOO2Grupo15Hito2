@@ -48,7 +48,6 @@ public abstract class UnidadVenta {
         this.responsableCargo = responsableCargo;
         this.superficie = superficie;
         this.codigoUnico = codigoUnico;
-        this.festival = festival;
     }
 
     public abstract BigDecimal calcularCanon();

@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Registrar Empleado | Epicentro Gourmet</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+<header class="site-header">
+    <div class="container navigation">
+        <a class="brand" th:href="@{/responsable}">
+            <span class="brand-mark">EG</span>
+            <span>Epicentro Gourmet</span>
+        </a>
+        <nav class="main-nav" aria-label="Navegación principal">
+            <a th:href="@{/responsable/empleados}" class="button" style="padding: 4px 10px; font-size: 0.9rem; text-decoration: none; background-color: #6c757d; color: white;">Volver</a>
+        </nav>
+    </div>
+</header>
+
+<main class="container form-page">
+    <p class="eyebrow">Personal</p>
+    <h1 th:text="${tipo == 'cajero' ? 'Registrar Nuevo Cajero' : 'Registrar Nuevo Cocinero'}">Registrar Empleado</h1>
+    <p class="form-intro">
+        Ingresá los datos del empleado. Se le generará una contraseña automática y se le enviará por correo electrónico.
+    </p>
+
+    <form class="registration-form"
+          th:action="${tipo == 'cajero' ? '/responsable/empleados/cajero/guardar' : '/responsable/empleados/cocinero/guardar'}"
+          th:object="${empleado}" method="post">
+
+        <label for="nombre">Nombre</label>
+        <input id="nombre" type="text" th:field="*{nombre}" required>
+        <small class="text-danger" th:if="${#fields.hasErrors('nombre')}" th:errors="*{nombre}" style="color: #dc3545; font-size: 0.85rem;"></small>
+
+        <label for="apellido">Apellido</label>
+        <input id="apellido" type="text" th:field="*{apellido}" required>
+        <small class="text-danger" th:if="${#fields.hasErrors('apellido')}" th:errors="*{apellido}" style="color: #dc3545; font-size: 0.85rem;"></small>
+
+        <label for="dni">DNI</label>
+        <input id="dni" type="text" inputmode="numeric" th:field="*{dni}" required>
+        <small class="text-danger" th:if="${#fields.hasErrors('dni')}" th:errors="*{dni}" style="color: #dc3545; font-size: 0.85rem;"></small>
+
+        <label for="email">Correo electrónico (Usuario)</label>
+        <input id="email" type="email" th:field="*{email}" required>
+
+        <label for="fechaNacimiento">Fecha de Nacimiento</label>
+        <input id="fechaNacimiento" type="date" th:field="*{fechaNacimiento}"
+               th:attr="max=${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}" required>
+        <p th:if="${#fields.hasErrors('fechaNacimiento')}" th:errors="*{fechaNacimiento}" style="color: #dc3545; font-size: 0.85rem; margin-top: 0.2rem;"></p>
+
+        <label for="fechaIngreso">Fecha de Ingreso</label>
+        <input id="fechaIngreso" type="date" th:field="*{fechaIngreso}"
+               th:attr="max=${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}" required>
+        <p th:if="${#fields.hasErrors('fechaIngreso')}" th:errors="*{fechaIngreso}" style="color: #dc3545; font-size: 0.85rem; margin-top: 0.2rem;"></p>
+
+        <div th:if="${tipo == 'cajero'}">
+            <label for="turnoTrabajo">Turno de Trabajo</label>
+            <input id="turnoTrabajo" type="text" th:field="*{turnoTrabajo}" placeholder="Ej: Mañana / Tarde / Noche">
+        </div>
+
+        <div class="form-group" style="margin-bottom: 1.2rem;" th:if="${tipo == 'cocinero'}">
+            <label for="especialidadCulinaria" style="display: block; margin-bottom: 0.4rem; font-weight: 500;">Especialidad Culinaria</label>
+            <input id="especialidadCulinaria" type="text" th:field="*{especialidadCulinaria}" placeholder="Ej: Pastas, Parrilla, etc." class="form-control">
+        </div>
+
+        <div class="form-group" style="margin-bottom: 1.5rem;" th:if="${tipo == 'cocinero'}">
+            <label for="categoria" style="display: block; margin-bottom: 0.4rem; font-weight: 500;">Categoría de Cocina (Plus):</label>
+            <select id="categoria" th:field="*{categoria}" class="form-control">
+                <option value="">Seleccione una categoría</option>
+                <option th:each="cat : ${T(com.unla.grupo15.entities.RolCocina).values()}"
+                        th:value="${cat}"
+                        th:text="${cat}">
+                </option>
+            </select>
+        </div>
+
+        <button class="button button-primary" type="submit" style="margin-top: 1.5rem;">Guardar y Enviar Credenciales</button>
+    </form>
+</main>
+</body>
+</html>
