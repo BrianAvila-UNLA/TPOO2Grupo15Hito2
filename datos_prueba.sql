@@ -127,6 +127,24 @@ VALUES (
     'COCINERO'
 );
 
+-- Historial inicial de las asignaciones del personal a los festivales.
+INSERT INTO asignacion_personal (
+    id_personal,
+    id_unidad_venta,
+    id_festival,
+    fecha_inicio,
+    fecha_fin
+)
+SELECT
+    p.id_personal,
+    p.id_unidad_venta,
+    uv.id_festival,
+    f.fecha_inicio,
+    NULL
+FROM personal p
+JOIN unidad_venta uv ON uv.id_unidad_venta = p.id_unidad_venta
+JOIN festival f ON f.id_festival = uv.id_festival;
+
 -- Platos ofrecidos por las unidades de venta.
 INSERT INTO plato (
     id,

@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Panel de Empleado | Epicentro Gourmet</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+<header class="site-header">
+    <div class="container navigation">
+        <a class="brand" th:href="@{/empleado/inicio}">
+            <span class="brand-mark">EG</span>
+            <span>Epicentro Gourmet</span>
+        </a>
+        <nav class="main-nav" aria-label="Navegación principal">
+            <a class="active" th:href="@{/empleado/inicio}">Mi Panel</a>
+            <a th:href="@{/empleado/liquidacion}">Mi Liquidación</a>
+            <a th:href="@{/logout}">Cerrar sesión</a>
+        </nav>
+    </div>
+</header>
+
+<main class="container form-page">
+    <p class="eyebrow" th:if="${personal != null}"
+       th:text="${'Bienvenido, ' + personal.nombre + ' ' + personal.apellido}">Panel de Empleado</p>
+    <h1>Panel General de Empleado</h1>
+    <p class="form-intro">Consulta tu información personal, tus festivales y tu asignación de trabajo.</p>
+
+    <div class="error-message" th:if="${errorPersonal}" th:text="${errorPersonal}"></div>
+    <div class="error-message" th:if="${param.error == 'sin-unidad'}">
+        Necesitás tener una unidad de venta asignada para operar la caja.
+    </div>
+    <div class="error-message" th:if="${param.error == 'caja-cerrada'}">
+        La caja de hoy ya fue cerrada; no se pueden registrar más pedidos.
+    </div>
+    <p th:if="${param.pedidoExitoso}" style="color: #27ae60;">
+        El pedido se registró correctamente.
+    </p>
+    <div class="card" th:if="${personal != null}" style="margin-bottom: 20px;">
+        <h3>Mis Datos Personales</h3>
+        <p><strong>DNI:</strong> <span th:text="${personal.dni}"></span></p>
+        <p><strong>Email:</strong> <span th:text="${personal.email}"></span></p>
+        <p><strong>Fecha de Ingreso:</strong> <span th:text="${personal.fechaIngreso}"></span></p>
+    </div>
+
+    <section class="card" style="margin-bottom: 20px;">
+        <h3>Mis Festivales y Unidades de Venta</h3>
+        <p th:if="${#lists.isEmpty(liquidaciones)}">Todavía no hay asignaciones registradas.</p>
+        <div th:each="liquidacion : ${liquidaciones}" style="border-top: 1px solid #ddd; padding: 12px 0;">
+            <p><strong>Festival:</strong> <span th:text="${liquidacion.asignacion.festival.nombre}"></span></p>
+            <p><strong>Unidad de venta:</strong>
+                <span th:text="${liquidacion.asignacion.unidadVenta.nombreComercial}"></span>
+            </p>
+            <p><strong>Período:</strong>
+                <span th:text="${liquidacion.asignacion.fechaInicio}"></span> -
+                <span th:text="${liquidacion.asignacion.fechaFin == null ? 'Actualidad' : liquidacion.asignacion.fechaFin}"></span>
+            </p>
+            <p><strong>Estado actual:</strong>
+                <span th:if="${liquidacion.activo}">Tenés que trabajar en esta unidad durante el festival activo.</span>
+                <span th:unless="${liquidacion.activo}">No es una asignación activa en este momento.</span>
+            </p>
+        </div>
+    </section>
+
+    <section class="card" style="margin-bottom: 20px;">
+        <h3>Sueldos por Festival</h3>
+        <p th:if="${#lists.isEmpty(liquidaciones)}">No hay liquidaciones disponibles.</p>
+        <div th:each="liquidacion : ${liquidaciones}" style="border-top: 1px solid #ddd; padding: 12px 0;">
+            <p><strong th:text="${liquidacion.asignacion.festival.nombre}">Festival</strong></p>
+            <p th:if="${liquidacion.sueldo != null}">
+                Sueldo calculado: $<span th:text="${liquidacion.sueldo}"></span>
+            </p>
+            <p class="error-message" th:if="${liquidacion['error'] != null}" th:text="${liquidacion['error']}"></p>
+            <a th:if="${liquidacion.sueldo != null}"
+               th:href="@{/empleado/recibo/pdf/{idAsignacion}(idAsignacion=${liquidacion.asignacion.idAsignacion})}"
+               class="btn" style="text-decoration: none; padding: 10px 15px; background: #c0392b; color: #fff; border-radius: 4px; font-weight: bold;">
+                Descargar recibo PDF
+            </a>
+        </div>
+    </section>
+
+    <section class="card" th:if="${esCajero}" style="border-left: 4px solid #f39c12;">
+        <h3>Panel de Cajero</h3>
+        <p style="margin-bottom: 15px; color: #666;">Opciones operativas de caja y control de transacciones diarias.</p>
+        <div style="display: flex; gap: 10px; flex-wrap: wrap; align-items: center;">
+            <a th:href="@{/cajero/pedido/nuevo}" class="btn"
+               style="text-decoration: none; padding: 10px 15px; background: #27ae60; color: #fff; border-radius: 4px; font-weight: bold;">
+                Registrar nuevo pedido
+            </a>
+            <form th:action="@{/cajero/cerrar-caja}" method="post" style="margin: 0;">
+                <button type="submit" class="btn"
+                        style="padding: 10px 15px; background: #f39c12; color: #fff; border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">
+                    Cerrar caja
+                </button>
+            </form>
+        </div>
+    </section>
+</main>
+</body>
+</html>

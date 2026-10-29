@@ -26,6 +26,12 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/", "/css/**", "/usuarios/login", "/unidades/registrar").permitAll()
+
+                        .requestMatchers("/cajero/**").hasRole("EMPLEADO")
+                        .requestMatchers("/empleado/**").hasRole("EMPLEADO")
+                        .requestMatchers("/responsable/**").hasRole("RESPONSABLE")
+                        .requestMatchers("/admin/**").hasRole("ADMINISTRADOR")
+
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form
@@ -33,7 +39,20 @@ public class SecurityConfig {
                         .loginProcessingUrl("/login")
                         .usernameParameter("email")
                         .passwordParameter("contrasenia")
-                        .defaultSuccessUrl("/", true)
+                        .successHandler((request, response, authentication) -> {
+                            boolean isAdmin = authentication.getAuthorities().stream()
+                                    .anyMatch(a -> a.getAuthority().equals("ROLE_ADMINISTRADOR"));
+                            boolean isResponsable = authentication.getAuthorities().stream()
+                                    .anyMatch(a -> a.getAuthority().equals("ROLE_RESPONSABLE"));
+
+                            if (isAdmin) {
+                                response.sendRedirect("/admin/inicio");
+                            } else if (isResponsable) {
+                                response.sendRedirect("/responsable/inicio");
+                            } else {
+                                response.sendRedirect("/empleado/inicio");
+                            }
+                        })
                         .failureUrl("/usuarios/login?error")
                         .permitAll()
                 )
