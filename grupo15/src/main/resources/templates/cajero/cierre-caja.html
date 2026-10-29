@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Epicentro Gourmet - Cierre de Caja</title>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #f4f6f9; margin: 0; padding: 20px; }
+        .container { max-width: 600px; margin: 0 auto; background: #fff; padding: 30px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        h2 { color: #d35400; margin-top: 0; }
+        .stats { background: #f8f9fa; padding: 15px; border-radius: 6px; margin: 20px 0; }
+        .stats p { font-size: 18px; margin: 10px 0; color: #333; }
+        .btn-back { display: inline-block; background-color: #34495e; color: white; padding: 10px 20px; text-decoration: none; border-radius: 4px; font-weight: bold; }
+        .btn-back:hover { background-color: #2c3e50; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Resumen de Cierre de Caja</h2>
+    <p th:if="${yaCerrada}" style="color: #c0392b;">
+        Esta caja ya fue cerrada para la fecha seleccionada. Se muestra el cierre registrado previamente.
+    </p>
+    <p>Unidad de Venta: <strong th:text="${cierreCaja.unidadVenta.nombreComercial}">Local</strong></p>
+    <p>Fecha: <strong th:text="${cierreCaja.fecha}"></strong></p>
+    <p>Cajero: <strong th:text="${cierreCaja.cajero.nombre + ' ' + cierreCaja.cajero.apellido}"></strong></p>
+
+    <div class="stats">
+        <p>Total de Pedidos del Día: <strong th:text="${cierreCaja.totalPedidos}">0</strong></p>
+        <p>Recaudación del Día: $<strong th:text="${cierreCaja.recaudacionTotal}">0.00</strong></p>
+        <p>Cierre registrado: <strong th:text="${cierreCaja.fechaHoraCierre}"></strong></p>
+    </div>
+
+    <a th:href="@{/empleado/inicio}" class="btn-back">← Volver al Panel de Empleado</a>
+</div>
+
+</body>
+</html>

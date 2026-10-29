@@ -8,7 +8,5 @@ import java.util.Optional;
 
 @Repository("cocineroRepository")
 public interface ICocineroRepository extends JpaRepository<Cocinero, Long> {
-
     public abstract Optional<Cocinero> findById(long id);
-
 }
