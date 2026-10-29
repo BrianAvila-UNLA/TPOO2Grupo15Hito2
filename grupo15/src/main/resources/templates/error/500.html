@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Error interno | Epicentro Gourmet</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+<main class="container form-page">
+    <p class="eyebrow">Error 500</p>
+    <h1>No se pudo cargar la página</h1>
+    <p class="form-intro">Ocurrió un error interno. Volvé a intentarlo o regresá al inicio.</p>
+    <a class="button button-secondary" th:href="@{/}">Volver al inicio</a>
+</main>
+</body>
+</html>

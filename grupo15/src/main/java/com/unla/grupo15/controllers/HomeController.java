@@ -30,9 +30,13 @@ public class HomeController {
 
     @GetMapping({"", "/", "/index"})
     public String index(Model model, Authentication authentication) {
-        model.addAttribute("festivales", festivalService.getAll());
-
         if (authentication != null && authentication.isAuthenticated()) {
+            boolean isEmpleado = authentication.getAuthorities().stream()
+                    .anyMatch(authority -> authority.getAuthority().equals("ROLE_EMPLEADO"));
+            if (isEmpleado) {
+                return "redirect:/empleado/inicio";
+            }
+
             String email = authentication.getName();
             Usuario usuario = usuarioService.findByEmail(email).orElse(null);
 
@@ -45,6 +49,8 @@ public class HomeController {
                 }
             }
         }
+
+        model.addAttribute("festivales", festivalService.getAll());
         return "index";
     }
 
