@@ -11,9 +11,11 @@ import java.time.LocalDate;
 @Getter @Setter @NoArgsConstructor
 public class Cocinero extends Personal {
 
+    @Column(nullable = false)
     private String especialidadCulinaria;
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private RolCocina categoria;
 
 }
