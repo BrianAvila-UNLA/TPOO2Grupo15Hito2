@@ -58,6 +58,11 @@ public class PersonalService implements IPersonalService {
     }
 
     @Override
+    public boolean existsByDni(int dni) {
+        return personalRepository.existsByDni(dni);
+    }
+
+    @Override
     public void registrarEmpleado(Personal empleado, UnidadVenta unidadVenta) {
         String passwordAleatoria = UUID.randomUUID().toString().substring(0, 8);
 

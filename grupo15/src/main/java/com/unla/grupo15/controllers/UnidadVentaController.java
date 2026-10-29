@@ -38,6 +38,12 @@ public class UnidadVentaController {
     @PostMapping("/registrar")
     public String registrar(@ModelAttribute("registro") RegistroUnidadForm form, Model model) {
         try {
+            if ("PUESTO".equals(form.tipo)
+                    && (form.cantidadCarpas <= 0 || form.tiempoMontaje <= 0)) {
+                throw new IllegalArgumentException(
+                        "La cantidad de carpas y el tiempo de montaje deben ser mayores que cero para un puesto desarmable.");
+            }
+
             registrationService.register(new UnidadVentaRegistrationService.UnitRegistration(
                     form.tipo,
                     form.nombreComercial,

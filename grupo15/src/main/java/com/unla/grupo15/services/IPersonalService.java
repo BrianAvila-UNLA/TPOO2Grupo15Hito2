@@ -19,6 +19,8 @@ public interface IPersonalService {
 
     Optional<Personal> findByEmail(String email);
 
+    boolean existsByDni(int dni);
+
     void registrarEmpleado(Personal empleado, UnidadVenta unidadVenta);
 
     void bajaLogica(Long id);

@@ -13,6 +13,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
 
@@ -50,8 +51,14 @@ public class ResponsableController {
                 List<Plato> platos = platoService.findByUnidadVenta(unidadVenta);
                 model.addAttribute("platos", platos);
 
-                BigDecimal canon = unidadVenta.calcularCanon();
-                model.addAttribute("canon", canon);
+                boolean canonDisponible = unidadVenta.getFestival() != null
+                        && unidadVenta.getFestival().getCosto() != null;
+                model.addAttribute("canonDisponible", canonDisponible);
+
+                if (canonDisponible) {
+                    BigDecimal canon = unidadVenta.calcularCanon();
+                    model.addAttribute("canon", canon);
+                }
             }
         }
 
@@ -82,6 +89,21 @@ public class ResponsableController {
 
     @PostMapping("/empleados/cajero/guardar")
     public String guardarCajero(@Valid @ModelAttribute("empleado") Cajero empleado, BindingResult result, Model model, Authentication authentication) {
+        LocalDate fechaLimite = LocalDate.now().minusYears(18);
+        if (empleado.getFechaNacimiento() != null
+                && !empleado.getFechaNacimiento().isBefore(fechaLimite)) {
+            result.rejectValue(
+                    "fechaNacimiento",
+                    "cajero.fechaNacimiento.menorEdad",
+                    "El cajero debe ser mayor de 18 años");
+        }
+        if (personalService.existsByDni(empleado.getDni())) {
+            result.rejectValue(
+                    "dni",
+                    "cajero.dni.duplicado",
+                    "Ya existe un empleado registrado con ese DNI");
+        }
+
         if (result.hasErrors()) {
             model.addAttribute("tipo", "cajero");
             return "personal/empleado-form";
@@ -105,6 +127,21 @@ public class ResponsableController {
 
     @PostMapping("/empleados/cocinero/guardar")
     public String guardarCocinero(@Valid @ModelAttribute("empleado") Cocinero empleado, BindingResult result, Model model, Authentication authentication) {
+        LocalDate fechaLimite = LocalDate.now().minusYears(18);
+        if (empleado.getFechaNacimiento() != null
+                && !empleado.getFechaNacimiento().isBefore(fechaLimite)) {
+            result.rejectValue(
+                    "fechaNacimiento",
+                    "cocinero.fechaNacimiento.menorEdad",
+                    "El cocinero debe ser mayor de 18 años");
+        }
+        if (personalService.existsByDni(empleado.getDni())) {
+            result.rejectValue(
+                    "dni",
+                    "cocinero.dni.duplicado",
+                    "Ya existe un empleado registrado con ese DNI");
+        }
+
         if (result.hasErrors()) {
             model.addAttribute("tipo", "cocinero");
             return "personal/empleado-form";

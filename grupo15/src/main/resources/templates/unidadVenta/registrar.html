@@ -62,14 +62,32 @@
             Tiene conexión eléctrica
         </label>
 
-        <label for="cantidadCarpas">Cantidad de carpas (Puesto desarmable)</label>
-        <input id="cantidadCarpas" type="number" min="0" th:field="*{cantidadCarpas}">
+        <div id="puesto-fields" th:style="${registro.tipo == 'PUESTO' ? '' : 'display: none;'}">
+            <label for="cantidadCarpas">Cantidad de carpas (Puesto desarmable)</label>
+            <input id="cantidadCarpas" type="number" min="1" th:field="*{cantidadCarpas}">
 
-        <label for="tiempoMontaje">Tiempo de montaje en minutos</label>
-        <input id="tiempoMontaje" type="number" min="0" th:field="*{tiempoMontaje}">
+            <label for="tiempoMontaje">Tiempo de montaje en minutos</label>
+            <input id="tiempoMontaje" type="number" min="1" th:field="*{tiempoMontaje}">
+        </div>
 
         <button class="button button-secondary" type="submit">Registrar unidad y enviar contraseña</button>
     </form>
 </main>
+<script>
+    const tipo = document.getElementById('tipo');
+    const puestoFields = document.getElementById('puesto-fields');
+    const cantidadCarpas = document.getElementById('cantidadCarpas');
+    const tiempoMontaje = document.getElementById('tiempoMontaje');
+
+    function actualizarCamposPuesto() {
+        const esPuesto = tipo.value === 'PUESTO';
+        puestoFields.style.display = esPuesto ? '' : 'none';
+        cantidadCarpas.required = esPuesto;
+        tiempoMontaje.required = esPuesto;
+    }
+
+    tipo.addEventListener('change', actualizarCamposPuesto);
+    actualizarCamposPuesto();
+</script>
 </body>
 </html>

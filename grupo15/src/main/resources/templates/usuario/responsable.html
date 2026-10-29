@@ -39,7 +39,12 @@
                 </div>
                 <div>
                     <span style="font-size: 1.5rem; font-weight: bold; color: #2c3e50;"
+                          th:if="${canonDisponible}"
                           th:text="${'$' + #numbers.formatDecimal(canon, 1, 'DEFAULT', 2, 'DEFAULT')}">$0.00</span>
+                    <span th:unless="${canonDisponible}"
+                          style="font-size: 0.95rem; color: #666;">
+                        Pendiente de asignar un festival
+                    </span>
                 </div>
             </div>
 

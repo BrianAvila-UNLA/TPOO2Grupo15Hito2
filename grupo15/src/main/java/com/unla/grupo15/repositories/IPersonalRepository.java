@@ -13,7 +13,8 @@ public interface IPersonalRepository extends JpaRepository<Personal, Long> {
 
     Optional<Personal> findByCredencialesEmail(String email);
 
-}
+    boolean existsByDni(int dni);
 
+}
 
 
