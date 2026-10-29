@@ -11,4 +11,6 @@ public interface ICajeroRepository extends JpaRepository<Cajero, Long> {
 
     public abstract Optional<Cajero> findById(long id);
 
+
+
 }

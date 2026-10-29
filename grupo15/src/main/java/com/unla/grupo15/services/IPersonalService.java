@@ -1,6 +1,6 @@
 package com.unla.grupo15.services;
 
-import com.unla.grupo15.entities.Cajero;
+import com.unla.grupo15.entities.AsignacionPersonal;
 import com.unla.grupo15.entities.Personal;
 import com.unla.grupo15.entities.UnidadVenta;
 
@@ -25,5 +25,13 @@ public interface IPersonalService {
 
     void bajaLogica(Long id);
 
-    public void darDeAlta(Long id);
+    void darDeAlta(Long id);
+
+    Optional<Personal> findByCredencialesEmail(String email);
+
+    List<AsignacionPersonal> obtenerHistorialAsignaciones(Personal personal);
+
+    Optional<AsignacionPersonal> findAsignacion(long idAsignacion, Personal personal);
+
+    boolean esCocinero(String email);
 }

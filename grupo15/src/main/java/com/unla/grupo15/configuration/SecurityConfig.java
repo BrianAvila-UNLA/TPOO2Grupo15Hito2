@@ -33,8 +33,10 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/", "/css/**", "/usuarios/login", "/unidades/registrar").permitAll()
-                        .requestMatchers("/admin/**").hasRole("ADMINISTRADOR")
+                        .requestMatchers("/cajero/**").hasRole("EMPLEADO")
+                        .requestMatchers("/empleado/**").hasRole("EMPLEADO")
                         .requestMatchers("/responsable/**").hasRole("RESPONSABLE")
+                        .requestMatchers("/admin/**").hasRole("ADMINISTRADOR")
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form
@@ -42,7 +44,20 @@ public class SecurityConfig {
                         .loginProcessingUrl("/login")
                         .usernameParameter("email")
                         .passwordParameter("contrasenia")
-                        .successHandler(customAuthenticationSuccessHandler()) // Usamos el manejador por roles
+                        .successHandler((request, response, authentication) -> {
+                            boolean isAdmin = authentication.getAuthorities().stream()
+                                    .anyMatch(a -> a.getAuthority().equals("ROLE_ADMINISTRADOR"));
+                            boolean isResponsable = authentication.getAuthorities().stream()
+                                    .anyMatch(a -> a.getAuthority().equals("ROLE_RESPONSABLE"));
+
+                            if (isAdmin) {
+                                response.sendRedirect("/admin/inicio");
+                            } else if (isResponsable) {
+                                response.sendRedirect("/responsable/inicio");
+                            } else {
+                                response.sendRedirect("/empleado/inicio");
+                            }
+                        })
                         .failureUrl("/usuarios/login?error")
                         .permitAll()
                 )
@@ -53,24 +68,6 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable());
 
         return http.build();
-    }
-
-    @Bean
-    public AuthenticationSuccessHandler customAuthenticationSuccessHandler() {
-        return (HttpServletRequest request, HttpServletResponse response, Authentication authentication) -> {
-            String redirectUrl = "/";
-
-            for (GrantedAuthority authority : authentication.getAuthorities()) {
-                String role = authority.getAuthority();
-
-                if (role.equals("ROLE_RESPONSABLE")) {
-                    redirectUrl = "/responsable";
-                    break;
-                }
-            }
-
-            response.sendRedirect(redirectUrl);
-        };
     }
 
     @Bean
