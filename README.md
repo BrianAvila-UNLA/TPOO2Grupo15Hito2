@@ -57,3 +57,4 @@ http://localhost:8080/
 https://github.com/BrianAvila-UNLA/TPOO2Grupo15Hito2/pull/1 (Ignacio David Vega)
 https://github.com/BrianAvila-UNLA/TPOO2Grupo15Hito2/pull/2 (Romero Gabriel Omar)
 https://github.com/BrianAvila-UNLA/TPOO2Grupo15Hito2/pull/4 (Romero Gabriel Omar)
+https://github.com/BrianAvila-UNLA/TPOO2Grupo15Hito2/pull/5 (Romero Gabriel Omar)
