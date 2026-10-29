@@ -1,17 +1,25 @@
 package com.unla.grupo15.services.implementation;
 
-import com.unla.grupo15.entities.Personal;
 import com.unla.grupo15.entities.AsignacionPersonal;
-import com.unla.grupo15.repositories.ICocineroRepository;
+import com.unla.grupo15.entities.Personal;
+import com.unla.grupo15.entities.RolUsuario;
+import com.unla.grupo15.entities.UnidadVenta;
+import com.unla.grupo15.entities.Usuario;
 import com.unla.grupo15.repositories.IAsignacionPersonalRepository;
+import com.unla.grupo15.repositories.ICocineroRepository;
 import com.unla.grupo15.repositories.IPersonalRepository;
+import com.unla.grupo15.repositories.IUsuarioRepository;
 import com.unla.grupo15.services.IPersonalService;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class PersonalService implements IPersonalService {
@@ -19,12 +27,22 @@ public class PersonalService implements IPersonalService {
     private final IPersonalRepository personalRepository;
     private final ICocineroRepository cocineroRepository;
     private final IAsignacionPersonalRepository asignacionRepository;
+    private final IUsuarioRepository usuarioRepository;
+    private final JavaMailSender mailSender;
+    private final PasswordEncoder passwordEncoder;
 
-    public PersonalService(IPersonalRepository personalRepository, ICocineroRepository cocineroRepository,
-                           IAsignacionPersonalRepository asignacionRepository) {
+    public PersonalService(IPersonalRepository personalRepository, 
+                           ICocineroRepository cocineroRepository,
+                           IAsignacionPersonalRepository asignacionRepository,
+                           IUsuarioRepository usuarioRepository, 
+                           JavaMailSender mailSender, 
+                           PasswordEncoder passwordEncoder) {
         this.personalRepository = personalRepository;
         this.cocineroRepository = cocineroRepository;
         this.asignacionRepository = asignacionRepository;
+        this.usuarioRepository = usuarioRepository;
+        this.mailSender = mailSender;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -151,5 +169,62 @@ public class PersonalService implements IPersonalService {
         }
         asignacion.setFechaFin(fin);
         asignacionRepository.save(asignacion);
+    }
+
+    @Override
+    public void registrarEmpleado(Personal empleado, UnidadVenta unidadVenta) {
+        String passwordAleatoria = UUID.randomUUID().toString().substring(0, 8);
+
+        Usuario credenciales = new Usuario();
+        credenciales.setEmail(empleado.getEmail());
+        credenciales.setNombre(empleado.getEmail());
+        credenciales.setContrasenia(passwordEncoder.encode(passwordAleatoria));
+        credenciales.setRol(RolUsuario.EMPLEADO);
+        credenciales.setActivo(true);
+
+        usuarioRepository.save(credenciales);
+
+        empleado.setCredenciales(credenciales);
+        empleado.setUnidadVenta(unidadVenta);
+
+        personalRepository.save(empleado);
+
+        SimpleMailMessage mensaje = new SimpleMailMessage();
+        mensaje.setTo(empleado.getEmail());
+        mensaje.setSubject("Tus credenciales de acceso - Epicentro Gourmet");
+        mensaje.setText("Hola " + empleado.getNombre() + ",\n\nSe ha creado tu cuenta como empleado.\n" +
+                "Tus datos de acceso son:\n" +
+                "Usuario (Email): " + empleado.getEmail() + "\n" +
+                "Contraseña temporal: " + passwordAleatoria + "\n\n" +
+                "Por favor, inicia sesión en la plataforma.");
+
+        try {
+            mailSender.send(mensaje);
+        } catch (Exception e) {
+        }
+    }
+
+    @Override
+    public void bajaLogica(Long id) {
+        Personal personal = personalRepository.findById(id).orElse(null);
+        if (personal != null) {
+            if (personal.getCredenciales() != null) {
+                personal.getCredenciales().setActivo(false);
+                usuarioRepository.save(personal.getCredenciales());
+            }
+            personalRepository.save(personal);
+        }
+    }
+
+    @Override
+    public void darDeAlta(Long id) {
+        Personal personal = personalRepository.findById(id).orElse(null);
+        if (personal != null) {
+            if (personal.getCredenciales() != null) {
+                personal.getCredenciales().setActivo(true);
+                usuarioRepository.save(personal.getCredenciales());
+            }
+            personalRepository.save(personal);
+        }
     }
 }
