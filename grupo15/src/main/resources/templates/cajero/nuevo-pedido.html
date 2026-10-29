@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Epicentro Gourmet - Registrar Pedido</title>
+  <style>
+    body { font-family: Arial, sans-serif; background-color: #f4f6f9; margin: 0; padding: 20px; }
+    .container { max-width: 800px; margin: 0 auto; background: #fff; padding: 30px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+    h2 { color: #d35400; margin-top: 0; }
+    table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+    th, td { padding: 12px; text-align: left; border-bottom: 1px solid #ddd; }
+    th { background-color: #f8f9fa; color: #333; }
+    input[type="number"] { width: 70px; padding: 6px; border: 1px solid #ccc; border-radius: 4px; text-align: center; }
+    .btn-submit { background-color: #27ae60; color: white; border: none; padding: 12px 20px; font-size: 16px; border-radius: 4px; cursor: pointer; margin-top: 20px; font-weight: bold; }
+    .btn-submit:hover { background-color: #219653; }
+    .btn-back { display: inline-block; margin-top: 15px; color: #666; text-decoration: none; }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h2>Registrar Nuevo Pedido</h2>
+  <p th:if="${param.error == 'cantidad-invalida'}" style="color: #c0392b;">
+    Una cantidad ingresada no es válida.
+  </p>
+  <p th:if="${param.error == 'sin-productos'}" style="color: #c0392b;">
+    Seleccioná al menos un producto para registrar el pedido.
+  </p>
+  <p>Unidad de Venta: <strong th:text="${unidadVenta.nombreComercial}">Puesto</strong></p>
+
+  <form th:action="@{/cajero/pedido/guardar}" method="post">
+    <table>
+      <thead>
+      <tr>
+        <th>Plato</th>
+        <th>Precio Unitario</th>
+        <th>Cantidad</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr th:if="${platos.empty}">
+        <td colspan="3" style="text-align: center; color: #777;">No hay platos disponibles en esta unidad de venta.</td>
+      </tr>
+      <tr th:each="plato : ${platos}">
+        <td th:text="${plato.nombrePlato}">Nombre del Plato</td>
+        <td>$<span th:text="${plato.precioVenta}">0.00</span></td>
+        <td>
+          <input type="number" th:name="'cantidades[' + ${plato.id} + ']'" value="0" min="0" />
+        </td>
+      </tr>
+      </tbody>
+    </table>
+
+    <div th:unless="${platos.empty}">
+      <button type="submit" class="btn-submit">Guardar Pedido</button>
+    </div>
+  </form>
+
+  <a th:href="@{/empleado/inicio}" class="btn-back">← Volver al Panel</a>
+</div>
+
+</body>
+</html>
