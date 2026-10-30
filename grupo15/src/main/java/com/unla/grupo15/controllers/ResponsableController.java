@@ -6,6 +6,7 @@ import com.unla.grupo15.services.IPlatoService;
 import com.unla.grupo15.services.IUnidadVentaService;
 import com.unla.grupo15.services.IUsuarioService;
 import jakarta.validation.Valid;
+import org.springframework.mail.MailException;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -113,7 +114,14 @@ public class ResponsableController {
         Usuario usuario = usuarioService.findByEmail(email).orElse(null);
         UnidadVenta unidadVenta = unidadVentaService.findByResponsableCargo(usuario);
 
-        personalService.registrarEmpleado(empleado, unidadVenta);
+        try {
+            personalService.registrarEmpleado(empleado, unidadVenta);
+        } catch (MailException exception) {
+            model.addAttribute("tipo", "cajero");
+            model.addAttribute("error",
+                    "No se pudo enviar el correo de credenciales. Verificá la configuración de correo e intentá nuevamente.");
+            return "personal/empleado-form";
+        }
 
         return "redirect:/responsable/empleados";
     }
@@ -151,7 +159,14 @@ public class ResponsableController {
         Usuario usuario = usuarioService.findByEmail(email).orElse(null);
         UnidadVenta unidadVenta = unidadVentaService.findByResponsableCargo(usuario);
 
-        personalService.registrarEmpleado(empleado, unidadVenta);
+        try {
+            personalService.registrarEmpleado(empleado, unidadVenta);
+        } catch (MailException exception) {
+            model.addAttribute("tipo", "cocinero");
+            model.addAttribute("error",
+                    "No se pudo enviar el correo de credenciales. Verificá la configuración de correo e intentá nuevamente.");
+            return "personal/empleado-form";
+        }
 
         return "redirect:/responsable/empleados";
     }

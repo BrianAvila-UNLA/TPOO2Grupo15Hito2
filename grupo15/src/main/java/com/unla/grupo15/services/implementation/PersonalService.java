@@ -11,7 +11,9 @@ import com.unla.grupo15.repositories.IPersonalRepository;
 import com.unla.grupo15.repositories.IUsuarioRepository;
 import com.unla.grupo15.services.IPersonalService;
 import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,19 +32,22 @@ public class PersonalService implements IPersonalService {
     private final IUsuarioRepository usuarioRepository;
     private final JavaMailSender mailSender;
     private final PasswordEncoder passwordEncoder;
+    private final String senderEmail;
 
     public PersonalService(IPersonalRepository personalRepository, 
                            ICocineroRepository cocineroRepository,
                            IAsignacionPersonalRepository asignacionRepository,
                            IUsuarioRepository usuarioRepository, 
                            JavaMailSender mailSender, 
-                           PasswordEncoder passwordEncoder) {
+                           PasswordEncoder passwordEncoder,
+                           @Value("${spring.mail.username}") String senderEmail) {
         this.personalRepository = personalRepository;
         this.cocineroRepository = cocineroRepository;
         this.asignacionRepository = asignacionRepository;
         this.usuarioRepository = usuarioRepository;
         this.mailSender = mailSender;
         this.passwordEncoder = passwordEncoder;
+        this.senderEmail = senderEmail;
     }
 
     @Override
@@ -176,6 +181,7 @@ public class PersonalService implements IPersonalService {
     }
 
     @Override
+    @Transactional
     public void registrarEmpleado(Personal empleado, UnidadVenta unidadVenta) {
         String passwordAleatoria = UUID.randomUUID().toString().substring(0, 8);
 
@@ -194,6 +200,7 @@ public class PersonalService implements IPersonalService {
         personalRepository.save(empleado);
 
         SimpleMailMessage mensaje = new SimpleMailMessage();
+        mensaje.setFrom(senderEmail);
         mensaje.setTo(empleado.getEmail());
         mensaje.setSubject("Tus credenciales de acceso - Epicentro Gourmet");
         mensaje.setText("Hola " + empleado.getNombre() + ",\n\nSe ha creado tu cuenta como empleado.\n" +
@@ -202,10 +209,7 @@ public class PersonalService implements IPersonalService {
                 "Contraseña temporal: " + passwordAleatoria + "\n\n" +
                 "Por favor, inicia sesión en la plataforma.");
 
-        try {
-            mailSender.send(mensaje);
-        } catch (Exception e) {
-        }
+        mailSender.send(mensaje);
     }
 
     @Override

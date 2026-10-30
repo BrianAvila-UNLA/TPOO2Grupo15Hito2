@@ -5,8 +5,10 @@ import com.unla.grupo15.entities.PuestoDesarmable;
 import com.unla.grupo15.entities.UnidadVenta;
 import com.unla.grupo15.services.IUnidadVentaService;
 import com.unla.grupo15.services.UnidadVentaRegistrationService;
+import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
@@ -36,14 +38,21 @@ public class UnidadVentaController {
     }
 
     @PostMapping("/registrar")
-    public String registrar(@ModelAttribute("registro") RegistroUnidadForm form, Model model) {
-        try {
-            if ("PUESTO".equals(form.tipo)
-                    && (form.cantidadCarpas <= 0 || form.tiempoMontaje <= 0)) {
-                throw new IllegalArgumentException(
-                        "La cantidad de carpas y el tiempo de montaje deben ser mayores que cero para un puesto desarmable.");
-            }
+    public String registrar(@Valid @ModelAttribute("registro") RegistroUnidadForm form,
+                            BindingResult result,
+                            Model model) {
+        if ("PUESTO".equals(form.tipo)
+                && (form.cantidadCarpas <= 0 || form.tiempoMontaje <= 0)) {
+            result.reject(
+                    "registro.puesto.campos.invalidos",
+                    "La cantidad de carpas y el tiempo de montaje deben ser mayores que cero para un puesto desarmable.");
+        }
 
+        if (result.hasErrors()) {
+            return "unidadVenta/registrar";
+        }
+
+        try {
             registrationService.register(new UnidadVentaRegistrationService.UnitRegistration(
                     form.tipo,
                     form.nombreComercial,
@@ -56,7 +65,10 @@ public class UnidadVentaController {
                     form.tiempoMontaje));
             return "redirect:/unidades/registrar?enviado";
         } catch (IllegalArgumentException | org.springframework.mail.MailException exception) {
-            model.addAttribute("error", exception.getMessage());
+            String message = exception.getMessage();
+            model.addAttribute("error", message == null || message.isBlank()
+                    ? "No se pudo registrar la unidad. Verificá los datos e intentá nuevamente."
+                    : message);
             return "unidadVenta/registrar";
         }
     }
@@ -87,9 +99,14 @@ public class UnidadVentaController {
 
     public static class RegistroUnidadForm {
         private String tipo = "FOODTRUCK";
+        @jakarta.validation.constraints.NotBlank(message = "El nombre comercial es obligatorio")
         private String nombreComercial;
+        @jakarta.validation.constraints.Min(value = 1, message = "La superficie debe ser mayor que cero")
         private long superficie;
+        @jakarta.validation.constraints.NotBlank(message = "El código único es obligatorio")
         private String codigoUnico;
+        @jakarta.validation.constraints.NotBlank(message = "El correo del responsable es obligatorio")
+        @jakarta.validation.constraints.Email(message = "El correo del responsable no es válido")
         private String email;
         private String patente;
         private boolean conexionElectrica;

@@ -42,6 +42,11 @@
         <p><strong>DNI:</strong> <span th:text="${personal.dni}"></span></p>
         <p><strong>Email:</strong> <span th:text="${personal.email}"></span></p>
         <p><strong>Fecha de Ingreso:</strong> <span th:text="${personal.fechaIngreso}"></span></p>
+        <p><strong>Unidad de venta asignada:</strong>
+            <span th:if="${personal.unidadVenta != null}"
+                  th:text="${personal.unidadVenta.nombreComercial}"></span>
+            <span th:unless="${personal.unidadVenta != null}">Sin unidad asignada</span>
+        </p>
     </div>
 
     <section class="card" style="margin-bottom: 20px;">

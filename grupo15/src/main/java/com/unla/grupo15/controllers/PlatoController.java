@@ -6,9 +6,11 @@ import com.unla.grupo15.entities.Usuario;
 import com.unla.grupo15.services.IPlatoService;
 import com.unla.grupo15.services.IUnidadVentaService;
 import com.unla.grupo15.services.IUsuarioService;
+import jakarta.validation.Valid;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
@@ -52,7 +54,13 @@ public class PlatoController {
     }
 
     @PostMapping("/guardar")
-    public String registrarPlato(@ModelAttribute Plato plato, Authentication authentication) {
+    public String registrarPlato(@Valid @ModelAttribute("plato") Plato plato,
+                                 BindingResult result,
+                                 Authentication authentication) {
+        if (result.hasErrors()) {
+            return "plato/registrar-plato";
+        }
+
         String email = authentication.getName();
         Usuario usuario = usuarioService.findByEmail(email).orElse(null);
         UnidadVenta unidadVenta = unidadVentaService.findByResponsableCargo(usuario);

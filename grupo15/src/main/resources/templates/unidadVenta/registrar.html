@@ -35,6 +35,7 @@
 
     <form class="registration-form" th:action="@{/unidades/registrar}"
           th:object="${registro}" method="post">
+        <div class="error-message" th:if="${#fields.hasGlobalErrors()}" th:errors="*{global}"></div>
         <label for="tipo">Tipo de unidad</label>
         <select id="tipo" th:field="*{tipo}" required>
             <option value="FOODTRUCK">Food Truck</option>
@@ -43,15 +44,19 @@
 
         <label for="nombreComercial">Nombre comercial</label>
         <input id="nombreComercial" type="text" th:field="*{nombreComercial}" required>
+        <small class="error-message" th:if="${#fields.hasErrors('nombreComercial')}" th:errors="*{nombreComercial}"></small>
 
         <label for="superficie">Superficie (m²)</label>
         <input id="superficie" type="number" min="1" th:field="*{superficie}" required>
+        <small class="error-message" th:if="${#fields.hasErrors('superficie')}" th:errors="*{superficie}"></small>
 
         <label for="codigoUnico">Código único</label>
         <input id="codigoUnico" type="text" th:field="*{codigoUnico}" required>
+        <small class="error-message" th:if="${#fields.hasErrors('codigoUnico')}" th:errors="*{codigoUnico}"></small>
 
         <label for="email">Correo del responsable</label>
         <input id="email" type="email" th:field="*{email}" required>
+        <small class="error-message" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></small>
         <small>La contraseña temporal se enviará a este correo.</small>
 
         <label for="patente">Patente (Food Truck)</label>
@@ -64,10 +69,10 @@
 
         <div id="puesto-fields" th:style="${registro.tipo == 'PUESTO' ? '' : 'display: none;'}">
             <label for="cantidadCarpas">Cantidad de carpas (Puesto desarmable)</label>
-            <input id="cantidadCarpas" type="number" min="1" th:field="*{cantidadCarpas}">
+            <input id="cantidadCarpas" type="number" min="1" th:field="*{cantidadCarpas}" disabled>
 
             <label for="tiempoMontaje">Tiempo de montaje en minutos</label>
-            <input id="tiempoMontaje" type="number" min="1" th:field="*{tiempoMontaje}">
+            <input id="tiempoMontaje" type="number" min="1" th:field="*{tiempoMontaje}" disabled>
         </div>
 
         <button class="button button-secondary" type="submit">Registrar unidad y enviar contraseña</button>
@@ -84,6 +89,8 @@
         puestoFields.style.display = esPuesto ? '' : 'none';
         cantidadCarpas.required = esPuesto;
         tiempoMontaje.required = esPuesto;
+        cantidadCarpas.disabled = !esPuesto;
+        tiempoMontaje.disabled = !esPuesto;
     }
 
     tipo.addEventListener('change', actualizarCamposPuesto);

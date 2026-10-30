@@ -18,12 +18,15 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.security.Principal;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.HashMap;
 import java.util.Map;
 
 @Controller
 @RequestMapping("/cajero")
 public class CajeroController {
+
+    private static final ZoneId APPLICATION_ZONE = ZoneId.of("America/Argentina/Buenos_Aires");
 
     @Autowired
     private IPedidoService pedidoService;
@@ -53,7 +56,7 @@ public class CajeroController {
         if (cajero.getUnidadVenta() == null) {
             return "redirect:/empleado/inicio?error=sin-unidad";
         }
-        if (cierreCajaService.estaCerrada(cajero.getUnidadVenta(), LocalDate.now())) {
+        if (cierreCajaService.estaCerrada(cajero.getUnidadVenta(), LocalDate.now(APPLICATION_ZONE))) {
             return "redirect:/empleado/inicio?error=caja-cerrada";
         }
 
@@ -69,7 +72,7 @@ public class CajeroController {
         if (cajero.getUnidadVenta() == null) {
             return "redirect:/empleado/inicio?error=sin-unidad";
         }
-        if (cierreCajaService.estaCerrada(cajero.getUnidadVenta(), LocalDate.now())) {
+        if (cierreCajaService.estaCerrada(cajero.getUnidadVenta(), LocalDate.now(APPLICATION_ZONE))) {
             return "redirect:/empleado/inicio?error=caja-cerrada";
         }
 
@@ -108,7 +111,7 @@ public class CajeroController {
         }
 
         UnidadVenta miUnidad = cajero.getUnidadVenta();
-        LocalDate fecha = LocalDate.now();
+        LocalDate fecha = LocalDate.now(APPLICATION_ZONE);
         try {
             model.addAttribute("cierreCaja", cierreCajaService.cerrarCaja(miUnidad, cajero, fecha));
             model.addAttribute("yaCerrada", false);

@@ -1,6 +1,9 @@
 package com.unla.grupo15.entities;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,10 +22,15 @@ public class Plato {
     @Setter(AccessLevel.NONE)
     private Long id;
 
+    @NotBlank(message = "El nombre del plato es obligatorio")
     private String nombrePlato;
 
+    @NotNull(message = "El precio de venta es obligatorio")
+    @DecimalMin(value = "0.01", message = "El precio de venta debe ser mayor que cero")
     private BigDecimal precioVenta;
 
+    @NotNull(message = "El costo de producción es obligatorio")
+    @DecimalMin(value = "0.01", message = "El costo de producción debe ser mayor que cero")
     private BigDecimal costoProduccion;
 
     @ManyToOne(fetch = FetchType.LAZY)

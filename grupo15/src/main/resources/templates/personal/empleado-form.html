@@ -25,6 +25,7 @@
     <p class="form-intro">
         Ingresá los datos del empleado. Se le generará una contraseña automática y se le enviará por correo electrónico.
     </p>
+    <div class="error-message" th:if="${error}" th:text="${error}"></div>
 
     <form class="registration-form"
           th:action="${tipo == 'cajero' ? '/responsable/empleados/cajero/guardar' : '/responsable/empleados/cocinero/guardar'}"

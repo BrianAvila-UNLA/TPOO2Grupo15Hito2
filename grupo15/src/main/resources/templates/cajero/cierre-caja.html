@@ -21,13 +21,13 @@
         Esta caja ya fue cerrada para la fecha seleccionada. Se muestra el cierre registrado previamente.
     </p>
     <p>Unidad de Venta: <strong th:text="${cierreCaja.unidadVenta.nombreComercial}">Local</strong></p>
-    <p>Fecha: <strong th:text="${cierreCaja.fecha}"></strong></p>
+    <p>Fecha: <strong th:text="${#temporals.format(cierreCaja.fecha, 'dd/MM/yyyy')}"></strong></p>
     <p>Cajero: <strong th:text="${cierreCaja.cajero.nombre + ' ' + cierreCaja.cajero.apellido}"></strong></p>
 
     <div class="stats">
         <p>Total de Pedidos del Día: <strong th:text="${cierreCaja.totalPedidos}">0</strong></p>
         <p>Recaudación del Día: $<strong th:text="${cierreCaja.recaudacionTotal}">0.00</strong></p>
-        <p>Cierre registrado: <strong th:text="${cierreCaja.fechaHoraCierre}"></strong></p>
+        <p>Cierre registrado: <strong th:text="${#temporals.format(cierreCaja.fechaHoraCierre, 'dd/MM/yyyy HH:mm:ss')}"></strong></p>
     </div>
 
     <a th:href="@{/empleado/inicio}" class="btn-back">← Volver al Panel de Empleado</a>

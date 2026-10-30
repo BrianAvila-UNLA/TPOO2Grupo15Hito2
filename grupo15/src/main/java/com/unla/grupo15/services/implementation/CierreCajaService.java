@@ -12,10 +12,13 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Optional;
 
 @Service
 public class CierreCajaService {
+
+    private static final ZoneId APPLICATION_ZONE = ZoneId.of("America/Argentina/Buenos_Aires");
 
     private final ICierreCajaRepository cierreCajaRepository;
     private final IPedidoRepository pedidoRepository;
@@ -39,7 +42,8 @@ public class CierreCajaService {
 
         try {
             return cierreCajaRepository.saveAndFlush(new CierreCaja(
-                    unidadVenta, cajero, fecha, LocalDateTime.now(), totalPedidos, recaudacionTotal));
+                    unidadVenta, cajero, fecha, LocalDateTime.now(APPLICATION_ZONE),
+                    totalPedidos, recaudacionTotal));
         } catch (DataIntegrityViolationException exception) {
             if (cierreCajaRepository.existsByUnidadVentaAndFecha(unidadVenta, fecha)) {
                 throw new CierreCajaYaRealizadoException(exception);
