@@ -55,18 +55,32 @@
         <input id="codigoUnico" type="text" th:field="*{codigoUnico}" required>
         <small class="error-message" th:if="${#fields.hasErrors('codigoUnico')}" th:errors="*{codigoUnico}"></small>
 
+        <label for="festivalId">Festival al que desea unirse</label>
+        <select id="festivalId" th:field="*{festivalId}" required>
+            <option value="">Seleccioná un festival</option>
+            <option th:each="festival : ${festivales}"
+                    th:value="${festival.idFestival}"
+                    th:text="${festival.nombre}">
+                Festival
+            </option>
+        </select>
+        <small class="error-message" th:if="${#fields.hasErrors('festivalId')}"
+               th:errors="*{festivalId}"></small>
+
         <label for="email">Correo del responsable</label>
         <input id="email" type="email" th:field="*{email}" required>
         <small class="error-message" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></small>
         <small>La contraseña temporal se enviará a este correo.</small>
 
-        <label for="patente">Patente (Food Truck)</label>
-        <input id="patente" type="text" th:field="*{patente}">
+        <div id="foodtruck-fields" th:style="${registro.tipo == 'FOODTRUCK' ? '' : 'display: none;'}">
+            <label for="patente">Patente (Food Truck)</label>
+            <input id="patente" type="text" th:field="*{patente}">
 
-        <label class="checkbox-label" for="conexionElectrica">
-            <input id="conexionElectrica" type="checkbox" th:field="*{conexionElectrica}">
-            Tiene conexión eléctrica
-        </label>
+            <label class="checkbox-label" for="conexionElectrica">
+                <input id="conexionElectrica" type="checkbox" th:field="*{conexionElectrica}">
+                Tiene conexión eléctrica
+            </label>
+        </div>
 
         <div id="puesto-fields" th:style="${registro.tipo == 'PUESTO' ? '' : 'display: none;'}">
             <label for="cantidadCarpas">Cantidad de carpas (Puesto desarmable)</label>
@@ -81,12 +95,18 @@
 </main>
 <script>
     const tipo = document.getElementById('tipo');
+    const foodtruckFields = document.getElementById('foodtruck-fields');
+    const patente = document.getElementById('patente');
+    const conexionElectrica = document.getElementById('conexionElectrica');
     const puestoFields = document.getElementById('puesto-fields');
     const cantidadCarpas = document.getElementById('cantidadCarpas');
     const tiempoMontaje = document.getElementById('tiempoMontaje');
 
     function actualizarCamposPuesto() {
         const esPuesto = tipo.value === 'PUESTO';
+        foodtruckFields.style.display = esPuesto ? 'none' : '';
+        patente.disabled = esPuesto;
+        conexionElectrica.disabled = esPuesto;
         puestoFields.style.display = esPuesto ? '' : 'none';
         cantidadCarpas.required = esPuesto;
         tiempoMontaje.required = esPuesto;

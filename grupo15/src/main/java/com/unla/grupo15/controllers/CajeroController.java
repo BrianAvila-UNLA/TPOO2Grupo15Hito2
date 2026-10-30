@@ -2,6 +2,8 @@ package com.unla.grupo15.controllers;
 
 import com.unla.grupo15.entities.Personal;
 import com.unla.grupo15.entities.Cajero;
+import com.unla.grupo15.entities.DetallePedido;
+import com.unla.grupo15.entities.Pedido;
 import com.unla.grupo15.entities.UnidadVenta;
 import com.unla.grupo15.repositories.IPlatoRepository;
 import com.unla.grupo15.services.IPedidoService;
@@ -15,7 +17,12 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import jakarta.servlet.http.HttpServletResponse;
+import com.lowagie.text.Document;
+import com.lowagie.text.Paragraph;
+import com.lowagie.text.pdf.PdfWriter;
 
+import java.io.IOException;
+import java.math.BigDecimal;
 import java.security.Principal;
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
@@ -69,14 +76,19 @@ public class CajeroController {
     }
 
     @PostMapping("/pedido/guardar")
-    public String guardarPedido(@RequestParam Map<String, String> allParams, Principal principal) {
+    public void guardarPedido(
+            @RequestParam Map<String, String> allParams,
+            Principal principal,
+            HttpServletResponse response) throws IOException {
         Cajero cajero = buscarCajero(principal.getName());
 
         if (cajero.getUnidadVenta() == null) {
-            return "redirect:/empleado/inicio?error=sin-unidad";
+            response.sendRedirect("/empleado/inicio?error=sin-unidad");
+            return;
         }
         if (cierreCajaService.estaCerrada(cajero.getUnidadVenta(), LocalDate.now(APPLICATION_ZONE))) {
-            return "redirect:/empleado/inicio?error=caja-cerrada";
+            response.sendRedirect("/empleado/inicio?error=caja-cerrada");
+            return;
         }
 
         Map<Long, Long> platosConCantidad = new HashMap<>();
@@ -92,17 +104,61 @@ public class CajeroController {
                         platosConCantidad.put(idPlato, cantidad);
                     }
                 } catch (NumberFormatException e) {
-                    return "redirect:/cajero/pedido/nuevo?error=cantidad-invalida";
+                    response.sendRedirect("/cajero/pedido/nuevo?error=cantidad-invalida");
+                    return;
                 }
             }
         }
 
         if (platosConCantidad.isEmpty()) {
-            return "redirect:/cajero/pedido/nuevo?error=sin-productos";
+            response.sendRedirect("/cajero/pedido/nuevo?error=sin-productos");
+            return;
         }
 
-        pedidoService.registrarPedido(platosConCantidad, cajero.getUnidadVenta());
-        return "redirect:/empleado/inicio?pedidoExitoso=true";
+        Pedido pedido = pedidoService.registrarPedido(platosConCantidad, cajero.getUnidadVenta());
+        response.sendRedirect("/empleado/inicio?pedidoExitoso=true&pedidoId=" + pedido.getId());
+    }
+
+    @GetMapping("/pedido/pdf/{id}")
+    public void descargarComprobantePedido(
+            @PathVariable long id,
+            Principal principal,
+            HttpServletResponse response) throws IOException {
+        Cajero cajero = buscarCajero(principal.getName());
+        Pedido pedido = pedidoService.findById(id).orElse(null);
+
+        if (pedido == null || pedido.getUnidadVenta() != cajero.getUnidadVenta()) {
+            response.sendError(HttpServletResponse.SC_NOT_FOUND, "Pedido no encontrado.");
+            return;
+        }
+
+        response.setContentType("application/pdf");
+        response.setHeader("Content-Disposition",
+                "attachment; filename=pedido_" + pedido.getId() + ".pdf");
+
+        BigDecimal total = pedido.getDetalles().stream()
+                .map(DetallePedido::getSubtotal)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        Document document = new Document();
+        PdfWriter.getInstance(document, response.getOutputStream());
+        document.open();
+        document.add(new Paragraph("--- EPICENTRO GOURMET ---"));
+        document.add(new Paragraph("Comprobante de pedido"));
+        document.add(new Paragraph("Fecha de pedido: " + pedido.getFechaPedido()));
+        document.add(new Paragraph("Cajero: " + cajero.getNombre() + " " + cajero.getApellido()));
+        document.add(new Paragraph("Unidad de venta: " + pedido.getUnidadVenta().getNombreComercial()));
+        document.add(new Paragraph("------------------------------------------"));
+
+        for (DetallePedido detalle : pedido.getDetalles()) {
+            document.add(new Paragraph(detalle.getPlato().getNombrePlato()
+                    + " | Cantidad: " + detalle.getCantidad()
+                    + " | Subtotal: $" + detalle.getSubtotal()));
+        }
+
+        document.add(new Paragraph("------------------------------------------"));
+        document.add(new Paragraph("Total: $" + total));
+        document.close();
     }
 
     @PostMapping("/cerrar-caja")

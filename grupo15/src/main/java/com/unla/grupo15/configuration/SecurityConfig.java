@@ -30,6 +30,7 @@ public class SecurityConfig {
                         .requestMatchers("/cajero/**").hasRole("EMPLEADO")
                         .requestMatchers("/empleado/**").hasRole("EMPLEADO")
                         .requestMatchers("/responsable/**").hasRole("RESPONSABLE")
+                        .requestMatchers("/unidades").hasRole("ADMINISTRADOR")
                         .requestMatchers("/admin/**").hasRole("ADMINISTRADOR")
                         .anyRequest().authenticated()
                 )
@@ -48,7 +49,7 @@ public class SecurityConfig {
                                     .anyMatch(a -> a.getAuthority().equals("ROLE_RESPONSABLE"));
 
                             if (isAdmin) {
-                                response.sendRedirect("/admin");
+                                response.sendRedirect("/admin/inicio");
                             } else if (isResponsable) {
                                 response.sendRedirect("/responsable");
                             } else {
