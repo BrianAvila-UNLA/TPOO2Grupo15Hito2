@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Liquidación de Sueldo | Epicentro Gourmet</title>
+  <link rel="icon" type="image/jpeg" th:href="@{/favicon.ico}">
   <link rel="stylesheet" th:href="@{/css/styles.css}">
 </head>
 <body>
@@ -16,7 +17,12 @@
     <nav class="main-nav" aria-label="Navegación principal">
       <a th:href="@{/empleado/inicio}">Mi Panel</a>
       <a class="active" th:href="@{/empleado/liquidacion}">Mi Liquidación</a>
-      <a th:href="@{/logout}">Cerrar sesión</a>
+      <span class="user-session" th:if="${personal != null}">
+        <span class="user-session-name" th:text="${personal.nombre + ' ' + personal.apellido}">Nombre Apellido</span>
+        <form th:action="@{/logout}" method="post">
+          <button type="submit">Cerrar sesión</button>
+        </form>
+      </span>
     </nav>
   </div>
 </header>
@@ -48,7 +54,7 @@
     <p class="error-message" th:if="${liquidacion['error'] != null}" th:text="${liquidacion['error']}"></p>
     <a th:if="${liquidacion.sueldo != null}"
        th:href="@{/empleado/recibo/pdf/{idAsignacion}(idAsignacion=${liquidacion.asignacion.idAsignacion})}"
-       class="btn" style="display: inline-block; margin-top: 15px; text-decoration: none; padding: 10px 15px; background: #c0392b; color: #fff; border-radius: 4px;">
+       class="btn" style="display: inline-block; margin-top: 15px; text-decoration: none; padding: 10px 15px; background: #5b2a86; color: #fff; border-radius: 4px;">
       Descargar recibo PDF
     </a>
   </div>

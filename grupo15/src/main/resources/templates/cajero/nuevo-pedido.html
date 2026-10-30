@@ -1,63 +1,188 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
 <head>
   <meta charset="UTF-8">
   <title>Epicentro Gourmet - Registrar Pedido</title>
+  <link rel="icon" type="image/jpeg" th:href="@{/favicon.ico}">
   <style>
-    body { font-family: Arial, sans-serif; background-color: #f4f6f9; margin: 0; padding: 20px; }
-    .container { max-width: 800px; margin: 0 auto; background: #fff; padding: 30px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
-    h2 { color: #d35400; margin-top: 0; }
-    table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-    th, td { padding: 12px; text-align: left; border-bottom: 1px solid #ddd; }
-    th { background-color: #f8f9fa; color: #333; }
-    input[type="number"] { width: 70px; padding: 6px; border: 1px solid #ccc; border-radius: 4px; text-align: center; }
-    .btn-submit { background-color: #27ae60; color: white; border: none; padding: 12px 20px; font-size: 16px; border-radius: 4px; cursor: pointer; margin-top: 20px; font-weight: bold; }
-    .btn-submit:hover { background-color: #219653; }
-    .btn-back { display: inline-block; margin-top: 15px; color: #666; text-decoration: none; }
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #fbf8fc;
+      margin: 0;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      background: #fff;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 4px 10px rgba(91, 42, 134, 0.12);
+    }
+
+    h2 {
+      color: #5b2a86;
+      margin-top: 0;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+
+    th,
+    td {
+      padding: 12px;
+      text-align: left;
+      border-bottom: 1px solid #e4d7ed;
+    }
+
+    th {
+      background-color: #f7eafa;
+      color: #3f2852;
+    }
+
+    input[type="number"] {
+      width: 70px;
+      padding: 6px;
+      border: 1px solid #d8c8e3;
+      border-radius: 4px;
+      text-align: center;
+    }
+
+    .btn-submit {
+      background-color: #d94f91;
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      font-size: 16px;
+      border-radius: 4px;
+      cursor: pointer;
+      margin-top: 20px;
+      font-weight: bold;
+    }
+
+    .btn-submit:hover {
+      background-color: #5b2a86;
+    }
+
+    .btn-back {
+      display: inline-block;
+      margin-top: 15px;
+      color: #5b2a86;
+      text-decoration: none;
+    }
+
+    .order-summary {
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+      margin-top: 24px;
+      padding: 16px;
+      background: #f7eafa;
+      border-radius: 8px;
+      color: #3f2852;
+    }
+
+    .order-summary strong {
+      color: #5b2a86;
+    }
+
+    .order-total {
+      font-size: 1.2rem;
+    }
+    .user-session { display: inline-flex; align-items: center; overflow: hidden; color: #5b2a86; background: #f7eafa; border: 1px solid #e4d7ed; border-radius: 8px; font-weight: 600; }
+    .user-session-name { padding: 8px 10px; }
+    .user-session form { margin: 0; }
+    .user-session button { padding: 8px 10px; color: white; background: #5b2a86; border: 0; border-left: 1px solid rgba(255,255,255,0.25); font: inherit; cursor: pointer; }
   </style>
 </head>
+
 <body>
 
-<div class="container">
-  <h2>Registrar Nuevo Pedido</h2>
-  <p th:if="${param.error == 'cantidad-invalida'}" style="color: #c0392b;">
-    Una cantidad ingresada no es válida.
-  </p>
-  <p th:if="${param.error == 'sin-productos'}" style="color: #c0392b;">
-    Seleccioná al menos un producto para registrar el pedido.
-  </p>
-  <p>Unidad de Venta: <strong th:text="${unidadVenta.nombreComercial}">Puesto</strong></p>
-
-  <form th:action="@{/cajero/pedido/guardar}" method="post">
-    <table>
-      <thead>
-      <tr>
-        <th>Plato</th>
-        <th>Precio Unitario</th>
-        <th>Cantidad</th>
-      </tr>
-      </thead>
-      <tbody>
-      <tr th:if="${platos.empty}">
-        <td colspan="3" style="text-align: center; color: #777;">No hay platos disponibles en esta unidad de venta.</td>
-      </tr>
-      <tr th:each="plato : ${platos}">
-        <td th:text="${plato.nombrePlato}">Nombre del Plato</td>
-        <td>$<span th:text="${plato.precioVenta}">0.00</span></td>
-        <td>
-          <input type="number" th:name="'cantidades[' + ${plato.id} + ']'" value="0" min="0" />
-        </td>
-      </tr>
-      </tbody>
-    </table>
-
-    <div th:unless="${platos.empty}">
-      <button type="submit" class="btn-submit">Guardar Pedido</button>
+  <div class="container">
+    <div style="display: flex; justify-content: flex-end; margin-bottom: 20px;">
+      <span class="user-session">
+        <span class="user-session-name" th:text="${personal.nombre + ' ' + personal.apellido}">Nombre Apellido</span>
+        <form th:action="@{/logout}" method="post">
+          <button type="submit">Cerrar sesión</button>
+        </form>
+      </span>
     </div>
-  </form>
+    <h2>Registrar Nuevo Pedido</h2>
+    <p th:if="${param.error == 'cantidad-invalida'}" style="color: #9c356f;">
+      Una cantidad ingresada no es válida.
+    </p>
+    <p th:if="${param.error == 'sin-productos'}" style="color: #9c356f;">
+      Seleccioná al menos un producto para registrar el pedido.
+    </p>
+    <p>Unidad de Venta: <strong th:text="${unidadVenta.nombreComercial}">Puesto</strong></p>
 
-  <a th:href="@{/empleado/inicio}" class="btn-back">← Volver al Panel</a>
-</div>
+    <form th:action="@{/cajero/pedido/guardar}" method="post">
+      <table>
+        <thead>
+          <tr>
+            <th>Plato</th>
+            <th>Precio Unitario</th>
+            <th>Cantidad</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr th:if="${platos.empty}">
+            <td colspan="3" style="text-align: center; color: #766f82;">No hay platos disponibles en esta unidad de
+              venta.</td>
+          </tr>
+          <tr th:each="plato : ${platos}">
+            <td th:text="${plato.nombrePlato}">Nombre del Plato</td>
+            <td>$<span th:text="${plato.precioVenta}">0.00</span></td>
+            <td>
+              <input type="number" th:name="'cantidades[' + ${plato.id} + ']'" th:data-precio="${plato.precioVenta}"
+                value="0" min="0" />
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="order-summary">
+        <span>Fecha y hora actual del pedido: <strong
+            th:text="${#temporals.format(fechaHoraActual, 'dd/MM/yyyy HH:mm')}">30/10/2026 07:41</strong></span>
+        <span class="order-total">Total: <strong id="totalPedido">$0.00</strong></span>
+      </div>
+
+      <div th:unless="${platos.empty}">
+        <button type="submit" class="btn-submit">ACEPTAR PEDIDO</button>
+      </div>
+    </form>
+
+    <a th:href="@{/empleado/inicio}" class="btn-back">← CANCELAR PEDIDO</a>
+  </div>
+
+  <script>
+    const totalPedido = document.getElementById('totalPedido');
+    const cantidadInputs = document.querySelectorAll('input[name^="cantidades["]');
+
+    function actualizarTotal() {
+      let total = 0;
+
+      cantidadInputs.forEach((input) => {
+        const precio = Number(input.dataset.precio);
+        const cantidad = Number(input.value);
+
+        if (Number.isFinite(precio) && Number.isFinite(cantidad) && cantidad > 0) {
+          total += precio * cantidad;
+        }
+      });
+
+      totalPedido.textContent = `$${total.toFixed(2)}`;
+    }
+
+    cantidadInputs.forEach((input) => input.addEventListener('input', actualizarTotal));
+    actualizarTotal();
+  </script>
 
 </body>
+
 </html>

@@ -1,11 +1,14 @@
 <!DOCTYPE html>
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Inicio | Epicentro Gourmet</title>
+    <link rel="icon" type="image/jpeg" th:href="@{/favicon.ico}">
     <link rel="stylesheet" th:href="@{/css/styles.css}">
 </head>
+
 <body>
     <header class="site-header">
         <div class="container navigation">
@@ -19,11 +22,11 @@
 
                 <a th:if="${usuario == null}" th:href="@{/usuarios/login}">Iniciar sesión</a>
 
-                <span th:if="${usuario != null}" style="display:inline-flex; align-items:center; gap:10px;">
+                <span th:if="${usuario != null}" class="user-session">
                     <a th:href="@{/personal/liquidacion}" style="font-weight: 500;">Mi Liquidación</a>
-                    <span th:text="${usuario.email}" style="font-weight: 500;">correo@user.com</span>
-                    <form th:action="@{/logout}" method="post" style="margin:0;">
-                         <button type="submit" class="button" style="padding: 4px 10px; font-size: 0.9rem;">Cerrar sesión</button>
+                    <span class="user-session-name" th:text="${usuario.nombre}">Nombre</span>
+                    <form th:action="@{/logout}" method="post">
+                        <button type="submit">Cerrar sesión</button>
                     </form>
                 </span>
             </nav>
@@ -40,6 +43,9 @@
                         Organizá festivales, unidades de venta, platos, pedidos y equipos
                         desde un solo lugar.
                     </p>
+                </div>
+                <div class="hero-media">
+                    <img th:src="@{/images/Meal_Home.jpg}" alt="Plato gourmet servido en un jardín">
                 </div>
             </div>
         </section>
@@ -74,9 +80,10 @@
 
     <footer class="site-footer">
         <div class="container">
-            <span>Epicentro Gourmet</span>
+            <span>Epicentro Gourmet. 2026™ Todos los derechos reservados</span>
             <span>Gestión de festivales gastronómicos</span>
         </div>
     </footer>
 </body>
+
 </html>
