@@ -18,7 +18,7 @@ public interface IPedidoService {
 
     void delete(long id);
 
-    void registrarPedido(Map<Long, Long> platosConCantidad, UnidadVenta unidadVenta);
+    Pedido registrarPedido(Map<Long, Long> platosConCantidad, UnidadVenta unidadVenta);
 
     long countByUnidadVenta(UnidadVenta unidadVenta);
     BigDecimal sumarRecaudacionPorUnidad(UnidadVenta unidadVenta);

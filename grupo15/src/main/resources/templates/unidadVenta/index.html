@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Unidades de venta | Epicentro Gourmet</title>
+    <link rel="icon" type="image/jpeg" th:href="@{/favicon.ico}">
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+
+<body>
+    <header class="site-header">
+        <div class="container navigation">
+            <a class="brand" th:href="@{/}">
+                <span class="brand-mark">EG</span>
+                <span>Epicentro Gourmet</span>
+            </a>
+            <nav class="main-nav" aria-label="Navegación principal">
+                <a class="active" th:href="@{/unidades}">Unidades de venta</a>
+                <span class="user-session">
+                    <span class="user-session-name">Administrador</span>
+                    <form th:action="@{/logout}" method="post">
+                        <button type="submit">Cerrar sesión</button>
+                    </form>
+                </span>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container content-section">
+        <div class="section-heading">
+            <div>
+                <p class="eyebrow">Festival</p>
+                <h1>Unidades de venta</h1>
+                <p class="form-intro">Estas son las unidades de venta registradas en el festival.</p>
+            </div>
+        </div>
+
+        <div class="error-message" th:if="${param.error != null}">
+            La cantidad solicitada supera las
+            <strong th:text="${param.disponibles[0]}">0</strong>
+            unidades disponibles en el festival seleccionado.
+        </div>
+
+        <div class="festival-grid" th:if="${not #lists.isEmpty(unidades)}">
+            <article class="festival-card" th:each="unidad : ${unidades}">
+                <div class="card-accent"></div>
+                <div class="card-content">
+                    <span class="tag"
+                        th:text="${unidad.festival != null ? unidad.festival.nombre : 'Sin festival asignado'}">
+                        Festival
+                    </span>
+                    <h2 th:text="${unidad.nombreComercial}">Nombre comercial</h2>
+                    <div class="date-row">
+                        <span>Código</span>
+                        <strong th:text="${unidad.codigoUnico}">Código</strong>
+                    </div>
+                    <div class="date-row">
+                        <span>Superficie</span>
+                        <strong th:text="${unidad.superficie + ' m²'}">0 m²</strong>
+                    </div>
+                    <div class="date-row">
+                        <span>Responsable</span>
+                        <strong
+                            th:text="${unidad.responsableCargo != null ? unidad.responsableCargo.nombre : 'Sin asignar'}">
+                            Sin asignar
+                        </strong>
+                    </div>
+                </div>
+            </article>
+        </div>
+
+        <p th:if="${#lists.isEmpty(unidades)}" class="form-intro">
+            Todavía no hay unidades de venta registradas.
+        </p>
+
+        <section style="margin-top: 3rem;">
+            <div class="section-heading">
+                <div>
+                    <p class="eyebrow">Rendimiento del Festival</p>
+                    <h2>Ranking por recaudación</h2>
+                </div>
+            </div>
+
+            <div class="festival-card" th:if="${not #lists.isEmpty(rankingUnidades)}">
+                <div class="card-content">
+                    <div class="date-row" th:each="item, posicion : ${rankingUnidades}">
+                        <span>
+                            <strong th:text="${posicion.count + '. ' + item.unidad.nombreComercial}">
+                                1. Unidad de venta
+                            </strong>
+                        </span>
+                        <strong th:text="${'$' + #numbers.formatDecimal(item.recaudacion, 1, 'DEFAULT', 2, 'DEFAULT')}">
+                            $0.00
+                        </strong>
+                    </div>
+                </div>
+            </div>
+
+            <p th:if="${#lists.isEmpty(rankingUnidades)}" class="form-intro">
+                Aún no hay datos de recaudación disponibles.
+            </p>
+        </section>
+
+        <section style="margin-top: 3rem;">
+            <div class="section-heading">
+                <div>
+                    <p class="eyebrow">Reporte</p>
+                    <h2>Unidades con mayor canon</h2>
+                </div>
+            </div>
+
+            <form class="registration-form" method="get"
+                  th:action="@{/admin/reportes/mayores-canon/pdf}" style="margin-bottom: 1.5rem;">
+                <label for="festivalId">Festival</label>
+                <select id="festivalId" name="festivalId" required>
+                    <option value="" disabled th:selected="${festivalSeleccionado == null}">
+                        Seleccioná un festival
+                    </option>
+                    <option th:each="festival : ${festivales}" th:value="${festival.idFestival}"
+                        th:text="${festival.nombre}" th:selected="${festivalSeleccionado != null
+                                and festival.idFestival == festivalSeleccionado.idFestival}">
+                        Festival
+                    </option>
+                </select>
+
+                <label for="limite">Cantidad de unidades a mostrar en reporte</label>
+                <input id="limite" name="limite" type="number" min="1" th:value="${limite}" required>
+
+                <button class="button" type="submit">Generar reporte en PDF</button>
+            </form>
+
+        </section>
+    </main>
+</body>
+
+</html>

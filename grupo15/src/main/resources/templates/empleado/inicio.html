@@ -42,6 +42,9 @@
     </div>
     <p th:if="${param.pedidoExitoso}" style="color: #7d3c98;">
         El pedido se registró correctamente.
+        <a th:if="${param.pedidoId}" th:href="@{/cajero/pedido/pdf/{id}(id=${param.pedidoId[0]})}">
+            Descargar comprobante PDF
+        </a>
     </p>
     <div class="card" th:if="${personal != null}" style="margin-bottom: 20px;">
         <h3>Mis Datos Personales</h3>
@@ -108,5 +111,11 @@
         </div>
     </section>
 </main>
+<script th:if="${param.pedidoId}" th:inline="javascript">
+    const comprobante = document.createElement('iframe');
+    comprobante.style.display = 'none';
+    comprobante.src = '/cajero/pedido/pdf/' + encodeURIComponent('[[${param.pedidoId[0]}]]');
+    document.body.appendChild(comprobante);
+</script>
 </body>
 </html>

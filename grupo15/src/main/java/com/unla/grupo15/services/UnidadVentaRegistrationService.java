@@ -1,6 +1,7 @@
 package com.unla.grupo15.services;
 
 import com.unla.grupo15.entities.FoodTruck;
+import com.unla.grupo15.entities.Festival;
 import com.unla.grupo15.entities.PuestoDesarmable;
 import com.unla.grupo15.entities.UnidadVenta;
 import com.unla.grupo15.entities.Usuario;
@@ -72,6 +73,7 @@ public class UnidadVentaRegistrationService {
         unidad.setSuperficie(registration.superficie());
         unidad.setCodigoUnico(registration.codigoUnico());
         unidad.setResponsableCargo(responsable);
+        unidad.setFestival(registration.festival());
         unidadVentaRepository.save(unidad);
 
         sendPassword(registration.email(), password);
@@ -117,6 +119,7 @@ public class UnidadVentaRegistrationService {
             String patente,
             boolean conexionElectrica,
             long cantidadCarpas,
-            long tiempoMontaje) {
+            long tiempoMontaje,
+            Festival festival) {
     }
 }

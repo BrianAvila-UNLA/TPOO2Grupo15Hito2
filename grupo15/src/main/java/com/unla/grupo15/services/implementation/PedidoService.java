@@ -52,7 +52,7 @@ public class PedidoService implements IPedidoService {
 
     @Override
     @Transactional
-    public void registrarPedido(Map<Long, Long> platosConCantidad, UnidadVenta unidadVenta) {
+    public Pedido registrarPedido(Map<Long, Long> platosConCantidad, UnidadVenta unidadVenta) {
         Pedido pedido = new Pedido(LocalDate.now(), unidadVenta);
 
         for (Map.Entry<Long, Long> entry : platosConCantidad.entrySet()) {
@@ -74,8 +74,9 @@ public class PedidoService implements IPedidoService {
         }
 
         if (!pedido.getDetalles().isEmpty()) {
-            pedidoRepository.save(pedido);
+            return pedidoRepository.save(pedido);
         }
+        throw new IllegalArgumentException("No se pudo registrar un pedido sin productos.");
     }
 
     @Override
