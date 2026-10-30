@@ -4,6 +4,7 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>Panel de Responsable | Epicentro Gourmet</title>
+        <link rel="icon" type="image/jpeg" th:href="@{/favicon.ico}">
         <link rel="stylesheet" th:href="@{/css/styles.css}">
     </head>
     <body>
@@ -14,17 +15,17 @@
                     <span>Epicentro Gourmet</span>
                 </a>
                 <nav class="main-nav" aria-label="Navegación principal">
-                        <span style="display:inline-flex; align-items:center; gap:10px;">
-                            <span th:text="${usuario.nombre}" style="font-weight: 500;">Nombre</span>
-                            <form th:action="@{/logout}" method="post" style="margin:0;">
-                                <button type="submit" class="button" style="padding: 4px 10px; font-size: 0.9rem;">Cerrar sesión</button>
+                        <span class="user-session">
+                            <span class="user-session-name" th:text="${usuario.nombre}">Nombre</span>
+                            <form th:action="@{/logout}" method="post">
+                                <button type="submit">Cerrar sesión</button>
                             </form>
                         </span>
                 </nav>
             </div>
         </header>
 
-        <main class="container content-section" style="background-color: #f8f9fa; padding: 2rem; border-radius: 8px; margin-top: 2rem;">
+        <main class="container content-section" style="background-color: #fbf8fc; padding: 2rem; border-radius: 8px; margin-top: 2rem;">
             <div class="section-heading">
                 <div>
                     <p class="eyebrow">Panel de Responsable</p>
@@ -32,17 +33,17 @@
                 </div>
             </div>
 
-            <div style="background: #fff; padding: 1.5rem; border-radius: 6px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); margin-bottom: 2rem; display: flex; justify-content: space-between; align-items: center;">
+            <div style="background: #fff; padding: 1.5rem; border-radius: 6px; box-shadow: 0 2px 4px rgba(91,42,134,0.08); margin-bottom: 2rem; display: flex; justify-content: space-between; align-items: center;">
                 <div>
-                    <h3 style="margin: 0; font-size: 1.1rem; color: #333;">Canon a pagar por la unidad</h3>
-                    <p style="margin: 0.3rem 0 0 0; font-size: 0.9rem; color: #666;">Calculado según la superficie y costos del festival</p>
+                    <h3 style="margin: 0; font-size: 1.1rem; color: #3f2852;">Canon a pagar por la unidad</h3>
+                    <p style="margin: 0.3rem 0 0 0; font-size: 0.9rem; color: #766f82;">Calculado según la superficie y costos del festival</p>
                 </div>
                 <div>
-                    <span style="font-size: 1.5rem; font-weight: bold; color: #2c3e50;"
+                    <span style="font-size: 1.5rem; font-weight: bold; color: #5b2a86;"
                           th:if="${canonDisponible}"
                           th:text="${'$' + #numbers.formatDecimal(canon, 1, 'DEFAULT', 2, 'DEFAULT')}">$0.00</span>
                     <span th:unless="${canonDisponible}"
-                          style="font-size: 0.95rem; color: #666;">
+                          style="font-size: 0.95rem; color: #766f82;">
                         Pendiente de asignar un festival
                     </span>
                 </div>
@@ -70,7 +71,7 @@
                 </article>
             </div>
 
-            <p th:if="${#lists.isEmpty(platos)}" style="color: #666; font-style: italic;">
+            <p th:if="${#lists.isEmpty(platos)}" style="color: #766f82; font-style: italic;">
                 Aún no hay platos registrados para esta unidad.
             </p>
         </main>

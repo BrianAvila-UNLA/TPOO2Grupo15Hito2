@@ -3,21 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <title>Epicentro Gourmet - Cierre de Caja</title>
+    <link rel="icon" type="image/jpeg" th:href="@{/favicon.ico}">
     <style>
-        body { font-family: Arial, sans-serif; background-color: #f4f6f9; margin: 0; padding: 20px; }
-        .container { max-width: 600px; margin: 0 auto; background: #fff; padding: 30px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
-        h2 { color: #d35400; margin-top: 0; }
-        .stats { background: #f8f9fa; padding: 15px; border-radius: 6px; margin: 20px 0; }
+        body { font-family: Arial, sans-serif; background-color: #fbf8fc; margin: 0; padding: 20px; }
+        .container { max-width: 600px; margin: 0 auto; background: #fff; padding: 30px; border-radius: 8px; box-shadow: 0 4px 10px rgba(91,42,134,0.12); }
+        h2 { color: #5b2a86; margin-top: 0; }
+        .stats { background: #f7eafa; padding: 15px; border-radius: 6px; margin: 20px 0; }
         .stats p { font-size: 18px; margin: 10px 0; color: #333; }
-        .btn-back { display: inline-block; background-color: #34495e; color: white; padding: 10px 20px; text-decoration: none; border-radius: 4px; font-weight: bold; }
-        .btn-back:hover { background-color: #2c3e50; }
+        .btn-back { display: inline-block; background-color: #5b2a86; color: white; padding: 10px 20px; text-decoration: none; border-radius: 4px; font-weight: bold; }
+        .btn-back:hover { background-color: #d94f91; }
     </style>
 </head>
 <body>
 
 <div class="container">
     <h2>Resumen de Cierre de Caja</h2>
-    <p th:if="${yaCerrada}" style="color: #c0392b;">
+    <p th:if="${yaCerrada}" style="color: #9c356f;">
         Esta caja ya fue cerrada para la fecha seleccionada. Se muestra el cierre registrado previamente.
     </p>
     <p>Unidad de Venta: <strong th:text="${cierreCaja.unidadVenta.nombreComercial}">Local</strong></p>

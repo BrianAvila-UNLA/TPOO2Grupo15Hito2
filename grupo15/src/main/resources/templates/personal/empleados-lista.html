@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Gestión de Empleados | Epicentro Gourmet</title>
+    <link rel="icon" type="image/jpeg" th:href="@{/favicon.ico}">
     <link rel="stylesheet" th:href="@{/css/styles.css}">
 </head>
 <body>
@@ -14,12 +15,12 @@
             <span>Epicentro Gourmet</span>
         </a>
         <nav class="main-nav" aria-label="Navegación principal">
-            <a th:href="@{/responsable}" class="button" style="padding: 4px 10px; font-size: 0.9rem; text-decoration: none; background-color: #6c757d; color: white;">Volver</a>
+            <a th:href="@{/responsable}" class="button" style="padding: 4px 10px; font-size: 0.9rem; text-decoration: none; background-color: #5b2a86; color: white;">Volver</a>
         </nav>
     </div>
 </header>
 
-<main class="container content-section" style="background-color: #f8f9fa; padding: 2rem; border-radius: 8px; margin-top: 2rem;">
+<main class="container content-section" style="background-color: #fbf8fc; padding: 2rem; border-radius: 8px; margin-top: 2rem;">
     <div class="section-heading">
         <div>
             <p class="eyebrow">Panel de Responsable</p>
@@ -39,7 +40,7 @@
             <div class="card-accent"></div>
             <div class="card-content">
                 <h4 th:text="${emp.nombre + ' ' + emp.apellido}">Nombre Empleado</h4>
-                <div style="margin-top: 0.8rem; font-size: 0.95rem; color: #555;">
+                <div style="margin-top: 0.8rem; font-size: 0.95rem; color: #5f5269;">
                     <span>Email: </span><strong th:text="${emp.email}">email@mail.com</strong><br>
                     <span>DNI: </span><strong th:text="${emp.dni}">00000000</strong><br>
                     <span>Rol: </span>
@@ -50,14 +51,14 @@
 
                     <a th:if="${emp.credenciales != null and emp.credenciales.activo}"
                        th:href="@{/responsable/empleados/baja/{id}(id=${emp.idPersonal})}"
-                       class="button" style="background-color: #dc3545; color: white; padding: 6px 12px; font-size: 0.85rem; text-decoration: none; display: inline-block;">
+                       class="button" style="background-color: #9c356f; color: white; padding: 6px 12px; font-size: 0.85rem; text-decoration: none; display: inline-block;">
                         Dar de Baja
                     </a>
 
 
                     <a th:unless="${emp.credenciales != null and emp.credenciales.activo}"
                        th:href="@{/responsable/empleados/activar/{id}(id=${emp.idPersonal})}"
-                       class="button" style="background-color: #28a745; color: white; padding: 6px 12px; font-size: 0.85rem; text-decoration: none; display: inline-block;">
+                       class="button" style="background-color: #d94f91; color: white; padding: 6px 12px; font-size: 0.85rem; text-decoration: none; display: inline-block;">
                         Activar
                     </a>
                 </div>
@@ -65,7 +66,7 @@
         </article>
     </div>
 
-    <p th:if="${#sets.isEmpty(empleados)}" style="color: #666; font-style: italic;">
+    <p th:if="${#sets.isEmpty(empleados)}" style="color: #766f82; font-style: italic;">
         No hay empleados registrados en esta unidad de venta.
     </p>
 </main>

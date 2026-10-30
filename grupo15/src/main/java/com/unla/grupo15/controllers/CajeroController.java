@@ -18,6 +18,7 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.security.Principal;
 import java.time.LocalDate;
+import java.time.ZonedDateTime;
 import java.time.ZoneId;
 import java.util.HashMap;
 import java.util.Map;
@@ -62,6 +63,8 @@ public class CajeroController {
 
         model.addAttribute("unidadVenta", cajero.getUnidadVenta());
         model.addAttribute("platos", platoRepository.findByUnidadVenta(cajero.getUnidadVenta()));
+        model.addAttribute("personal", cajero);
+        model.addAttribute("fechaHoraActual", ZonedDateTime.now(APPLICATION_ZONE));
         return "cajero/nuevo-pedido";
     }
 
