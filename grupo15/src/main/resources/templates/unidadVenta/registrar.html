@@ -83,7 +83,7 @@
             </div>
 
             <div id="puesto-fields" th:style="${registro.tipo == 'PUESTO' ? '' : 'display: none;'}">
-                <label for="cantidadCarpas">/nCantidad de carpas (Puesto desarmable)</label>
+                <label for="cantidadCarpas">Cantidad de carpas (Puesto desarmable)</label>
                 <input id="cantidadCarpas" type="number" min="1" th:field="*{cantidadCarpas}" disabled>
 
                 <label for="tiempoMontaje">Tiempo de montaje en minutos</label>
