@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Unidades de venta | Epicentro Gourmet</title>
+    <title>Inicio Administrador | Epicentro Gourmet</title>
     <link rel="icon" type="image/jpeg" th:href="@{/favicon.ico}">
     <link rel="stylesheet" th:href="@{/css/styles.css}">
 </head>
@@ -19,7 +19,8 @@
             <nav class="main-nav" aria-label="Navegación principal">
                 <a class="active" th:href="@{/unidades}">Unidades de venta</a>
                 <span class="user-session">
-                    <span class="user-session-name">Administrador</span>
+                    <span class="user-session-name"
+                        th:text="${usuario != null ? 'Hola: ' + usuario.nombre : 'Hola'}">Hola</span>
                     <form th:action="@{/logout}" method="post">
                         <button type="submit">Cerrar sesión</button>
                     </form>
@@ -111,8 +112,8 @@
                 </div>
             </div>
 
-            <form class="registration-form" method="get"
-                  th:action="@{/admin/reportes/mayores-canon/pdf}" style="margin-bottom: 1.5rem;">
+            <form class="registration-form" method="get" th:action="@{/admin/reportes/mayores-canon/pdf}"
+                style="margin-bottom: 1.5rem;">
                 <label for="festivalId">Festival</label>
                 <select id="festivalId" name="festivalId" required>
                     <option value="" disabled th:selected="${festivalSeleccionado == null}">

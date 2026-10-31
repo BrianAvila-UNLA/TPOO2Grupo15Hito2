@@ -164,6 +164,7 @@ public class CajeroController {
     @PostMapping("/cerrar-caja")
     public String verCierreCaja(Model model, Principal principal, HttpServletResponse response) {
         Cajero cajero = buscarCajero(principal.getName());
+        model.addAttribute("personal", cajero);
 
         if (cajero.getUnidadVenta() == null) {
             return "redirect:/empleado/inicio?error=sin-unidad";

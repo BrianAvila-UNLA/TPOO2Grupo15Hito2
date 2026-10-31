@@ -50,14 +50,20 @@ public class PlatoController {
 
         model.addAttribute("plato", plato);
         model.addAttribute("unidadVenta", unidadVenta);
+        model.addAttribute("usuario", usuario);
         return "plato/registrar-plato";
     }
 
     @PostMapping("/guardar")
     public String registrarPlato(@Valid @ModelAttribute("plato") Plato plato,
                                  BindingResult result,
-                                 Authentication authentication) {
+                                 Authentication authentication,
+                                 Model model) {
         if (result.hasErrors()) {
+            Usuario usuario = usuarioService.findByEmail(authentication.getName()).orElse(null);
+            if (usuario != null) {
+                model.addAttribute("usuario", usuario);
+            }
             return "plato/registrar-plato";
         }
 

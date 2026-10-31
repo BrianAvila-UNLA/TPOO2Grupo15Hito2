@@ -24,7 +24,7 @@
 
                 <span th:if="${usuario != null}" class="user-session">
                     <a th:href="@{/personal/liquidacion}" style="font-weight: 500;">Mi Liquidación</a>
-                    <span class="user-session-name" th:text="${usuario.nombre}">Nombre</span>
+                    <span class="user-session-name" th:text="${'Hola: ' + usuario.nombre}">Hola</span>
                     <form th:action="@{/logout}" method="post">
                         <button type="submit">Cerrar sesión</button>
                     </form>
@@ -37,10 +37,9 @@
         <section class="hero">
             <div class="container hero-content">
                 <div>
-                    <p class="eyebrow">Gestión gastronómica</p>
-                    <h1>Sabores que se encuentran.</h1>
+                    <h1>Los festivales más populares están aquí</h1>
                     <p class="hero-text">
-                        Organizá festivales, unidades de venta, platos, pedidos y equipos
+                        Organizá tus festivales, unidades de venta, platos, pedidos y equipos
                         desde un solo lugar.
                     </p>
                 </div>
@@ -50,7 +49,7 @@
             </div>
         </section>
 
-        <section class="container content-section">
+        <section class="container content-section home-festivals">
             <div class="section-heading">
                 <div>
                     <p class="eyebrow">Agenda</p>

@@ -106,7 +106,7 @@
   <div class="container">
     <div style="display: flex; justify-content: flex-end; margin-bottom: 20px;">
       <span class="user-session">
-        <span class="user-session-name" th:text="${personal.nombre + ' ' + personal.apellido}">Nombre Apellido</span>
+        <span class="user-session-name" th:text="${'Hola: ' + personal.nombre + ' ' + personal.apellido}">Hola</span>
         <form th:action="@{/logout}" method="post">
           <button type="submit">Cerrar sesión</button>
         </form>

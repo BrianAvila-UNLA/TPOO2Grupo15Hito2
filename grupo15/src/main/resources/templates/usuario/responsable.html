@@ -16,7 +16,7 @@
                 </a>
                 <nav class="main-nav" aria-label="Navegación principal">
                         <span class="user-session">
-                            <span class="user-session-name" th:text="${usuario.nombre}">Nombre</span>
+                            <span class="user-session-name" th:text="${'Hola: ' + usuario.nombre}">Hola</span>
                             <form th:action="@{/logout}" method="post">
                                 <button type="submit">Cerrar sesión</button>
                             </form>

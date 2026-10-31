@@ -16,6 +16,12 @@
         </a>
         <nav class="main-nav" aria-label="Navegación principal">
             <a th:href="@{/}">Inicio</a>
+            <span class="user-session">
+                <span class="user-session-name" th:text="${'Hola: ' + usuario.nombre}">Hola</span>
+                <form th:action="@{/logout}" method="post">
+                    <button type="submit">Cerrar sesión</button>
+                </form>
+            </span>
         </nav>
     </div>
 </header>

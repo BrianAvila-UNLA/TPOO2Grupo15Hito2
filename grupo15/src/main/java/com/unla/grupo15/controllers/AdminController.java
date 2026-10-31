@@ -2,16 +2,19 @@ package com.unla.grupo15.controllers;
 
 import com.unla.grupo15.entities.Festival;
 import com.unla.grupo15.entities.UnidadVenta;
+import com.unla.grupo15.entities.Usuario;
 import com.unla.grupo15.dto.ReporteMayoresCanonDTO;
 import com.unla.grupo15.services.IFestivalService;
 import com.unla.grupo15.services.IPedidoService;
 import com.unla.grupo15.services.IUnidadVentaService;
+import com.unla.grupo15.services.IUsuarioService;
 import com.lowagie.text.Document;
 import com.lowagie.text.Paragraph;
 import com.lowagie.text.pdf.PdfWriter;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -31,21 +34,25 @@ public class AdminController {
     private final IUnidadVentaService unidadVentaService;
     private final IPedidoService pedidoService;
     private final IFestivalService festivalService;
+    private final IUsuarioService usuarioService;
 
     public AdminController(
             IUnidadVentaService unidadVentaService,
             IPedidoService pedidoService,
-            IFestivalService festivalService) {
+            IFestivalService festivalService,
+            IUsuarioService usuarioService) {
         this.unidadVentaService = unidadVentaService;
         this.pedidoService = pedidoService;
         this.festivalService = festivalService;
+        this.usuarioService = usuarioService;
     }
 
     @GetMapping("/inicio")
     public String inicio(
             @RequestParam(required = false) Long festivalId,
             @RequestParam(defaultValue = "3") int limite,
-            Model model) {
+            Model model,
+            Authentication authentication) {
         List<Festival> festivales = festivalService.getAll();
         Festival festivalSeleccionado = seleccionarFestival(festivales, festivalId);
         int limiteSeguro = Math.max(1, limite);
@@ -66,6 +73,12 @@ public class AdminController {
         model.addAttribute("festivales", festivales);
         model.addAttribute("festivalSeleccionado", festivalSeleccionado);
         model.addAttribute("limite", limiteSeguro);
+        if (authentication != null && authentication.isAuthenticated()) {
+            Usuario usuario = usuarioService.findByEmail(authentication.getName()).orElse(null);
+            if (usuario != null) {
+                model.addAttribute("usuario", usuario);
+            }
+        }
         return "unidadVenta/index";
     }
 

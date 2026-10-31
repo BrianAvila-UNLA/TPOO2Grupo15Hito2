@@ -17,6 +17,7 @@
 <body>
 
 <div class="container">
+    <p th:if="${personal != null}" th:text="${'Hola: ' + personal.nombre + ' ' + personal.apellido}">Hola</p>
     <h2>Resumen de Cierre de Caja</h2>
     <p th:if="${yaCerrada}" style="color: #9c356f;">
         Esta caja ya fue cerrada para la fecha seleccionada. Se muestra el cierre registrado previamente.

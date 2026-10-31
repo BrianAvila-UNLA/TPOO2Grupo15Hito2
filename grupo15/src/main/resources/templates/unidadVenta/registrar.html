@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -7,115 +8,115 @@
     <link rel="icon" type="image/jpeg" th:href="@{/favicon.ico}">
     <link rel="stylesheet" th:href="@{/css/styles.css}">
 </head>
-<body>
-<header class="site-header">
-    <div class="container navigation">
-        <a class="brand" th:href="@{/}">
-            <span class="brand-mark">EG</span>
-            <span>Epicentro Gourmet</span>
-        </a>
-        <nav class="main-nav" aria-label="Navegación principal">
-            <a th:href="@{/}">Inicio</a>
-            <a class="active" th:href="@{/unidades/registrar}">Registrar una unidad de venta</a>
-            <a th:href="@{/usuarios/login}">Iniciar sesión</a>
-        </nav>
-    </div>
-</header>
 
-<main class="container form-page">
-    <p class="eyebrow">Registro</p>
-    <h1>Registrar una unidad de venta</h1>
-    <p class="form-intro">
-        Se creará un usuario responsable y se enviará una contraseña temporal al correo indicado.
-    </p>
+<body class="home-page">
+    <header class="site-header">
+        <div class="container navigation">
+            <a class="brand" th:href="@{/}">
+                <span class="brand-mark">EG</span>
+                <span>Epicentro Gourmet</span>
+            </a>
+            <nav class="main-nav" aria-label="Navegación principal">
+                <a th:href="@{/}">Inicio</a>
+                <a class="active" th:href="@{/unidades/registrar}">Registrar una unidad de venta</a>
+                <a th:href="@{/usuarios/login}">Iniciar sesión</a>
+            </nav>
+        </div>
+    </header>
 
-    <div class="success-message" th:if="${param.enviado}">
-        La unidad fue registrada. Revisá el correo indicado para obtener la contraseña del responsable.
-    </div>
-    <div class="error-message" th:if="${error}" th:text="${error}"></div>
+    <main class="container form-page">
+        <p class="eyebrow">Registro</p>
+        <h1>Registrar una unidad de venta</h1>
+        <p class="form-intro">
+            Se creará un usuario responsable y se enviará una contraseña temporal al correo indicado.
+        </p>
 
-    <form class="registration-form" th:action="@{/unidades/registrar}"
-          th:object="${registro}" method="post">
-        <div class="error-message" th:if="${#fields.hasGlobalErrors()}" th:errors="*{global}"></div>
-        <label for="tipo">Tipo de unidad</label>
-        <select id="tipo" th:field="*{tipo}" required>
-            <option value="FOODTRUCK">Food Truck</option>
-            <option value="PUESTO">Puesto desarmable</option>
-        </select>
+        <div class="success-message" th:if="${param.enviado}">
+            La unidad fue registrada. Revisá el correo indicado para obtener la contraseña del responsable.
+        </div>
+        <div class="error-message" th:if="${error}" th:text="${error}"></div>
 
-        <label for="nombreComercial">Nombre comercial</label>
-        <input id="nombreComercial" type="text" th:field="*{nombreComercial}" required>
-        <small class="error-message" th:if="${#fields.hasErrors('nombreComercial')}" th:errors="*{nombreComercial}"></small>
+        <form class="registration-form" th:action="@{/unidades/registrar}" th:object="${registro}" method="post">
+            <div class="error-message" th:if="${#fields.hasGlobalErrors()}" th:errors="*{global}"></div>
+            <label for="tipo">Tipo de unidad</label>
+            <select id="tipo" th:field="*{tipo}" required>
+                <option value="FOODTRUCK">Food Truck</option>
+                <option value="PUESTO">Puesto desarmable</option>
+            </select>
 
-        <label for="superficie">Superficie (m²)</label>
-        <input id="superficie" type="number" min="1" th:field="*{superficie}" required>
-        <small class="error-message" th:if="${#fields.hasErrors('superficie')}" th:errors="*{superficie}"></small>
+            <label for="nombreComercial">Nombre comercial</label>
+            <input id="nombreComercial" type="text" th:field="*{nombreComercial}" required>
+            <small class="error-message" th:if="${#fields.hasErrors('nombreComercial')}"
+                th:errors="*{nombreComercial}"></small>
 
-        <label for="codigoUnico">Código único</label>
-        <input id="codigoUnico" type="text" th:field="*{codigoUnico}" required>
-        <small class="error-message" th:if="${#fields.hasErrors('codigoUnico')}" th:errors="*{codigoUnico}"></small>
+            <label for="superficie">Superficie (m²)</label>
+            <input id="superficie" type="number" min="1" th:field="*{superficie}" required>
+            <small class="error-message" th:if="${#fields.hasErrors('superficie')}" th:errors="*{superficie}"></small>
 
-        <label for="festivalId">Festival al que desea unirse</label>
-        <select id="festivalId" th:field="*{festivalId}" required>
-            <option value="">Seleccioná un festival</option>
-            <option th:each="festival : ${festivales}"
-                    th:value="${festival.idFestival}"
+            <label for="codigoUnico">Código único</label>
+            <input id="codigoUnico" type="text" th:field="*{codigoUnico}" required>
+            <small class="error-message" th:if="${#fields.hasErrors('codigoUnico')}" th:errors="*{codigoUnico}"></small>
+
+            <label for="festivalId">Festival al que desea unirse</label>
+            <select id="festivalId" th:field="*{festivalId}" required>
+                <option value="">Seleccioná un festival</option>
+                <option th:each="festival : ${festivales}" th:value="${festival.idFestival}"
                     th:text="${festival.nombre}">
-                Festival
-            </option>
-        </select>
-        <small class="error-message" th:if="${#fields.hasErrors('festivalId')}"
-               th:errors="*{festivalId}"></small>
+                    Festival
+                </option>
+            </select>
+            <small class="error-message" th:if="${#fields.hasErrors('festivalId')}" th:errors="*{festivalId}"></small>
 
-        <label for="email">Correo del responsable</label>
-        <input id="email" type="email" th:field="*{email}" required>
-        <small class="error-message" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></small>
-        <small>La contraseña temporal se enviará a este correo.</small>
+            <label for="email">Correo del responsable</label>
+            <input id="email" type="email" th:field="*{email}" required>
+            <small class="error-message" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></small>
+            <small>La contraseña temporal se enviará a este correo.</small>
 
-        <div id="foodtruck-fields" th:style="${registro.tipo == 'FOODTRUCK' ? '' : 'display: none;'}">
-            <label for="patente">Patente (Food Truck)</label>
-            <input id="patente" type="text" th:field="*{patente}">
+            <div id="foodtruck-fields" th:style="${registro.tipo == 'FOODTRUCK' ? '' : 'display: none;'}">
+                <label for="patente">Patente (Food Truck)</label>
+                <input id="patente" type="text" th:field="*{patente}">
 
-            <label class="checkbox-label" for="conexionElectrica">
-                <input id="conexionElectrica" type="checkbox" th:field="*{conexionElectrica}">
-                Tiene conexión eléctrica
-            </label>
-        </div>
+                <label class="checkbox-label" for="conexionElectrica">
+                    <input id="conexionElectrica" type="checkbox" th:field="*{conexionElectrica}">
+                    Tiene conexión eléctrica
+                </label>
+            </div>
 
-        <div id="puesto-fields" th:style="${registro.tipo == 'PUESTO' ? '' : 'display: none;'}">
-            <label for="cantidadCarpas">Cantidad de carpas (Puesto desarmable)</label>
-            <input id="cantidadCarpas" type="number" min="1" th:field="*{cantidadCarpas}" disabled>
+            <div id="puesto-fields" th:style="${registro.tipo == 'PUESTO' ? '' : 'display: none;'}">
+                <label for="cantidadCarpas">/nCantidad de carpas (Puesto desarmable)</label>
+                <input id="cantidadCarpas" type="number" min="1" th:field="*{cantidadCarpas}" disabled>
 
-            <label for="tiempoMontaje">Tiempo de montaje en minutos</label>
-            <input id="tiempoMontaje" type="number" min="1" th:field="*{tiempoMontaje}" disabled>
-        </div>
+                <label for="tiempoMontaje">Tiempo de montaje en minutos</label>
+                <input id="tiempoMontaje" type="number" min="1" th:field="*{tiempoMontaje}" disabled>
+            </div>
 
-        <button class="button button-secondary" type="submit">Registrar unidad y enviar contraseña</button>
-    </form>
-</main>
-<script>
-    const tipo = document.getElementById('tipo');
-    const foodtruckFields = document.getElementById('foodtruck-fields');
-    const patente = document.getElementById('patente');
-    const conexionElectrica = document.getElementById('conexionElectrica');
-    const puestoFields = document.getElementById('puesto-fields');
-    const cantidadCarpas = document.getElementById('cantidadCarpas');
-    const tiempoMontaje = document.getElementById('tiempoMontaje');
+            <button class="button button-secondary" type="submit">Registrar unidad y enviar contraseña</button>
+        </form>
+    </main>
+    <script>
+        const tipo = document.getElementById('tipo');
+        const foodtruckFields = document.getElementById('foodtruck-fields');
+        const patente = document.getElementById('patente');
+        const conexionElectrica = document.getElementById('conexionElectrica');
+        const puestoFields = document.getElementById('puesto-fields');
+        const cantidadCarpas = document.getElementById('cantidadCarpas');
+        const tiempoMontaje = document.getElementById('tiempoMontaje');
 
-    function actualizarCamposPuesto() {
-        const esPuesto = tipo.value === 'PUESTO';
-        foodtruckFields.style.display = esPuesto ? 'none' : '';
-        patente.disabled = esPuesto;
-        conexionElectrica.disabled = esPuesto;
-        puestoFields.style.display = esPuesto ? '' : 'none';
-        cantidadCarpas.required = esPuesto;
-        tiempoMontaje.required = esPuesto;
-        cantidadCarpas.disabled = !esPuesto;
-        tiempoMontaje.disabled = !esPuesto;
-    }
+        function actualizarCamposPuesto() {
+            const esPuesto = tipo.value === 'PUESTO';
+            foodtruckFields.style.display = esPuesto ? 'none' : '';
+            patente.disabled = esPuesto;
+            conexionElectrica.disabled = esPuesto;
+            puestoFields.style.display = esPuesto ? '' : 'none';
+            cantidadCarpas.required = esPuesto;
+            tiempoMontaje.required = esPuesto;
+            cantidadCarpas.disabled = !esPuesto;
+            tiempoMontaje.disabled = !esPuesto;
+        }
 
-    tipo.addEventListener('change', actualizarCamposPuesto);
-    actualizarCamposPuesto();
-</script>
+        tipo.addEventListener('change', actualizarCamposPuesto);
+        actualizarCamposPuesto();
+    </script>
 </body>
+
 </html>

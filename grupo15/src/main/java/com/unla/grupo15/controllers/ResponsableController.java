@@ -82,9 +82,10 @@ public class ResponsableController {
     }
 
     @GetMapping("/empleados/cajero/nuevo")
-    public String formNuevoCajero(Model model) {
+    public String formNuevoCajero(Model model, Authentication authentication) {
         model.addAttribute("empleado", new Cajero());
         model.addAttribute("tipo", "cajero");
+        agregarUsuario(model, authentication);
         return "personal/empleado-form";
     }
 
@@ -107,6 +108,7 @@ public class ResponsableController {
 
         if (result.hasErrors()) {
             model.addAttribute("tipo", "cajero");
+            agregarUsuario(model, authentication);
             return "personal/empleado-form";
         }
 
@@ -118,6 +120,7 @@ public class ResponsableController {
             personalService.registrarEmpleado(empleado, unidadVenta);
         } catch (MailException exception) {
             model.addAttribute("tipo", "cajero");
+            agregarUsuario(model, authentication);
             model.addAttribute("error",
                     "No se pudo enviar el correo de credenciales. Verificá la configuración de correo e intentá nuevamente.");
             return "personal/empleado-form";
@@ -127,9 +130,10 @@ public class ResponsableController {
     }
 
     @GetMapping("/empleados/cocinero/nuevo")
-    public String formNuevoCocinero(Model model) {
+    public String formNuevoCocinero(Model model, Authentication authentication) {
         model.addAttribute("empleado", new Cocinero());
         model.addAttribute("tipo", "cocinero");
+        agregarUsuario(model, authentication);
         return "personal/empleado-form";
     }
 
@@ -152,6 +156,7 @@ public class ResponsableController {
 
         if (result.hasErrors()) {
             model.addAttribute("tipo", "cocinero");
+            agregarUsuario(model, authentication);
             return "personal/empleado-form";
         }
 
@@ -163,6 +168,7 @@ public class ResponsableController {
             personalService.registrarEmpleado(empleado, unidadVenta);
         } catch (MailException exception) {
             model.addAttribute("tipo", "cocinero");
+            agregarUsuario(model, authentication);
             model.addAttribute("error",
                     "No se pudo enviar el correo de credenciales. Verificá la configuración de correo e intentá nuevamente.");
             return "personal/empleado-form";
@@ -181,6 +187,13 @@ public class ResponsableController {
     public String activarEmpleado(@PathVariable Long id) {
         personalService.darDeAlta(id);
         return "redirect:/responsable/empleados";
+    }
+
+    private void agregarUsuario(Model model, Authentication authentication) {
+        if (authentication != null && authentication.isAuthenticated()) {
+            usuarioService.findByEmail(authentication.getName())
+                    .ifPresent(usuario -> model.addAttribute("usuario", usuario));
+        }
     }
 
 }

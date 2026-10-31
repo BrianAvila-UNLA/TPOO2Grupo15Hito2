@@ -18,7 +18,7 @@
       <a th:href="@{/empleado/inicio}">Mi Panel</a>
       <a class="active" th:href="@{/empleado/liquidacion}">Mi Liquidación</a>
       <span class="user-session" th:if="${personal != null}">
-        <span class="user-session-name" th:text="${personal.nombre + ' ' + personal.apellido}">Nombre Apellido</span>
+        <span class="user-session-name" th:text="${'Hola: ' + personal.nombre + ' ' + personal.apellido}">Hola</span>
         <form th:action="@{/logout}" method="post">
           <button type="submit">Cerrar sesión</button>
         </form>
