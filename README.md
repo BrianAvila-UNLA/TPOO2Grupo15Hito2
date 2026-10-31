@@ -66,3 +66,4 @@ http://localhost:8080/
 * https://github.com/BrianAvila-UNLA/TPOO2Grupo15Hito2/pull/10 (Brian Avila)
 * https://github.com/BrianAvila-UNLA/TPOO2Grupo15Hito2/pull/11 (Ignacio David Vega)
 * https://github.com/BrianAvila-UNLA/TPOO2Grupo15Hito2/pull/12 (Ignacio David Vega)
+* https://github.com/BrianAvila-UNLA/TPOO2Grupo15Hito2/pull/13 (Ignacio David Vega)
