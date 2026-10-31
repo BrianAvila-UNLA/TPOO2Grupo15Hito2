@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Menú actual | Epicentro Gourmet</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+<header class="encabezado-sitio">
+    <div class="contenedor navegacion">
+        <a class="marca" th:href="@{/responsable}">
+            <span class="marca-icono">EG</span><span>Epicentro Gourmet</span>
+        </a>
+        <nav class="navegacion-principal" aria-label="Navegación principal">
+            <a th:href="@{/responsable}" class="boton">Volver</a>
+            <span class="sesion-usuario">
+                <span class="nombre-sesion-usuario" th:text="${'Hola: ' + usuario.nombre}">Hola</span>
+                <form th:action="@{/logout}" method="post">
+                    <button type="submit">Cerrar sesión</button>
+                </form>
+            </span>
+        </nav>
+    </div>
+</header>
+<main class="contenedor seccion-contenido pagina-compacta" style="background-color: #fbf8fc; border-radius: 8px;">
+    <p class="subtitulo">Gestión de menú</p>
+    <h1 th:text="${unidadVenta.nombreComercial}">Unidad de venta</h1>
+    <div style="margin-bottom: 2rem;">
+        <a th:href="@{/platos/nuevo}" class="boton boton-principal">Registrar nuevo plato</a>
+    </div>
+    <div class="rejilla-festivales" th:if="${not #lists.isEmpty(platos)}">
+        <article class="tarjeta-festival" th:each="plato : ${platos}">
+            <div class="acento-tarjeta"></div>
+            <div class="contenido-tarjeta">
+                <h3 th:text="${plato.nombrePlato}">Nombre del plato</h3>
+                <p>Precio de venta: <strong th:text="${'$' + plato.precioVenta}">$0.00</strong></p>
+                <p>Costo de producción: <strong th:text="${'$' + plato.costoProduccion}">$0.00</strong></p>
+            </div>
+        </article>
+    </div>
+    <p th:if="${#lists.isEmpty(platos)}" class="introduccion-formulario">Aún no hay platos registrados para esta unidad.</p>
+</main>
+</body>
+</html>

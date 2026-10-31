@@ -79,7 +79,7 @@ public class AdminController {
                 model.addAttribute("usuario", usuario);
             }
         }
-        return "unidadVenta/index";
+        return "usuario/admin-inicio";
     }
 
     @GetMapping("/reportes/mayores-canon/pdf")

@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -30,6 +31,8 @@ public abstract class UnidadVenta {
 
     protected String codigoUnico;
 
+    protected LocalDate fechaCreacion;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_festival")
     protected Festival festival;
@@ -48,6 +51,13 @@ public abstract class UnidadVenta {
         this.responsableCargo = responsableCargo;
         this.superficie = superficie;
         this.codigoUnico = codigoUnico;
+    }
+
+    @PrePersist
+    protected void establecerFechaCreacion() {
+        if (fechaCreacion == null) {
+            fechaCreacion = LocalDate.now();
+        }
     }
 
     public abstract BigDecimal calcularCanon();

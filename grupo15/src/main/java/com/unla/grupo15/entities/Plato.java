@@ -33,6 +33,9 @@ public class Plato {
     @DecimalMin(value = "0.01", message = "El costo de producción debe ser mayor que cero")
     private BigDecimal costoProduccion;
 
+    @Column(nullable = false, columnDefinition = "BOOLEAN DEFAULT TRUE")
+    private boolean activo = true;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_unidad_venta")
     protected UnidadVenta unidadVenta;

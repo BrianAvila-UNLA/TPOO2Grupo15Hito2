@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -7,47 +8,51 @@
     <link rel="icon" type="image/jpeg" th:href="@{/favicon.ico}">
     <link rel="stylesheet" th:href="@{/css/styles.css}">
 </head>
-<body>
-<header class="site-header">
-    <div class="container navigation">
-        <a class="brand" th:href="@{/}">
-            <span class="brand-mark">EG</span>
-            <span>Epicentro Gourmet</span>
-        </a>
-        <nav class="main-nav" aria-label="Navegación principal">
-            <a th:href="@{/}">Inicio</a>
-            <span class="user-session">
-                <span class="user-session-name" th:text="${'Hola: ' + usuario.nombre}">Hola</span>
-                <form th:action="@{/logout}" method="post">
-                    <button type="submit">Cerrar sesión</button>
-                </form>
-            </span>
-        </nav>
-    </div>
-</header>
 
-<main class="container form-page">
-    <p class="eyebrow">Menú</p>
-    <h1>Registrar Nuevo Plato</h1>
-    <p class="form-intro">
-        Agregá un nuevo plato al menú de tu unidad de venta.
-    </p>
+<body class="pagina-principal">
+    <header class="encabezado-sitio">
+        <div class="contenedor navegacion">
+            <a class="marca" th:href="@{/}">
+                <span class="marca-icono">EG</span>
+                <span>Epicentro Gourmet</span>
+            </a>
+            <nav class="navegacion-principal" aria-label="Navegación principal">
+                <a th:href="@{/}">Inicio</a>
+                <a th:href="@{/responsable/menu}" class="boton">Volver</a>
+                <span class="sesion-usuario">
+                    <span class="nombre-sesion-usuario" th:text="${'Hola: ' + usuario.nombre}">Hola</span>
+                    <form th:action="@{/logout}" method="post">
+                        <button type="submit">Cerrar sesión</button>
+                    </form>
+                </span>
+            </nav>
+        </div>
+    </header>
 
-    <form class="registration-form" th:action="@{/platos/guardar}" th:object="${plato}" method="post">
-        <label for="nombrePlato">Nombre del plato</label>
-        <input id="nombrePlato" type="text" th:field="*{nombrePlato}" required>
-        <small class="error-message" th:if="${#fields.hasErrors('nombrePlato')}" th:errors="*{nombrePlato}"></small>
+    <main class="contenedor formulario-compacto">
+        <p class="subtitulo">Menú</p>
+        <h1>Registrar Nuevo Plato</h1>
+        <p class="introduccion-formulario">
+            Agregá un nuevo plato al menú de tu unidad de venta.
+        </p>
 
-        <label for="precioVenta">Precio de venta ($)</label>
-        <input id="precioVenta" type="number" step="0.01" min="0" th:field="*{precioVenta}" required>
-        <small class="error-message" th:if="${#fields.hasErrors('precioVenta')}" th:errors="*{precioVenta}"></small>
+        <form class="formulario-registro" th:action="@{/platos/guardar}" th:object="${plato}" method="post">
+            <label for="nombrePlato">Nombre del plato</label>
+            <input id="nombrePlato" type="text" th:field="*{nombrePlato}" required>
+            <small class="mensaje-error" th:if="${#fields.hasErrors('nombrePlato')}" th:errors="*{nombrePlato}"></small>
 
-        <label for="costoProduccion">Costo de producción ($)</label>
-        <input id="costoProduccion" type="number" step="0.01" min="0" th:field="*{costoProduccion}" required>
-        <small class="error-message" th:if="${#fields.hasErrors('costoProduccion')}" th:errors="*{costoProduccion}"></small>
+            <label for="precioVenta">Precio de venta ($)</label>
+            <input id="precioVenta" type="number" step="0.01" min="0" th:field="*{precioVenta}" required>
+            <small class="mensaje-error" th:if="${#fields.hasErrors('precioVenta')}" th:errors="*{precioVenta}"></small>
 
-        <button class="button button-secondary" type="submit">Guardar Plato</button>
-    </form>
-</main>
+            <label for="costoProduccion">Costo de producción ($)</label>
+            <input id="costoProduccion" type="number" step="0.01" min="0" th:field="*{costoProduccion}" required>
+            <small class="mensaje-error" th:if="${#fields.hasErrors('costoProduccion')}"
+                th:errors="*{costoProduccion}"></small>
+
+            <button class="boton boton-secundario" type="submit">Guardar Plato</button>
+        </form>
+    </main>
 </body>
+
 </html>

@@ -1,9 +1,11 @@
 package com.unla.grupo15.services.implementation;
 
 import com.unla.grupo15.entities.DetallePedido;
+import com.unla.grupo15.entities.Festival;
 import com.unla.grupo15.entities.Pedido;
 import com.unla.grupo15.entities.Plato;
 import com.unla.grupo15.entities.UnidadVenta;
+import com.unla.grupo15.dto.PlatoDTO;
 import com.unla.grupo15.repositories.IPedidoRepository;
 import com.unla.grupo15.repositories.IPlatoRepository; // Asegúrate de inyectar tu repositorio de platos
 import com.unla.grupo15.services.IPedidoService;
@@ -16,6 +18,8 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.time.LocalDate;
+import org.springframework.data.domain.PageRequest;
 
 @Service("pedidoService")
 @SuppressWarnings("unused")
@@ -86,6 +90,39 @@ public class PedidoService implements IPedidoService {
 
     @Override
     public BigDecimal sumarRecaudacionPorUnidad(UnidadVenta unidadVenta) {
-        return pedidoRepository.sumarRecaudacionPorUnidad(unidadVenta);
+        BigDecimal recaudacion = pedidoRepository.sumarRecaudacionPorUnidad(unidadVenta);
+        return recaudacion == null ? BigDecimal.ZERO : recaudacion;
+    }
+
+    @Override
+    public BigDecimal sumarRecaudacionPorFestival(Festival festival) {
+        BigDecimal recaudacion = pedidoRepository.sumarRecaudacionPorFestival(festival);
+        return recaudacion == null ? BigDecimal.ZERO : recaudacion;
+    }
+
+    @Override
+    public BigDecimal sumarCostoPlatosPorUnidad(UnidadVenta unidadVenta) {
+        BigDecimal costos = pedidoRepository.sumarCostoPlatosPorUnidad(unidadVenta);
+        return costos == null ? BigDecimal.ZERO : costos;
+    }
+
+    @Override
+    public BigDecimal sumarRecaudacionPorUnidadEntreFechas(UnidadVenta unidadVenta, LocalDate desde, LocalDate hasta) {
+        BigDecimal total = pedidoRepository.sumarRecaudacionPorUnidadEntreFechas(unidadVenta, desde, hasta);
+        return total == null ? BigDecimal.ZERO : total;
+    }
+
+    @Override
+    public BigDecimal sumarCostoPlatosPorUnidadEntreFechas(UnidadVenta unidadVenta, LocalDate desde, LocalDate hasta) {
+        BigDecimal total = pedidoRepository.sumarCostoPlatosPorUnidadEntreFechas(unidadVenta, desde, hasta);
+        return total == null ? BigDecimal.ZERO : total;
+    }
+
+    @Override
+    public Optional<PlatoDTO> platoEstrella(UnidadVenta unidadVenta, Festival festival) {
+        return pedidoRepository.buscarPlatosMasVendidos(unidadVenta, festival, PageRequest.of(0, 1))
+                .stream()
+                .findFirst()
+                .map(row -> new PlatoDTO((String) row[0], (BigDecimal) row[1], ((Number) row[2]).longValue()));
     }
 }

@@ -10,16 +10,15 @@
 </head>
 
 <body>
-    <header class="site-header">
-        <div class="container navigation">
-            <a class="brand" th:href="@{/}">
-                <span class="brand-mark">EG</span>
+    <header class="encabezado-sitio">
+        <div class="contenedor navegacion">
+            <a class="marca" th:href="@{/}">
+                <span class="marca-icono">EG</span>
                 <span>Epicentro Gourmet</span>
             </a>
-            <nav class="main-nav" aria-label="Navegación principal">
-                <a class="active" th:href="@{/unidades}">Unidades de venta</a>
-                <span class="user-session">
-                    <span class="user-session-name"
+            <nav class="navegacion-principal" aria-label="Navegación principal">
+                <span class="sesion-usuario">
+                    <span class="nombre-sesion-usuario"
                         th:text="${usuario != null ? 'Hola: ' + usuario.nombre : 'Hola'}">Hola</span>
                     <form th:action="@{/logout}" method="post">
                         <button type="submit">Cerrar sesión</button>
@@ -29,39 +28,40 @@
         </div>
     </header>
 
-    <main class="container content-section">
-        <div class="section-heading">
+    <main class="contenedor seccion-contenido">
+        <div class="encabezado-seccion">
             <div>
-                <p class="eyebrow">Festival</p>
+                <p class="subtitulo">Festival</p>
                 <h1>Unidades de venta</h1>
-                <p class="form-intro">Estas son las unidades de venta registradas en el festival.</p>
+                <p class="introduccion-formulario">Estas son las unidades de venta registradas en todos los festivales.
+                </p>
             </div>
         </div>
 
-        <div class="error-message" th:if="${param.error != null}">
+        <div class="mensaje-error" th:if="${param.error != null}">
             La cantidad solicitada supera las
             <strong th:text="${param.disponibles[0]}">0</strong>
             unidades disponibles en el festival seleccionado.
         </div>
 
-        <div class="festival-grid" th:if="${not #lists.isEmpty(unidades)}">
-            <article class="festival-card" th:each="unidad : ${unidades}">
-                <div class="card-accent"></div>
-                <div class="card-content">
-                    <span class="tag"
+        <div class="rejilla-festivales" th:if="${not #lists.isEmpty(unidades)}">
+            <article class="tarjeta-festival" th:each="unidad : ${unidades}">
+                <div class="acento-tarjeta"></div>
+                <div class="contenido-tarjeta">
+                    <span class="etiqueta"
                         th:text="${unidad.festival != null ? unidad.festival.nombre : 'Sin festival asignado'}">
                         Festival
                     </span>
                     <h2 th:text="${unidad.nombreComercial}">Nombre comercial</h2>
-                    <div class="date-row">
+                    <div class="fila-fecha">
                         <span>Código</span>
                         <strong th:text="${unidad.codigoUnico}">Código</strong>
                     </div>
-                    <div class="date-row">
+                    <div class="fila-fecha">
                         <span>Superficie</span>
                         <strong th:text="${unidad.superficie + ' m²'}">0 m²</strong>
                     </div>
-                    <div class="date-row">
+                    <div class="fila-fecha">
                         <span>Responsable</span>
                         <strong
                             th:text="${unidad.responsableCargo != null ? unidad.responsableCargo.nombre : 'Sin asignar'}">
@@ -72,21 +72,21 @@
             </article>
         </div>
 
-        <p th:if="${#lists.isEmpty(unidades)}" class="form-intro">
+        <p th:if="${#lists.isEmpty(unidades)}" class="introduccion-formulario">
             Todavía no hay unidades de venta registradas.
         </p>
 
         <section style="margin-top: 3rem;">
-            <div class="section-heading">
+            <div class="encabezado-seccion">
                 <div>
-                    <p class="eyebrow">Rendimiento del Festival</p>
+                    <p class="subtitulo">Rendimiento del Festival</p>
                     <h2>Ranking por recaudación</h2>
                 </div>
             </div>
 
-            <div class="festival-card" th:if="${not #lists.isEmpty(rankingUnidades)}">
-                <div class="card-content">
-                    <div class="date-row" th:each="item, posicion : ${rankingUnidades}">
+            <div class="tarjeta-festival" th:if="${not #lists.isEmpty(rankingUnidades)}">
+                <div class="contenido-tarjeta">
+                    <div class="fila-fecha" th:each="item, posicion : ${rankingUnidades}">
                         <span>
                             <strong th:text="${posicion.count + '. ' + item.unidad.nombreComercial}">
                                 1. Unidad de venta
@@ -99,20 +99,20 @@
                 </div>
             </div>
 
-            <p th:if="${#lists.isEmpty(rankingUnidades)}" class="form-intro">
+            <p th:if="${#lists.isEmpty(rankingUnidades)}" class="introduccion-formulario">
                 Aún no hay datos de recaudación disponibles.
             </p>
         </section>
 
         <section style="margin-top: 3rem;">
-            <div class="section-heading">
+            <div class="encabezado-seccion">
                 <div>
-                    <p class="eyebrow">Reporte</p>
+                    <p class="subtitulo">Reporte</p>
                     <h2>Unidades con mayor canon</h2>
                 </div>
             </div>
 
-            <form class="registration-form" method="get" th:action="@{/admin/reportes/mayores-canon/pdf}"
+            <form class="formulario-registro" method="get" th:action="@{/admin/reportes/mayores-canon/pdf}"
                 style="margin-bottom: 1.5rem;">
                 <label for="festivalId">Festival</label>
                 <select id="festivalId" name="festivalId" required>
@@ -129,7 +129,7 @@
                 <label for="limite">Cantidad de unidades a mostrar en reporte</label>
                 <input id="limite" name="limite" type="number" min="1" th:value="${limite}" required>
 
-                <button class="button" type="submit">Generar reporte en PDF</button>
+                <button class="boton" type="submit">Generar reporte en PDF</button>
             </form>
 
         </section>

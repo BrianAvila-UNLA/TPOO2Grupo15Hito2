@@ -3,21 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Registrar Empleado | Epicentro Gourmet</title>
+    <title th:text="${modoEdicion} ? 'Modificar Empleado | Epicentro Gourmet' : 'Registrar Empleado | Epicentro Gourmet'">Registrar Empleado | Epicentro Gourmet</title>
     <link rel="icon" type="image/jpeg" th:href="@{/favicon.ico}">
     <link rel="stylesheet" th:href="@{/css/styles.css}">
 </head>
 <body>
-<header class="site-header">
-    <div class="container navigation">
-        <a class="brand" th:href="@{/responsable}">
-            <span class="brand-mark">EG</span>
+<header class="encabezado-sitio">
+    <div class="contenedor navegacion">
+        <a class="marca" th:href="@{/responsable}">
+            <span class="marca-icono">EG</span>
             <span>Epicentro Gourmet</span>
         </a>
-        <nav class="main-nav" aria-label="Navegación principal">
-            <a th:href="@{/responsable/empleados}" class="button" style="padding: 4px 10px; font-size: 0.9rem; text-decoration: none; background-color: #5b2a86; color: white;">Volver</a>
-            <span class="user-session">
-                <span class="user-session-name" th:text="${'Hola: ' + usuario.nombre}">Hola</span>
+        <nav class="navegacion-principal" aria-label="Navegación principal">
+            <a th:href="@{/responsable/empleados}" class="boton" style="padding: 4px 10px; font-size: 0.9rem; text-decoration: none; background-color: #5b2a86; color: white;">Volver</a>
+            <span class="sesion-usuario">
+                <span class="nombre-sesion-usuario" th:text="${'Hola: ' + usuario.nombre}">Hola</span>
                 <form th:action="@{/logout}" method="post">
                     <button type="submit">Cerrar sesión</button>
                 </form>
@@ -26,16 +26,22 @@
     </div>
 </header>
 
-<main class="container form-page">
-    <p class="eyebrow">Personal</p>
-    <h1 th:text="${tipo == 'cajero' ? 'Registrar Nuevo Cajero' : 'Registrar Nuevo Cocinero'}">Registrar Empleado</h1>
-    <p class="form-intro">
+<main class="contenedor pagina-formulario">
+    <p class="subtitulo">Personal</p>
+    <h1 th:if="${tipo == 'cajero' and modoEdicion}">Modificar Cajero</h1>
+    <h1 th:if="${tipo == 'cocinero' and modoEdicion}">Modificar Cocinero</h1>
+    <h1 th:if="${tipo == 'cajero' and !modoEdicion}">Registrar Nuevo Cajero</h1>
+    <h1 th:if="${tipo == 'cocinero' and !modoEdicion}">Registrar Nuevo Cocinero</h1>
+    <p class="introduccion-formulario" th:if="${!modoEdicion}">
         Ingresá los datos del empleado. Se le generará una contraseña automática y se le enviará por correo electrónico.
     </p>
-    <div class="error-message" th:if="${error}" th:text="${error}"></div>
+    <p class="introduccion-formulario" th:if="${modoEdicion}">
+        Modificá los datos del empleado. La contraseña actual no se modifica.
+    </p>
+    <div class="mensaje-error" th:if="${error}" th:text="${error}"></div>
 
-    <form class="registration-form"
-          th:action="${tipo == 'cajero' ? '/responsable/empleados/cajero/guardar' : '/responsable/empleados/cocinero/guardar'}"
+    <form class="formulario-registro"
+          th:action="${modoEdicion ? '/responsable/empleados/' + empleado.idPersonal + '/editar/' + tipo : (tipo == 'cajero' ? '/responsable/empleados/cajero/guardar' : '/responsable/empleados/cocinero/guardar')}"
           th:object="${empleado}" method="post">
 
         <label for="nombre">Nombre</label>
@@ -52,6 +58,7 @@
 
         <label for="email">Correo electrónico (Usuario)</label>
         <input id="email" type="email" th:field="*{email}" required>
+        <small class="text-danger" th:if="${#fields.hasErrors('email')}" th:errors="*{email}" style="color: #9c356f; font-size: 0.85rem;"></small>
 
         <label for="fechaNacimiento">Fecha de Nacimiento</label>
         <input id="fechaNacimiento" type="date" th:field="*{fechaNacimiento}"
@@ -84,7 +91,8 @@
             </select>
         </div>
 
-        <button class="button button-primary" type="submit" style="margin-top: 1.5rem;">Guardar y Enviar Credenciales</button>
+        <button class="boton boton-principal" type="submit" style="margin-top: 1.5rem;"
+                th:text="${modoEdicion} ? 'Guardar cambios' : 'Guardar y Enviar Credenciales'">Guardar</button>
     </form>
 </main>
 </body>

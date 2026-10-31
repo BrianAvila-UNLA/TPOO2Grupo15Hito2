@@ -2,6 +2,7 @@ package com.unla.grupo15.services.implementation;
 
 import com.unla.grupo15.entities.AsignacionPersonal;
 import com.unla.grupo15.entities.Personal;
+import com.unla.grupo15.entities.Festival;
 import com.unla.grupo15.entities.RolUsuario;
 import com.unla.grupo15.entities.UnidadVenta;
 import com.unla.grupo15.entities.Usuario;
@@ -22,6 +23,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.math.BigDecimal;
 
 @Service
 public class PersonalService implements IPersonalService {
@@ -32,6 +34,7 @@ public class PersonalService implements IPersonalService {
     private final IUsuarioRepository usuarioRepository;
     private final JavaMailSender mailSender;
     private final PasswordEncoder passwordEncoder;
+    private final LiquidacionService liquidacionService;
     private final String senderEmail;
 
     public PersonalService(IPersonalRepository personalRepository, 
@@ -40,6 +43,7 @@ public class PersonalService implements IPersonalService {
                            IUsuarioRepository usuarioRepository, 
                            JavaMailSender mailSender, 
                            PasswordEncoder passwordEncoder,
+                           LiquidacionService liquidacionService,
                            @Value("${spring.mail.username}") String senderEmail) {
         this.personalRepository = personalRepository;
         this.cocineroRepository = cocineroRepository;
@@ -47,6 +51,7 @@ public class PersonalService implements IPersonalService {
         this.usuarioRepository = usuarioRepository;
         this.mailSender = mailSender;
         this.passwordEncoder = passwordEncoder;
+        this.liquidacionService = liquidacionService;
         this.senderEmail = senderEmail;
     }
 
@@ -122,6 +127,32 @@ public class PersonalService implements IPersonalService {
         return personalRepository.existsByDni(dni);
     }
 
+    @Override
+    public boolean existsByDniExcluding(int dni, long idPersonal) {
+        return personalRepository.existsByDniAndIdPersonalNot(dni, idPersonal);
+    }
+
+    @Override
+    public boolean existsByEmail(String email) {
+        return personalRepository.existsByEmail(email);
+    }
+
+    @Override
+    public boolean existsByEmailExcluding(String email, long idPersonal) {
+        return personalRepository.existsByEmailAndIdPersonalNot(email, idPersonal);
+    }
+
+    @Override
+    @Transactional
+    public Personal actualizarEmpleado(Personal empleado) {
+        if (empleado.getCredenciales() != null) {
+            empleado.getCredenciales().setEmail(empleado.getEmail());
+            empleado.getCredenciales().setNombre(nombreUsuario(empleado));
+            usuarioRepository.save(empleado.getCredenciales());
+        }
+        return insertOrUpdate(empleado);
+    }
+
     @Transactional
     public List<AsignacionPersonal> obtenerHistorialAsignaciones(Personal personal) {
         List<AsignacionPersonal> historial = asignacionRepository.findByPersonalOrderByFechaInicioDesc(personal);
@@ -164,7 +195,35 @@ public class PersonalService implements IPersonalService {
         if (personalOpt.isPresent()) {
             return cocineroRepository.findById(personalOpt.get().getIdPersonal()).isPresent();
         }
+
         return false;
+    }
+
+    @Override
+    public BigDecimal calcularSueldos(UnidadVenta unidadVenta, Festival festival) {
+        BigDecimal total = BigDecimal.ZERO;
+        for (Personal personal : unidadVenta.getPersonal()) {
+            if (!personal.isEliminado() && personal.getCredenciales() != null
+                    && personal.getCredenciales().isActivo()) {
+                total = total.add(liquidacionService.calcularSueldo(personal, festival));
+            }
+        }
+        return total;
+    }
+
+    @Override
+    public BigDecimal calcularSueldos(UnidadVenta unidadVenta, Festival festival,
+                                      LocalDate desde, LocalDate hasta) {
+        Festival periodo = new Festival(festival.getNombre(), festival.getTemporada(),
+                desde, hasta, festival.getCosto());
+        BigDecimal total = BigDecimal.ZERO;
+        for (Personal personal : unidadVenta.getPersonal()) {
+            if (!personal.isEliminado() && personal.getCredenciales() != null
+                    && personal.getCredenciales().isActivo()) {
+                total = total.add(liquidacionService.calcularSueldo(personal, periodo));
+            }
+        }
+        return total;
     }
 
     private void cerrarAsignacion(AsignacionPersonal asignacion) {
@@ -181,13 +240,14 @@ public class PersonalService implements IPersonalService {
     }
 
     @Override
-    @Transactional
+    @Transactional(noRollbackFor = MailException.class)
     public void registrarEmpleado(Personal empleado, UnidadVenta unidadVenta) {
         String passwordAleatoria = UUID.randomUUID().toString().substring(0, 8);
 
         Usuario credenciales = new Usuario();
+
         credenciales.setEmail(empleado.getEmail());
-        credenciales.setNombre(empleado.getEmail());
+        credenciales.setNombre(nombreUsuario(empleado));
         credenciales.setContrasenia(passwordEncoder.encode(passwordAleatoria));
         credenciales.setRol(RolUsuario.EMPLEADO);
         credenciales.setActivo(true);
@@ -196,6 +256,7 @@ public class PersonalService implements IPersonalService {
 
         empleado.setCredenciales(credenciales);
         empleado.setUnidadVenta(unidadVenta);
+        empleado.setEliminado(false);
 
         personalRepository.save(empleado);
 
@@ -212,10 +273,15 @@ public class PersonalService implements IPersonalService {
         mailSender.send(mensaje);
     }
 
+    private String nombreUsuario(Personal empleado) {
+        return empleado.getNombre();
+    }
+
     @Override
     public void bajaLogica(Long id) {
         Personal personal = personalRepository.findById(id).orElse(null);
         if (personal != null) {
+            personal.setEliminado(true);
             if (personal.getCredenciales() != null) {
                 personal.getCredenciales().setActivo(false);
                 usuarioRepository.save(personal.getCredenciales());
@@ -225,9 +291,18 @@ public class PersonalService implements IPersonalService {
     }
 
     @Override
+    public void inactivar(Long id) {
+        Personal personal = personalRepository.findById(id).orElse(null);
+        if (personal != null && personal.getCredenciales() != null) {
+            personal.getCredenciales().setActivo(false);
+            usuarioRepository.save(personal.getCredenciales());
+        }
+    }
+
+    @Override
     public void darDeAlta(Long id) {
         Personal personal = personalRepository.findById(id).orElse(null);
-        if (personal != null) {
+        if (personal != null && !personal.isEliminado()) {
             if (personal.getCredenciales() != null) {
                 personal.getCredenciales().setActivo(true);
                 usuarioRepository.save(personal.getCredenciales());

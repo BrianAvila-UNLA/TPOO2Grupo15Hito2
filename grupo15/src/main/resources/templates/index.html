@@ -9,22 +9,22 @@
     <link rel="stylesheet" th:href="@{/css/styles.css}">
 </head>
 
-<body>
-    <header class="site-header">
-        <div class="container navigation">
-            <a class="brand" th:href="@{/}">
-                <span class="brand-mark">EG</span>
+<body class="pagina-inicio">
+    <header class="encabezado-sitio">
+        <div class="contenedor navegacion">
+            <a class="marca" th:href="@{/}">
+                <span class="marca-icono">EG</span>
                 <span>Epicentro Gourmet</span>
             </a>
-            <nav class="main-nav" aria-label="Navegación principal">
+            <nav class="navegacion-principal" aria-label="Navegación principal">
                 <a class="active" th:href="@{/}">Inicio</a>
                 <a th:href="@{/unidades/registrar}">Registrar una unidad de venta</a>
 
                 <a th:if="${usuario == null}" th:href="@{/usuarios/login}">Iniciar sesión</a>
 
-                <span th:if="${usuario != null}" class="user-session">
+                <span th:if="${usuario != null}" class="sesion-usuario">
                     <a th:href="@{/personal/liquidacion}" style="font-weight: 500;">Mi Liquidación</a>
-                    <span class="user-session-name" th:text="${'Hola: ' + usuario.nombre}">Hola</span>
+                    <span class="nombre-sesion-usuario" th:text="${'Hola: ' + usuario.nombre}">Hola</span>
                     <form th:action="@{/logout}" method="post">
                         <button type="submit">Cerrar sesión</button>
                     </form>
@@ -34,40 +34,40 @@
     </header>
 
     <main>
-        <section class="hero">
-            <div class="container hero-content">
+        <section class="portada">
+            <div class="contenedor contenido-portada">
                 <div>
                     <h1>Los festivales más populares están aquí</h1>
-                    <p class="hero-text">
+                    <p class="texto-portada">
                         Organizá tus festivales, unidades de venta, platos, pedidos y equipos
                         desde un solo lugar.
                     </p>
                 </div>
-                <div class="hero-media">
+                <div class="medio-portada">
                     <img th:src="@{/images/Meal_Home.jpg}" alt="Plato gourmet servido en un jardín">
                 </div>
             </div>
         </section>
 
-        <section class="container content-section home-festivals">
-            <div class="section-heading">
+        <section class="contenedor seccion-contenido festivales-inicio">
+            <div class="encabezado-seccion">
                 <div>
-                    <p class="eyebrow">Agenda</p>
+                    <p class="subtitulo">Agenda</p>
                     <h2>Próximos festivales</h2>
                 </div>
             </div>
 
-            <div class="festival-grid" th:if="${not #lists.isEmpty(festivales)}">
-                <article class="festival-card" th:each="festival : ${festivales}">
-                    <div class="card-accent"></div>
-                    <div class="card-content">
-                        <span class="tag" th:text="${festival.temporada}">Temporada</span>
+            <div class="rejilla-festivales" th:if="${not #lists.isEmpty(festivales)}">
+                <article class="tarjeta-festival" th:each="festival : ${festivales}">
+                    <div class="acento-tarjeta"></div>
+                    <div class="contenido-tarjeta">
+                        <span class="etiqueta" th:text="${festival.temporada}">Temporada</span>
                         <h3 th:text="${festival.nombre}">Nombre del festival</h3>
-                        <div class="date-row">
+                        <div class="fila-fecha">
                             <span>Desde</span>
                             <strong th:text="${festival.fechaInicio}">Fecha de inicio</strong>
                         </div>
-                        <div class="date-row">
+                        <div class="fila-fecha">
                             <span>Hasta</span>
                             <strong th:text="${festival.fechaFin}">Fecha de fin</strong>
                         </div>
@@ -77,10 +77,10 @@
         </section>
     </main>
 
-    <footer class="site-footer">
-        <div class="container">
+    <footer class="pie-sitio">
+        <div class="contenedor">
             <span>Epicentro Gourmet. 2026™ Todos los derechos reservados</span>
-            <span>Gestión de festivales gastronómicos</span>
+            <span>Gestión de festivales gastronómicos. Version 3.0.0</span>
         </div>
     </footer>
 </body>

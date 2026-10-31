@@ -33,7 +33,7 @@ public class UnidadVentaController {
     @GetMapping("")
     public String index(Model model) {
         model.addAttribute("unidades", unidadVentaService.getAll());
-        return "unidadVenta/index";
+        return "usuario/admin-inicio";
     }
 
     @GetMapping("/registrar")
@@ -71,6 +71,7 @@ public class UnidadVentaController {
             registrationService.register(new UnidadVentaRegistrationService.UnitRegistration(
                     form.tipo,
                     form.nombreComercial,
+                    form.nombreResponsable,
                     form.superficie,
                     form.codigoUnico,
                     form.email,
@@ -117,6 +118,8 @@ public class UnidadVentaController {
         private String tipo = "FOODTRUCK";
         @jakarta.validation.constraints.NotBlank(message = "El nombre comercial es obligatorio")
         private String nombreComercial;
+        @jakarta.validation.constraints.NotBlank(message = "El nombre del responsable es obligatorio")
+        private String nombreResponsable;
         @jakarta.validation.constraints.Min(value = 1, message = "La superficie debe ser mayor que cero")
         private long superficie;
         @jakarta.validation.constraints.NotBlank(message = "El código único es obligatorio")
@@ -135,6 +138,8 @@ public class UnidadVentaController {
         public void setTipo(String tipo) { this.tipo = tipo; }
         public String getNombreComercial() { return nombreComercial; }
         public void setNombreComercial(String nombreComercial) { this.nombreComercial = nombreComercial; }
+        public String getNombreResponsable() { return nombreResponsable; }
+        public void setNombreResponsable(String nombreResponsable) { this.nombreResponsable = nombreResponsable; }
         public long getSuperficie() { return superficie; }
         public void setSuperficie(long superficie) { this.superficie = superficie; }
         public String getCodigoUnico() { return codigoUnico; }

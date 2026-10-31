@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Reportes | Epicentro Gourmet</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+<header class="encabezado-sitio">
+    <div class="contenedor navegacion">
+        <a class="marca" th:href="@{/responsable}">
+            <span class="marca-icono">EG</span><span>Epicentro Gourmet</span>
+        </a>
+        <nav class="navegacion-principal" aria-label="Navegación principal">
+            <a th:href="@{/responsable}" class="boton">Volver</a>
+            <span class="sesion-usuario">
+                <span class="nombre-sesion-usuario" th:text="${'Hola: ' + usuario.nombre}">Hola</span>
+                <form th:action="@{/logout}" method="post">
+                    <button type="submit">Cerrar sesión</button>
+                </form>
+            </span>
+        </nav>
+    </div>
+</header>
+<main class="contenedor seccion-contenido" style="background-color: #fbf8fc; padding: 2rem; border-radius: 8px; margin-top: 2rem;">
+    <p class="subtitulo">Reportes del responsable</p>
+    <h1 th:text="${unidadVenta.nombreComercial}">Unidad de venta</h1>
+    <div class="mensaje-error" th:if="${errorRentabilidad}" th:text="${errorRentabilidad}"></div>
+
+    <section style="background: #fff; padding: 1.5rem; border-radius: 6px; margin-bottom: 2rem;">
+        <h2>Rentabilidad neta entre fechas</h2>
+        <form th:action="@{/responsable/reportes/rentabilidad}" method="get">
+            <label>Desde <input type="date" name="fechaDesde" th:value="${fechaDesde}" th:min="${fechaMinima}" required></label>
+            <label>Hasta <input type="date" name="fechaHasta" th:value="${fechaHasta}" required></label>
+            <button class="boton boton-principal" type="submit">Calcular</button>
+        </form>
+        <div th:if="${reporteRentabilidad != null}">
+            <p>Pedidos totales: <strong th:text="${'$' + #numbers.formatDecimal(reporteRentabilidad.ventasTotales, 1, 'DEFAULT', 2, 'DEFAULT')}">$0.00</strong></p>
+            <p>Costos de platos: <strong th:text="${'$' + #numbers.formatDecimal(reporteRentabilidad.costosPlatos, 1, 'DEFAULT', 2, 'DEFAULT')}">$0.00</strong></p>
+            <p>Sueldos: <strong th:text="${'$' + #numbers.formatDecimal(reporteRentabilidad.sueldos, 1, 'DEFAULT', 2, 'DEFAULT')}">$0.00</strong></p>
+            <p>Canon: <strong th:text="${'$' + #numbers.formatDecimal(reporteRentabilidad.canon, 1, 'DEFAULT', 2, 'DEFAULT')}">$0.00</strong></p>
+            <h3 th:text="${'Rentabilidad neta: $' + #numbers.formatDecimal(reporteRentabilidad.rentabilidadNeta, 1, 'DEFAULT', 2, 'DEFAULT')}">Rentabilidad neta</h3>
+        </div>
+    </section>
+
+</main>
+</body>
+</html>
+

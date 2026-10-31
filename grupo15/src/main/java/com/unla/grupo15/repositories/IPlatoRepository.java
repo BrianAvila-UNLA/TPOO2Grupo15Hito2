@@ -18,4 +18,6 @@ public interface IPlatoRepository extends JpaRepository<Plato, Long> {
 
     public abstract List<Plato> findByUnidadVenta(UnidadVenta unidadVenta);
 
+    List<Plato> findByUnidadVentaAndActivoTrue(UnidadVenta unidadVenta);
+
 }

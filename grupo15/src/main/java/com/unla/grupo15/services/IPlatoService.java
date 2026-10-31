@@ -18,4 +18,8 @@ public interface IPlatoService {
 
     public List<Plato> findByUnidadVenta(UnidadVenta unidadVenta);
 
+    void inactivar(long id);
+
+    void activar(long id);
+
 }

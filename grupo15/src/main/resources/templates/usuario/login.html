@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -7,41 +8,42 @@
     <link rel="icon" type="image/jpeg" th:href="@{/favicon.ico}">
     <link rel="stylesheet" th:href="@{/css/styles.css}">
 </head>
-<body class="home-page login-page">
-<header class="site-header">
-    <div class="container navigation">
-        <a class="brand" th:href="@{/}">
-            <span class="brand-mark">EG</span>
-            <span>Epicentro Gourmet</span>
-        </a>
-        <nav class="main-nav" aria-label="Navegación principal">
-            <a th:href="@{/}">Inicio</a>
-            <a th:href="@{/unidades/registrar}">Registrar una unidad de venta</a>
-        </nav>
-    </div>
-</header>
 
-<main class="container form-page">
-    <p class="eyebrow">Acceso</p>
-    <h1>Iniciar sesión</h1>
-    <p class="form-intro">Usá el correo registrado y la contraseña recibida por email.</p>
+<body class="pagina-principal pagina-login">
+    <header class="encabezado-sitio">
+        <div class="contenedor navegacion">
+            <a class="marca" th:href="@{/}">
+                <span class="marca-icono">EG</span>
+                <span>Epicentro Gourmet</span>
+            </a>
+            <nav class="navegacion-principal" aria-label="Navegación principal">
+                <a th:href="@{/}">Volver al inicio</a>
+            </nav>
+        </div>
+    </header>
 
-    <div class="error-message" th:if="${param.error}">
-        El correo o la contraseña son incorrectos.
-    </div>
-    <div class="success-message" th:if="${param.logout}">
-        Cerraste la sesión correctamente.
-    </div>
+    <main class="contenedor pagina-formulario">
+        <p class="subtitulo">Acceso</p>
+        <h1>Iniciar sesión</h1>
+        <p class="introduccion-formulario">Usá el correo registrado y la contraseña recibida por email.</p>
 
-    <form class="registration-form" th:action="@{/login}" method="post">
-        <label for="email">Correo electrónico</label>
-        <input id="email" name="email" type="email" autocomplete="email" required>
+        <div class="mensaje-error" th:if="${param.error}">
+            El correo o la contraseña son incorrectos.
+        </div>
+        <div class="mensaje-exito" th:if="${param.logout}">
+            Cerraste la sesión correctamente.
+        </div>
 
-        <label for="contrasenia">Contraseña</label>
-        <input id="contrasenia" name="contrasenia" type="password" autocomplete="current-password" required>
+        <form class="formulario-registro" th:action="@{/login}" method="post">
+            <label for="email">Correo electrónico</label>
+            <input id="email" name="email" type="email" autocomplete="email" required>
 
-        <button class="button button-secondary" type="submit">Ingresar</button>
-    </form>
-</main>
+            <label for="contrasenia">Contraseña</label>
+            <input id="contrasenia" name="contrasenia" type="password" autocomplete="current-password" required>
+
+            <button class="boton boton-secundario" type="submit">Ingresar</button>
+        </form>
+    </main>
 </body>
+
 </html>

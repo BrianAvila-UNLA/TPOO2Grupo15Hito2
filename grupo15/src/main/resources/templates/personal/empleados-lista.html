@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -7,74 +8,98 @@
     <link rel="icon" type="image/jpeg" th:href="@{/favicon.ico}">
     <link rel="stylesheet" th:href="@{/css/styles.css}">
 </head>
+
 <body>
-<header class="site-header">
-    <div class="container navigation">
-        <a class="brand" th:href="@{/responsable}">
-            <span class="brand-mark">EG</span>
-            <span>Epicentro Gourmet</span>
-        </a>
-        <nav class="main-nav" aria-label="Navegación principal">
-            <a th:href="@{/responsable}" class="button" style="padding: 4px 10px; font-size: 0.9rem; text-decoration: none; background-color: #5b2a86; color: white;">Volver</a>
-            <span class="user-session">
-                <span class="user-session-name" th:text="${'Hola: ' + usuario.nombre}">Hola</span>
-                <form th:action="@{/logout}" method="post">
-                    <button type="submit">Cerrar sesión</button>
-                </form>
-            </span>
-        </nav>
-    </div>
-</header>
-
-<main class="container content-section" style="background-color: #fbf8fc; padding: 2rem; border-radius: 8px; margin-top: 2rem;">
-    <div class="section-heading">
-        <div>
-            <p class="eyebrow">Panel de Responsable</p>
-            <h2>Gestión de Empleados</h2>
+    <header class="encabezado-sitio">
+        <div class="contenedor navegacion">
+            <a class="marca" th:href="@{/responsable}">
+                <span class="marca-icono">EG</span>
+                <span>Epicentro Gourmet</span>
+            </a>
+            <nav class="navegacion-principal" aria-label="Navegación principal">
+                <a th:href="@{/responsable}" class="boton">Volver</a>
+                <span class="sesion-usuario">
+                    <span class="nombre-sesion-usuario" th:text="${'Hola: ' + usuario.nombre}">Hola</span>
+                    <form th:action="@{/logout}" method="post">
+                        <button type="submit">Cerrar sesión</button>
+                    </form>
+                </span>
+            </nav>
         </div>
-    </div>
+    </header>
 
-    <div style="margin-bottom: 2rem; display: flex; gap: 10px;">
-        <a th:href="@{/responsable/empleados/cajero/nuevo}" class="button button-primary" style="text-decoration: none;">Registrar Nuevo Cajero</a>
-        <a th:href="@{/responsable/empleados/cocinero/nuevo}" class="button button-primary" style="text-decoration: none;">Registrar Nuevo Cocinero</a>
-    </div>
-
-    <h3 style="margin-bottom: 1rem;">Personal Asignado</h3>
-
-    <div class="festival-grid" th:if="${not #sets.isEmpty(empleados)}">
-        <article class="festival-card" th:each="emp : ${empleados}">
-            <div class="card-accent"></div>
-            <div class="card-content">
-                <h4 th:text="${emp.nombre + ' ' + emp.apellido}">Nombre Empleado</h4>
-                <div style="margin-top: 0.8rem; font-size: 0.95rem; color: #5f5269;">
-                    <span>Email: </span><strong th:text="${emp.email}">email@mail.com</strong><br>
-                    <span>DNI: </span><strong th:text="${emp.dni}">00000000</strong><br>
-                    <span>Rol: </span>
-                    <strong th:text="${emp instanceof T(com.unla.grupo15.entities.Cocinero) ? 'Cocinero (' + emp.categoria + ')' : 'Cajero'}">Rol</strong><br>
-                    <span>Estado: </span><strong th:text="${emp.credenciales != null and emp.credenciales.activo ? 'Activo' : 'Inactivo'}">Activo</strong>
-                </div>
-                <div style="margin-top: 1rem;">
-
-                    <a th:if="${emp.credenciales != null and emp.credenciales.activo}"
-                       th:href="@{/responsable/empleados/baja/{id}(id=${emp.idPersonal})}"
-                       class="button" style="background-color: #9c356f; color: white; padding: 6px 12px; font-size: 0.85rem; text-decoration: none; display: inline-block;">
-                        Dar de Baja
-                    </a>
-
-
-                    <a th:unless="${emp.credenciales != null and emp.credenciales.activo}"
-                       th:href="@{/responsable/empleados/activar/{id}(id=${emp.idPersonal})}"
-                       class="button" style="background-color: #d94f91; color: white; padding: 6px 12px; font-size: 0.85rem; text-decoration: none; display: inline-block;">
-                        Activar
-                    </a>
-                </div>
+    <main class="contenedor seccion-contenido pagina-compacta" style="background-color: #fbf8fc; border-radius: 8px;">
+        <div class="encabezado-seccion">
+            <div>
+                <p class="subtitulo">Panel de Responsable</p>
+                <h2>Gestión de Empleados</h2>
             </div>
-        </article>
-    </div>
+        </div>
 
-    <p th:if="${#sets.isEmpty(empleados)}" style="color: #766f82; font-style: italic;">
-        No hay empleados registrados en esta unidad de venta.
-    </p>
-</main>
+        <div style="margin-bottom: 2rem; display: flex; gap: 10px;">
+            <a th:href="@{/responsable/empleados/cajero/nuevo}" class="boton boton-principal"
+                style="text-decoration: none;">Registrar Nuevo Cajero</a>
+            <a th:href="@{/responsable/empleados/cocinero/nuevo}" class="boton boton-principal"
+                style="text-decoration: none;">Registrar Nuevo Cocinero</a>
+        </div>
+
+        <h3 style="margin-bottom: 1rem;">Personal Asignado</h3>
+
+        <div class="rejilla-festivales" th:if="${not #sets.isEmpty(empleados)}">
+            <article class="tarjeta-festival" th:each="emp : ${empleados}">
+                <div class="acento-tarjeta"></div>
+                <div class="contenido-tarjeta">
+                    <h4 th:text="${emp.nombre + ' ' + emp.apellido}">Nombre Empleado</h4>
+                    <div style="margin-top: 0.8rem; font-size: 0.95rem; color: #5f5269;">
+                        <span>Email: </span><strong th:text="${emp.email}">email@mail.com</strong><br>
+                        <span>DNI: </span><strong th:text="${emp.dni}">00000000</strong><br>
+                        <span>Rol: </span>
+                        <strong
+                            th:text="${emp instanceof T(com.unla.grupo15.entities.Cocinero) ? 'Cocinero' : 'Cajero'}">Rol</strong><br>
+                        <span>Estado: </span><strong
+                            th:text="${emp.credenciales != null and emp.credenciales.activo ? 'Activo' : 'Inactivo'}">Activo</strong>
+                    </div>
+                    <div style="margin-top: 1rem;">
+                        <a th:href="@{/responsable/empleados/{id}/editar(id=${emp.idPersonal})}" class="boton"
+                            style="background-color: #5b2a86; color: white; padding: 6px 12px; font-size: 0.85rem; text-decoration: none; display: inline-block;">
+                            Modificar
+                        </a>
+
+                        <form th:if="${emp.credenciales != null and emp.credenciales.activo}"
+                            th:action="@{/responsable/empleados/baja/{id}(id=${emp.idPersonal})}" method="post"
+                            style="display: inline;"
+                            onsubmit="return confirm('¿Está seguro de dar de baja este empleado?');">
+                            <button type="submit" class="boton"
+                                style="background-color: #f05555; color: white; padding: 6px 12px; font-size: 0.85rem;">
+                                Dar de Baja
+                            </button>
+                        </form>
+
+                        <form th:if="${emp.credenciales != null and emp.credenciales.activo}"
+                            th:action="@{/responsable/empleados/inactivar/{id}(id=${emp.idPersonal})}" method="post"
+                            style="display: inline;"
+                            onsubmit="return confirm('¿Está seguro de inactivar este empleado?');">
+                            <button type="submit" class="boton"
+                                style="background-color: #766f82; color: white; padding: 6px 12px; font-size: 0.85rem;">
+                                Inactivar empleado
+                            </button>
+                        </form>
+
+
+                        <a th:unless="${emp.credenciales != null and emp.credenciales.activo}"
+                            th:href="@{/responsable/empleados/activar/{id}(id=${emp.idPersonal})}" class="boton"
+                            style="background-color: #35d13d; color: white; padding: 6px 12px; font-size: 0.85rem; text-decoration: none; display: inline-block;">
+                            Activar
+                        </a>
+                    </div>
+                </div>
+            </article>
+        </div>
+
+        <p th:if="${#sets.isEmpty(empleados)}" style="color: #766f82; font-style: italic;">
+            No hay empleados registrados en esta unidad de venta.
+        </p>
+    </main>
 </body>
+
 </html>
