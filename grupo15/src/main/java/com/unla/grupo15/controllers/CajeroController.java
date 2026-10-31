@@ -69,7 +69,7 @@ public class CajeroController {
         }
 
         model.addAttribute("unidadVenta", cajero.getUnidadVenta());
-        model.addAttribute("platos", platoRepository.findByUnidadVenta(cajero.getUnidadVenta()));
+        model.addAttribute("platos", platoRepository.findByUnidadVentaAndActivoTrue(cajero.getUnidadVenta()));
         model.addAttribute("personal", cajero);
         model.addAttribute("fechaHoraActual", ZonedDateTime.now(APPLICATION_ZONE));
         return "cajero/nuevo-pedido";

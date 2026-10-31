@@ -47,4 +47,20 @@ public class PlatoService implements IPlatoService {
         return platoRepository.findByUnidadVenta(unidadVenta);
     }
 
+    @Override
+    public void inactivar(long id) {
+        Plato plato = platoRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("No se encontró el plato"));
+        plato.setActivo(false);
+        platoRepository.save(plato);
+    }
+
+    @Override
+    public void activar(long id) {
+        Plato plato = platoRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("No se encontró el plato"));
+        plato.setActivo(true);
+        platoRepository.save(plato);
+    }
+
 }

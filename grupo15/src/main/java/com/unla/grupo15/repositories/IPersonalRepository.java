@@ -18,6 +18,11 @@ public interface IPersonalRepository extends JpaRepository<Personal, Long> {
 
     boolean existsByDni(int dni);
 
-}
+    boolean existsByDniAndIdPersonalNot(int dni, long idPersonal);
 
+    boolean existsByEmail(String email);
+
+    boolean existsByEmailAndIdPersonalNot(String email, long idPersonal);
+
+}
 

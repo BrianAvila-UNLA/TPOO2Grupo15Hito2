@@ -8,15 +8,16 @@
   <style>
     body {
       font-family: Arial, sans-serif;
-      background-color: #fbf8fc;
+      background: url("../images/background_home.jpg") center / cover fixed;
       margin: 0;
       padding: 20px;
     }
 
-    .container {
+    .contenedor {
       max-width: 800px;
       margin: 0 auto;
-      background: #fff;
+      background: rgba(255, 255, 255, 0.88);
+      border: 1px solid rgba(255, 255, 255, 0.7);
       padding: 30px;
       border-radius: 8px;
       box-shadow: 0 4px 10px rgba(91, 42, 134, 0.12);
@@ -94,19 +95,45 @@
     .order-total {
       font-size: 1.2rem;
     }
-    .user-session { display: inline-flex; align-items: center; overflow: hidden; color: #5b2a86; background: #f7eafa; border: 1px solid #e4d7ed; border-radius: 8px; font-weight: 600; }
-    .user-session-name { padding: 8px 10px; }
-    .user-session form { margin: 0; }
-    .user-session button { padding: 8px 10px; color: white; background: #5b2a86; border: 0; border-left: 1px solid rgba(255,255,255,0.25); font: inherit; cursor: pointer; }
+
+    .sesion-usuario {
+      display: inline-flex;
+      align-items: center;
+      overflow: hidden;
+      color: #5b2a86;
+      background: #f7eafa;
+      border: 1px solid #e4d7ed;
+      border-radius: 8px;
+      font-weight: 600;
+    }
+
+    .nombre-sesion-usuario {
+      padding: 8px 10px;
+    }
+
+    .sesion-usuario form {
+      margin: 0;
+    }
+
+    .sesion-usuario button {
+      padding: 8px 10px;
+      color: white;
+      background: #5b2a86;
+      border: 0;
+      border-left: 1px solid rgba(255, 255, 255, 0.25);
+      font: inherit;
+      cursor: pointer;
+    }
   </style>
 </head>
 
 <body>
 
-  <div class="container">
+  <div class="contenedor">
     <div style="display: flex; justify-content: flex-end; margin-bottom: 20px;">
-      <span class="user-session">
-        <span class="user-session-name" th:text="${'Hola: ' + personal.nombre + ' ' + personal.apellido}">Hola</span>
+      <span class="sesion-usuario">
+        <span class="nombre-sesion-usuario"
+          th:text="${'Hola: ' + personal.nombre + ' ' + personal.apellido}">Hola</span>
         <form th:action="@{/logout}" method="post">
           <button type="submit">Cerrar sesión</button>
         </form>

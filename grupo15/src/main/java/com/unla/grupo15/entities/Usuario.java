@@ -28,7 +28,8 @@ public class Usuario {
     @Enumerated(EnumType.STRING)
     private RolUsuario rol;
 
-    private boolean activo;
+    @Column(nullable = false, columnDefinition = "BOOLEAN DEFAULT TRUE")
+    private boolean activo = true;
 
     public Usuario(String nombre, String contrasenia, RolUsuario rol, boolean activo) {
         this.nombre = nombre;

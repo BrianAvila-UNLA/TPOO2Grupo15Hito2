@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -7,57 +8,62 @@
   <link rel="icon" type="image/jpeg" th:href="@{/favicon.ico}">
   <link rel="stylesheet" th:href="@{/css/styles.css}">
 </head>
+
 <body>
-<header class="site-header">
-  <div class="container navigation">
-    <a class="brand" th:href="@{/empleado/inicio}">
-      <span class="brand-mark">EG</span>
-      <span>Epicentro Gourmet</span>
-    </a>
-    <nav class="main-nav" aria-label="Navegación principal">
-      <a th:href="@{/empleado/inicio}">Mi Panel</a>
-      <a class="active" th:href="@{/empleado/liquidacion}">Mi Liquidación</a>
-      <span class="user-session" th:if="${personal != null}">
-        <span class="user-session-name" th:text="${'Hola: ' + personal.nombre + ' ' + personal.apellido}">Hola</span>
-        <form th:action="@{/logout}" method="post">
-          <button type="submit">Cerrar sesión</button>
-        </form>
-      </span>
-    </nav>
-  </div>
-</header>
+  <header class="encabezado-sitio">
+    <div class="contenedor navegacion">
+      <a class="marca" th:href="@{/empleado/inicio}">
+        <span class="marca-icono">EG</span>
+        <span>Epicentro Gourmet</span>
+      </a>
+      <nav class="navegacion-principal" aria-label="Navegación principal">
+        <a th:href="@{/empleado/inicio}">Mi Panel</a>
+        <a class="active" th:href="@{/empleado/liquidacion}">Mi Liquidación</a>
+        <span class="sesion-usuario" th:if="${personal != null}">
+          <span class="nombre-sesion-usuario"
+            th:text="${'Hola: ' + personal.nombre + ' ' + personal.apellido}">Hola</span>
+          <form th:action="@{/logout}" method="post">
+            <button type="submit">Cerrar sesión</button>
+          </form>
+        </span>
+      </nav>
+    </div>
+  </header>
 
-<main class="container form-page">
-  <p class="eyebrow">Recibo digital</p>
-  <h1>Liquidación de Sueldo</h1>
-  <p class="form-intro">Consulta la liquidación correspondiente a cada festival en el que trabajaste.</p>
+  <main class="contenedor pagina-formulario">
+    <p class="subtitulo">Recibo digital</p>
+    <h1>Liquidación de Sueldo</h1>
+    <p class="introduccion-formulario">Consulta la liquidación correspondiente a cada festival en el que trabajaste.</p>
 
-  <div class="error-message" th:if="${errorLiquidacion}" th:text="${errorLiquidacion}"></div>
-  <p th:if="${#lists.isEmpty(liquidaciones)}">Todavía no hay liquidaciones disponibles.</p>
+    <div class="mensaje-error" th:if="${errorLiquidacion}" th:text="${errorLiquidacion}"></div>
+    <p th:if="${#lists.isEmpty(liquidaciones)}">Todavía no hay liquidaciones disponibles.</p>
 
-  <div class="card" th:each="liquidacion : ${liquidaciones}" style="margin-bottom: 20px;">
-    <h3 th:text="${liquidacion.asignacion.festival.nombre}">Festival</h3>
-    <p><strong>Nombre y Apellido:</strong>
-      <span th:text="${personal.nombre + ' ' + personal.apellido}">Juan Pérez</span>
-    </p>
-    <p><strong>DNI:</strong> <span th:text="${personal.dni}">12345678</span></p>
-    <p><strong>Unidad de Venta:</strong>
-      <span th:text="${liquidacion.asignacion.unidadVenta.nombreComercial}"></span>
-    </p>
-    <p><strong>Período trabajado:</strong>
-      <span th:text="${liquidacion.asignacion.fechaInicio}"></span> -
-      <span th:text="${liquidacion.asignacion.fechaFin == null ? 'Actualidad' : liquidacion.asignacion.fechaFin}"></span>
-    </p>
-    <p th:if="${liquidacion.sueldo != null}">
-      <strong>Sueldo calculado:</strong> $<span th:text="${liquidacion.sueldo}"></span>
-    </p>
-    <p class="error-message" th:if="${liquidacion['error'] != null}" th:text="${liquidacion['error']}"></p>
-    <a th:if="${liquidacion.sueldo != null}"
-       th:href="@{/empleado/recibo/pdf/{idAsignacion}(idAsignacion=${liquidacion.asignacion.idAsignacion})}"
-       class="btn" style="display: inline-block; margin-top: 15px; text-decoration: none; padding: 10px 15px; background: #5b2a86; color: #fff; border-radius: 4px;">
-      Descargar recibo PDF
-    </a>
-  </div>
-</main>
+    <div class="card" th:each="liquidacion : ${liquidaciones}" style="margin-bottom: 20px;">
+      <h3 th:text="${liquidacion.asignacion.festival.nombre}">Festival</h3>
+      <p><strong>Nombre y Apellido:</strong>
+        <span th:text="${personal.nombre + ' ' + personal.apellido}">Juan Pérez</span>
+      </p>
+      <p><strong>DNI:</strong> <span th:text="${personal.dni}">12345678</span></p>
+      <p><strong>Unidad de Venta:</strong>
+        <span th:text="${liquidacion.asignacion.unidadVenta.nombreComercial}"></span>
+      </p>
+      <p><strong>Período trabajado:</strong>
+        <span th:text="${liquidacion.asignacion.fechaInicio}"></span> -
+        <span
+          th:text="${liquidacion.asignacion.fechaFin == null ? 'Actualidad' : liquidacion.asignacion.fechaFin}"></span>
+      </p>
+      <p th:if="${liquidacion.sueldo != null}">
+        <strong>Sueldo calculado:</strong> $<span th:text="${liquidacion.sueldo}"></span>
+      </p>
+      <p class="mensaje-error" th:if="${liquidacion['error'] != null}" th:text="${liquidacion['error']}"></p>
+      <a th:if="${liquidacion.sueldo != null}"
+        th:href="@{/empleado/recibo/pdf/{idAsignacion}(idAsignacion=${liquidacion.asignacion.idAsignacion})}"
+        class="btn"
+        style="display: inline-block; margin-top: 15px; text-decoration: none; padding: 10px 15px; background: #5b2a86; color: #fff; border-radius: 4px;">
+        Descargar recibo PDF
+      </a>
+    </div>
+  </main>
 </body>
+
 </html>

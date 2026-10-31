@@ -9,35 +9,33 @@
     <link rel="stylesheet" th:href="@{/css/styles.css}">
 </head>
 
-<body class="home-page">
-    <header class="site-header">
-        <div class="container navigation">
-            <a class="brand" th:href="@{/}">
-                <span class="brand-mark">EG</span>
+<body class="pagina-principal">
+    <header class="encabezado-sitio">
+        <div class="contenedor navegacion">
+            <a class="marca" th:href="@{/}">
+                <span class="marca-icono">EG</span>
                 <span>Epicentro Gourmet</span>
             </a>
-            <nav class="main-nav" aria-label="Navegación principal">
-                <a th:href="@{/}">Inicio</a>
-                <a class="active" th:href="@{/unidades/registrar}">Registrar una unidad de venta</a>
-                <a th:href="@{/usuarios/login}">Iniciar sesión</a>
+            <nav class="navegacion-principal" aria-label="Navegación principal">
+                <a th:href="@{/}">Volver al inicio</a>
             </nav>
         </div>
     </header>
 
-    <main class="container form-page">
-        <p class="eyebrow">Registro</p>
+    <main class="contenedor pagina-formulario">
+        <p class="subtitulo">Registro</p>
         <h1>Registrar una unidad de venta</h1>
-        <p class="form-intro">
+        <p class="introduccion-formulario">
             Se creará un usuario responsable y se enviará una contraseña temporal al correo indicado.
         </p>
 
-        <div class="success-message" th:if="${param.enviado}">
+        <div class="mensaje-exito" th:if="${param.enviado}">
             La unidad fue registrada. Revisá el correo indicado para obtener la contraseña del responsable.
         </div>
-        <div class="error-message" th:if="${error}" th:text="${error}"></div>
+        <div class="mensaje-error" th:if="${error}" th:text="${error}"></div>
 
-        <form class="registration-form" th:action="@{/unidades/registrar}" th:object="${registro}" method="post">
-            <div class="error-message" th:if="${#fields.hasGlobalErrors()}" th:errors="*{global}"></div>
+        <form class="formulario-registro" th:action="@{/unidades/registrar}" th:object="${registro}" method="post">
+            <div class="mensaje-error" th:if="${#fields.hasGlobalErrors()}" th:errors="*{global}"></div>
             <label for="tipo">Tipo de unidad</label>
             <select id="tipo" th:field="*{tipo}" required>
                 <option value="FOODTRUCK">Food Truck</option>
@@ -46,16 +44,21 @@
 
             <label for="nombreComercial">Nombre comercial</label>
             <input id="nombreComercial" type="text" th:field="*{nombreComercial}" required>
-            <small class="error-message" th:if="${#fields.hasErrors('nombreComercial')}"
+            <small class="mensaje-error" th:if="${#fields.hasErrors('nombreComercial')}"
                 th:errors="*{nombreComercial}"></small>
+
+            <label for="nombreResponsable">Nombre del responsable</label>
+            <input id="nombreResponsable" type="text" th:field="*{nombreResponsable}" required>
+            <small class="mensaje-error" th:if="${#fields.hasErrors('nombreResponsable')}"
+                th:errors="*{nombreResponsable}"></small>
 
             <label for="superficie">Superficie (m²)</label>
             <input id="superficie" type="number" min="1" th:field="*{superficie}" required>
-            <small class="error-message" th:if="${#fields.hasErrors('superficie')}" th:errors="*{superficie}"></small>
+            <small class="mensaje-error" th:if="${#fields.hasErrors('superficie')}" th:errors="*{superficie}"></small>
 
             <label for="codigoUnico">Código único</label>
             <input id="codigoUnico" type="text" th:field="*{codigoUnico}" required>
-            <small class="error-message" th:if="${#fields.hasErrors('codigoUnico')}" th:errors="*{codigoUnico}"></small>
+            <small class="mensaje-error" th:if="${#fields.hasErrors('codigoUnico')}" th:errors="*{codigoUnico}"></small>
 
             <label for="festivalId">Festival al que desea unirse</label>
             <select id="festivalId" th:field="*{festivalId}" required>
@@ -65,18 +68,18 @@
                     Festival
                 </option>
             </select>
-            <small class="error-message" th:if="${#fields.hasErrors('festivalId')}" th:errors="*{festivalId}"></small>
+            <small class="mensaje-error" th:if="${#fields.hasErrors('festivalId')}" th:errors="*{festivalId}"></small>
 
             <label for="email">Correo del responsable</label>
             <input id="email" type="email" th:field="*{email}" required>
-            <small class="error-message" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></small>
+            <small class="mensaje-error" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></small>
             <small>La contraseña temporal se enviará a este correo.</small>
 
             <div id="foodtruck-fields" th:style="${registro.tipo == 'FOODTRUCK' ? '' : 'display: none;'}">
                 <label for="patente">Patente (Food Truck)</label>
                 <input id="patente" type="text" th:field="*{patente}">
 
-                <label class="checkbox-label" for="conexionElectrica">
+                <label class="etiqueta-checkbox" for="conexionElectrica">
                     <input id="conexionElectrica" type="checkbox" th:field="*{conexionElectrica}">
                     Tiene conexión eléctrica
                 </label>
@@ -90,7 +93,7 @@
                 <input id="tiempoMontaje" type="number" min="1" th:field="*{tiempoMontaje}" disabled>
             </div>
 
-            <button class="button button-secondary" type="submit">Registrar unidad y enviar contraseña</button>
+            <button class="boton boton-secundario" type="submit">Registrar unidad y enviar contraseña</button>
         </form>
     </main>
     <script>

@@ -5,8 +5,8 @@
     <title>Epicentro Gourmet - Cierre de Caja</title>
     <link rel="icon" type="image/jpeg" th:href="@{/favicon.ico}">
     <style>
-        body { font-family: Arial, sans-serif; background-color: #fbf8fc; margin: 0; padding: 20px; }
-        .container { max-width: 600px; margin: 0 auto; background: #fff; padding: 30px; border-radius: 8px; box-shadow: 0 4px 10px rgba(91,42,134,0.12); }
+        body { font-family: Arial, sans-serif; background: url("../images/background_home.jpg") center / cover fixed; margin: 0; padding: 20px; }
+        .contenedor { max-width: 600px; margin: 0 auto; background: rgba(255,255,255,0.88); padding: 30px; border: 1px solid rgba(255,255,255,0.7); border-radius: 18px; box-shadow: 0 18px 45px rgba(38,35,33,0.18); backdrop-filter: blur(5px); }
         h2 { color: #5b2a86; margin-top: 0; }
         .stats { background: #f7eafa; padding: 15px; border-radius: 6px; margin: 20px 0; }
         .stats p { font-size: 18px; margin: 10px 0; color: #333; }
@@ -16,7 +16,10 @@
 </head>
 <body>
 
-<div class="container">
+<div class="contenedor">
+    <div style="text-align: right; margin-bottom: 1rem;">
+        <a th:href="@{/empleado/inicio}" class="btn-back">Volver</a>
+    </div>
     <p th:if="${personal != null}" th:text="${'Hola: ' + personal.nombre + ' ' + personal.apellido}">Hola</p>
     <h2>Resumen de Cierre de Caja</h2>
     <p th:if="${yaCerrada}" style="color: #9c356f;">

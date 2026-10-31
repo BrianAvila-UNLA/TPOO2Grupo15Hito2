@@ -44,6 +44,9 @@ public abstract class Personal {
     @JoinColumn(name = "id_usuario_credenciales", referencedColumnName = "id")
     protected Usuario credenciales;
 
+    @Column(nullable = false, columnDefinition = "boolean default false")
+    protected boolean eliminado = false;
+
     @NotNull(message = "La fecha de nacimiento es obligatoria")
     @Past(message = "La fecha de nacimiento debe ser anterior a la actual")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
