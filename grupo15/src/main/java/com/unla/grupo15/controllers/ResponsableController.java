@@ -34,8 +34,8 @@ public class ResponsableController {
     private final IPersonalService personalService;
 
     public ResponsableController(IUsuarioService usuarioService, IUnidadVentaService unidadVentaService,
-                                 IPlatoService platoService, IPersonalService personalService,
-                                 IPedidoService pedidoService) {
+            IPlatoService platoService, IPersonalService personalService,
+            IPedidoService pedidoService) {
         this.usuarioService = usuarioService;
         this.unidadVentaService = unidadVentaService;
         this.platoService = platoService;
@@ -86,8 +86,8 @@ public class ResponsableController {
 
     @GetMapping("/reportes/rentabilidad")
     public String reporteRentabilidad(@RequestParam LocalDate fechaDesde,
-                                      @RequestParam LocalDate fechaHasta,
-                                      Model model, Authentication authentication) {
+            @RequestParam LocalDate fechaHasta,
+            Model model, Authentication authentication) {
         Usuario usuario = usuarioService.findByEmail(authentication.getName()).orElse(null);
         UnidadVenta unidadVenta = usuario == null ? null : unidadVentaService.findByResponsableCargo(usuario);
         if (unidadVenta != null && unidadVenta.getFechaCreacion() != null
@@ -130,7 +130,7 @@ public class ResponsableController {
     }
 
     private void cargarPanelConReporte(Model model, Authentication authentication,
-                                       LocalDate fechaDesde, LocalDate fechaHasta) {
+            LocalDate fechaDesde, LocalDate fechaHasta) {
         String email = authentication.getName();
         Usuario usuario = usuarioService.findByEmail(email).orElse(null);
         UnidadVenta unidadVenta = usuario == null ? null : unidadVentaService.findByResponsableCargo(usuario);
@@ -210,9 +210,10 @@ public class ResponsableController {
     private void cambiarEstadoPlato(long id, Authentication authentication, boolean activo) {
         Usuario usuario = usuarioService.findByEmail(authentication.getName()).orElse(null);
         UnidadVenta unidadVenta = usuario == null ? null : unidadVentaService.findByResponsableCargo(usuario);
-        Plato plato = platoService.findById(id).orElseThrow(() -> new IllegalArgumentException("No se encontró el plato"));
+        Plato plato = platoService.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("No se encontró el plato"));
         if (unidadVenta == null || plato.getUnidadVenta() == null
-                || !plato.getUnidadVenta().getIdUnidadVenta().equals(unidadVenta.getIdUnidadVenta())) {
+                || plato.getUnidadVenta().getIdUnidadVenta() != unidadVenta.getIdUnidadVenta()) {
             throw new IllegalArgumentException("El plato no pertenece a la unidad de venta");
         }
         if (activo) {
@@ -232,7 +233,8 @@ public class ResponsableController {
     }
 
     @PostMapping("/empleados/cajero/guardar")
-    public String guardarCajero(@Valid @ModelAttribute("empleado") Cajero empleado, BindingResult result, Model model, Authentication authentication) {
+    public String guardarCajero(@Valid @ModelAttribute("empleado") Cajero empleado, BindingResult result, Model model,
+            Authentication authentication) {
         LocalDate fechaLimite = LocalDate.now().minusYears(18);
         if (empleado.getFechaNacimiento() != null
                 && !empleado.getFechaNacimiento().isBefore(fechaLimite)) {
@@ -295,7 +297,8 @@ public class ResponsableController {
     }
 
     @PostMapping("/empleados/cocinero/guardar")
-    public String guardarCocinero(@Valid @ModelAttribute("empleado") Cocinero empleado, BindingResult result, Model model, Authentication authentication) {
+    public String guardarCocinero(@Valid @ModelAttribute("empleado") Cocinero empleado, BindingResult result,
+            Model model, Authentication authentication) {
         LocalDate fechaLimite = LocalDate.now().minusYears(18);
         if (empleado.getFechaNacimiento() != null
                 && !empleado.getFechaNacimiento().isBefore(fechaLimite)) {
@@ -364,24 +367,24 @@ public class ResponsableController {
 
     @PostMapping("/empleados/{id}/editar/cajero")
     public String editarCajero(@PathVariable Long id,
-                               @Valid @ModelAttribute("empleado") Cajero datos,
-                               BindingResult result,
-                               Model model,
-                               Authentication authentication) {
+            @Valid @ModelAttribute("empleado") Cajero datos,
+            BindingResult result,
+            Model model,
+            Authentication authentication) {
         return editarEmpleado(id, datos, result, model, authentication, "cajero");
     }
 
     @PostMapping("/empleados/{id}/editar/cocinero")
     public String editarCocinero(@PathVariable Long id,
-                                 @Valid @ModelAttribute("empleado") Cocinero datos,
-                                 BindingResult result,
-                                 Model model,
-                                 Authentication authentication) {
+            @Valid @ModelAttribute("empleado") Cocinero datos,
+            BindingResult result,
+            Model model,
+            Authentication authentication) {
         return editarEmpleado(id, datos, result, model, authentication, "cocinero");
     }
 
     private String editarEmpleado(Long id, Personal datos, BindingResult result, Model model,
-                                  Authentication authentication, String tipo) {
+            Authentication authentication, String tipo) {
         Personal empleado = buscarEmpleadoDeResponsable(id, authentication);
         if (empleado == null) {
             return "redirect:/responsable/empleados";
@@ -437,7 +440,7 @@ public class ResponsableController {
     }
 
     private void validarDatosEmpleado(Personal empleado, org.springframework.validation.Errors result,
-                                      long id, String tipo) {
+            long id, String tipo) {
         LocalDate fechaLimite = LocalDate.now().minusYears(18);
         if (empleado.getFechaNacimiento() != null
                 && !empleado.getFechaNacimiento().isBefore(fechaLimite)) {
