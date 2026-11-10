@@ -8,6 +8,7 @@ import com.unla.grupo15.services.IPlatoService;
 import com.unla.grupo15.services.IPedidoService;
 import com.unla.grupo15.services.IUnidadVentaService;
 import com.unla.grupo15.services.IUsuarioService;
+import com.unla.grupo15.services.implementation.LiquidacionService;
 import jakarta.validation.Valid;
 import org.springframework.mail.MailException;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -19,7 +20,10 @@ import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -32,15 +36,17 @@ public class ResponsableController {
     private final IPlatoService platoService;
     private final IPedidoService pedidoService;
     private final IPersonalService personalService;
+    private final LiquidacionService liquidacionService;
 
     public ResponsableController(IUsuarioService usuarioService, IUnidadVentaService unidadVentaService,
             IPlatoService platoService, IPersonalService personalService,
-            IPedidoService pedidoService) {
+            IPedidoService pedidoService, LiquidacionService liquidacionService) {
         this.usuarioService = usuarioService;
         this.unidadVentaService = unidadVentaService;
         this.platoService = platoService;
         this.personalService = personalService;
         this.pedidoService = pedidoService;
+        this.liquidacionService = liquidacionService;
     }
 
     @GetMapping
@@ -181,6 +187,42 @@ public class ResponsableController {
 
         model.addAttribute("usuario", usuario);
         return "personal/empleados-lista";
+    }
+
+    @GetMapping("/liquidacion-haberes")
+    public String liquidacionHaberes(Model model, Authentication authentication) {
+        Usuario usuario = usuarioService.findByEmail(authentication.getName()).orElse(null);
+        UnidadVenta unidadVenta = usuario == null ? null : unidadVentaService.findByResponsableCargo(usuario);
+        Festival festival = unidadVenta == null ? null : unidadVenta.getFestival();
+        List<Map<String, Object>> liquidaciones = new ArrayList<>();
+        BigDecimal totalHaberes = BigDecimal.ZERO;
+
+        if (unidadVenta != null && festival != null) {
+            for (Personal empleado : unidadVenta.getPersonal()) {
+                if (empleado.isEliminado() || empleado.getCredenciales() == null
+                        || !empleado.getCredenciales().isActivo()) {
+                    continue;
+                }
+
+                Map<String, Object> liquidacion = new HashMap<>();
+                liquidacion.put("empleado", empleado);
+                try {
+                    BigDecimal sueldo = liquidacionService.calcularSueldo(empleado, festival);
+                    liquidacion.put("sueldo", sueldo);
+                    totalHaberes = totalHaberes.add(sueldo);
+                } catch (IllegalStateException exception) {
+                    liquidacion.put("error", exception.getMessage());
+                }
+                liquidaciones.add(liquidacion);
+            }
+        }
+
+        model.addAttribute("usuario", usuario);
+        model.addAttribute("unidadVenta", unidadVenta);
+        model.addAttribute("festival", festival);
+        model.addAttribute("liquidaciones", liquidaciones);
+        model.addAttribute("totalHaberes", totalHaberes);
+        return "personal/liquidacion-haberes";
     }
 
     @GetMapping("/menu")

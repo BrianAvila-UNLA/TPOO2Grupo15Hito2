@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Liquidación de Haberes | Epicentro Gourmet</title>
+    <link rel="icon" type="image/jpeg" th:href="@{/favicon.ico}">
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+
+<body>
+    <header class="encabezado-sitio">
+        <div class="contenedor navegacion">
+            <a class="marca" th:href="@{/responsable}">
+                <span class="marca-icono">EG</span>
+                <span>Epicentro Gourmet</span>
+            </a>
+            <nav class="navegacion-principal" aria-label="Navegación principal">
+                <a th:href="@{/responsable}" class="boton">Volver</a>
+                <span class="sesion-usuario" th:if="${usuario != null}">
+                    <span class="nombre-sesion-usuario" th:text="${'Hola: ' + usuario.nombre}">Hola</span>
+                    <form th:action="@{/logout}" method="post">
+                        <button type="submit">Cerrar sesión</button>
+                    </form>
+                </span>
+            </nav>
+        </div>
+    </header>
+
+    <main class="contenedor pagina-formulario">
+        <p class="subtitulo">Panel de Responsable</p>
+        <h1>Liquidación de Haberes</h1>
+        <p class="introduccion-formulario"
+            th:text="${unidadVenta == null ? 'No se encontró una unidad de venta asociada a este responsable.' : 'Liquidaciones del personal de ' + unidadVenta.nombreComercial + '.'}">
+            Liquidaciones del personal de la unidad.
+        </p>
+
+        <div class="card" th:if="${festival != null}" style="margin-bottom: 20px;">
+            <h3 th:text="${festival.nombre}">Festival</h3>
+            <p><strong>Período:</strong>
+                <span th:text="${festival.fechaInicio}">Inicio</span> -
+                <span th:text="${festival.fechaFin}">Fin</span>
+            </p>
+            <p><strong>Total de haberes:</strong>
+                $<span th:text="${#numbers.formatDecimal(totalHaberes, 1, 'DEFAULT', 2, 'DEFAULT')}">0.00</span>
+            </p>
+        </div>
+
+        <p th:if="${unidadVenta != null and festival == null}">
+            No hay un festival asignado a esta unidad de venta.
+        </p>
+
+        <div th:if="${festival != null and not #lists.isEmpty(liquidaciones)}">
+            <div class="card" th:each="liquidacion : ${liquidaciones}" style="margin-bottom: 20px;">
+                <h3 th:text="${liquidacion.empleado.nombre + ' ' + liquidacion.empleado.apellido}">Nombre del empleado</h3>
+                <p><strong>DNI:</strong> <span th:text="${liquidacion.empleado.dni}">12345678</span></p>
+                <p><strong>Email:</strong> <span th:text="${liquidacion.empleado.email}">empleado@mail.com</span></p>
+                <p><strong>Puesto:</strong>
+                    <span
+                        th:text="${liquidacion.empleado instanceof T(com.unla.grupo15.entities.Cocinero) ? 'Cocinero' : 'Cajero'}">Puesto</span>
+                </p>
+                <p th:if="${liquidacion.sueldo != null}">
+                    <strong>Sueldo calculado:</strong>
+                    $<span th:text="${#numbers.formatDecimal(liquidacion.sueldo, 1, 'DEFAULT', 2, 'DEFAULT')}">0.00</span>
+                </p>
+                <p class="mensaje-error" th:if="${liquidacion['error'] != null}" th:text="${liquidacion['error']}"></p>
+            </div>
+        </div>
+
+        <p th:if="${festival != null and #lists.isEmpty(liquidaciones)}">
+            No hay empleados activos asignados a esta unidad de venta.
+        </p>
+    </main>
+</body>
+
+</html>
