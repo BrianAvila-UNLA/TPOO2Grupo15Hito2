@@ -33,10 +33,25 @@
             <div>
                 <p class="subtitulo">Festival</p>
                 <h1>Unidades de venta</h1>
-                <p class="introduccion-formulario">Estas son las unidades de venta registradas en todos los festivales.
-                </p>
+                <p class="introduccion-formulario">Seleccioná un festival para consultar sus unidades y el ranking de recaudación.</p>
             </div>
         </div>
+
+        <form class="formulario-registro" method="get" th:action="@{/admin/inicio}"
+            style="margin-bottom: 1.5rem;">
+            <label for="festivalRankingId">Festival</label>
+            <select id="festivalRankingId" name="festivalId" required>
+                <option value="" disabled th:selected="${festivalSeleccionado == null}">
+                    Seleccioná un festival
+                </option>
+                <option th:each="festival : ${festivales}" th:value="${festival.idFestival}"
+                    th:text="${festival.nombre}" th:selected="${festivalSeleccionado != null
+                            and festival.idFestival == festivalSeleccionado.idFestival}">
+                    Festival
+                </option>
+            </select>
+            <button class="boton boton-principal" type="submit">Consultar festival</button>
+        </form>
 
         <div class="mensaje-error" th:if="${param.error != null}">
             La cantidad solicitada supera las
@@ -80,7 +95,7 @@
             <div class="encabezado-seccion">
                 <div>
                     <p class="subtitulo">Rendimiento del Festival</p>
-                    <h2>Ranking por recaudación</h2>
+                        <h2 th:text="${festivalSeleccionado != null ? 'Ranking por recaudación: ' + festivalSeleccionado.nombre : 'Ranking por recaudación'}">Ranking por recaudación</h2>
                 </div>
             </div>
 

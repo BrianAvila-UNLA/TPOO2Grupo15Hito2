@@ -45,6 +45,15 @@ public class UnidadVentaRegistrationService {
 
     @Transactional(noRollbackFor = MailException.class)
     public void register(UnitRegistration registration) {
+        if (registration.codigoUnico() == null
+                || !registration.codigoUnico().matches(UnidadVenta.FORMATO_CODIGO_UNICO)) {
+            throw new IllegalArgumentException(
+                    "El código debe tener el formato XX-0000000 (dos letras mayúsculas y siete dígitos).");
+        }
+        if (existeCodigoUnico(registration.codigoUnico())) {
+            throw new IllegalArgumentException("Ya existe una unidad de venta con ese código.");
+        }
+
         String password = generatePassword();
         Usuario responsable = new Usuario(
                 registration.nombreResponsable(),
@@ -78,6 +87,10 @@ public class UnidadVentaRegistrationService {
         unidadVentaRepository.save(unidad);
 
         sendPassword(registration.email(), password);
+    }
+
+    public boolean existeCodigoUnico(String codigoUnico) {
+        return unidadVentaRepository.existsByCodigoUnico(codigoUnico);
     }
 
     private String generatePassword() {

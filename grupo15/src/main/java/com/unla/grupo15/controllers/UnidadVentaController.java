@@ -7,6 +7,7 @@ import com.unla.grupo15.entities.UnidadVenta;
 import com.unla.grupo15.services.IFestivalService;
 import com.unla.grupo15.services.IUnidadVentaService;
 import com.unla.grupo15.services.UnidadVentaRegistrationService;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -62,6 +63,11 @@ public class UnidadVentaController {
             result.rejectValue("festivalId", "registro.festival.invalido",
                     "Seleccioná un festival válido.");
         }
+        if (form.codigoUnico != null && form.codigoUnico.matches(UnidadVenta.FORMATO_CODIGO_UNICO)
+                && registrationService.existeCodigoUnico(form.codigoUnico)) {
+            result.rejectValue("codigoUnico", "registro.codigoUnico.duplicado",
+                    "Ya existe una unidad de venta con ese código.");
+        }
 
         if (result.hasErrors()) {
             return "unidadVenta/registrar";
@@ -81,6 +87,9 @@ public class UnidadVentaController {
                     form.tiempoMontaje,
                     festival));
             return "redirect:/unidades/registrar?enviado";
+        } catch (org.springframework.dao.DataIntegrityViolationException exception) {
+            model.addAttribute("error", "Ya existe una unidad de venta con ese código.");
+            return "unidadVenta/registrar";
         } catch (IllegalArgumentException | org.springframework.mail.MailException exception) {
             String message = exception.getMessage();
             model.addAttribute("error", message == null || message.isBlank()
@@ -123,6 +132,8 @@ public class UnidadVentaController {
         @jakarta.validation.constraints.Min(value = 1, message = "La superficie debe ser mayor que cero")
         private long superficie;
         @jakarta.validation.constraints.NotBlank(message = "El código único es obligatorio")
+        @Pattern(regexp = UnidadVenta.FORMATO_CODIGO_UNICO,
+                message = "El código debe tener el formato XX-0000000 (dos letras mayúsculas y siete dígitos)")
         private String codigoUnico;
         @jakarta.validation.constraints.NotBlank(message = "El correo del responsable es obligatorio")
         @jakarta.validation.constraints.Email(message = "El correo del responsable no es válido")

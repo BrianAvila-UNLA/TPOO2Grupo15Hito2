@@ -57,11 +57,16 @@ public class AdminController {
         Festival festivalSeleccionado = seleccionarFestival(festivales, festivalId);
         int limiteSeguro = Math.max(1, limite);
 
-        List<UnidadVenta> unidades = unidadVentaService.getAll();
+        List<UnidadVenta> unidades = festivalSeleccionado == null
+                ? List.of()
+                : unidadVentaService.getAll().stream()
+                        .filter(unidad -> unidad.getFestival() != null
+                                && unidad.getFestival().getIdFestival() == festivalSeleccionado.getIdFestival())
+                        .toList();
         List<RankingUnidad> ranking = unidades.stream()
                 .map(unidad -> new RankingUnidad(
                         unidad,
-                        recaudacionDe(unidad)))
+                        recaudacionDe(unidad, festivalSeleccionado)))
                 .sorted(Comparator.comparing(RankingUnidad::recaudacion).reversed()
                         .thenComparing(rankingUnidad -> rankingUnidad.unidad().getNombreComercial()))
                 .toList();
@@ -177,8 +182,13 @@ public class AdminController {
                 unidad.calcularCanon());
     }
 
-    private BigDecimal recaudacionDe(UnidadVenta unidad) {
-        BigDecimal recaudacion = pedidoService.sumarRecaudacionPorUnidad(unidad);
+    private BigDecimal recaudacionDe(UnidadVenta unidad, Festival festival) {
+        if (festival.getFechaInicio() == null || festival.getFechaFin() == null
+                || festival.getFechaFin().isBefore(festival.getFechaInicio())) {
+            return BigDecimal.ZERO;
+        }
+        BigDecimal recaudacion = pedidoService.sumarRecaudacionPorUnidadEntreFechas(
+                unidad, festival.getFechaInicio(), festival.getFechaFin());
         return recaudacion == null ? BigDecimal.ZERO : recaudacion;
     }
 
