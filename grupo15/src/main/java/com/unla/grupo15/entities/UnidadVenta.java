@@ -1,6 +1,8 @@
 package com.unla.grupo15.entities;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,6 +18,8 @@ import java.util.Set;
 @Inheritance(strategy = InheritanceType.JOINED)
 public abstract class UnidadVenta {
 
+    public static final String FORMATO_CODIGO_UNICO = "^[A-Z]{2}-[0-9]{7}$";
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Setter(AccessLevel.NONE)
@@ -29,6 +33,10 @@ public abstract class UnidadVenta {
 
     protected long superficie;
 
+    @NotBlank(message = "El código único es obligatorio")
+    @Pattern(regexp = FORMATO_CODIGO_UNICO,
+            message = "El código debe tener el formato XX-0000000 (dos letras mayúsculas y siete dígitos)")
+    @Column(length = 10, nullable = false, unique = true)
     protected String codigoUnico;
 
     protected LocalDate fechaCreacion;

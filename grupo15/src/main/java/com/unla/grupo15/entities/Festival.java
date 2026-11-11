@@ -1,6 +1,8 @@
 package com.unla.grupo15.entities;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.AssertTrue;
+import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,8 +25,10 @@ public class Festival {
 
     private String temporada;
 
+    @NotNull(message = "La fecha de inicio es obligatoria")
     private LocalDate fechaInicio;
 
+    @NotNull(message = "La fecha de fin es obligatoria")
     private LocalDate fechaFin;
 
     @OneToOne(cascade = CascadeType.ALL)
@@ -40,5 +44,10 @@ public class Festival {
         this.fechaInicio = fechaInicio;
         this.fechaFin = fechaFin;
         this.costo = costo;
+    }
+
+    @AssertTrue(message = "La fecha de fin debe ser igual o posterior a la fecha de inicio")
+    public boolean isPeriodoValido() {
+        return fechaInicio == null || fechaFin == null || !fechaFin.isBefore(fechaInicio);
     }
 }

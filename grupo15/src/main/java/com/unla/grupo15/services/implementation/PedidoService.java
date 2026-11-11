@@ -7,9 +7,8 @@ import com.unla.grupo15.entities.Plato;
 import com.unla.grupo15.entities.UnidadVenta;
 import com.unla.grupo15.dto.PlatoDTO;
 import com.unla.grupo15.repositories.IPedidoRepository;
-import com.unla.grupo15.repositories.IPlatoRepository; // Asegúrate de inyectar tu repositorio de platos
+import com.unla.grupo15.repositories.IPlatoRepository;
 import com.unla.grupo15.services.IPedidoService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,7 +17,6 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.time.LocalDate;
 import org.springframework.data.domain.PageRequest;
 
 @Service("pedidoService")
@@ -26,12 +24,11 @@ import org.springframework.data.domain.PageRequest;
 public class PedidoService implements IPedidoService {
 
     private final IPedidoRepository pedidoRepository;
+    private final IPlatoRepository platoRepository;
 
-    @Autowired
-    private IPlatoRepository platoRepository;
-
-    public PedidoService(IPedidoRepository pedidoRepository) {
+    public PedidoService(IPedidoRepository pedidoRepository, IPlatoRepository platoRepository) {
         this.pedidoRepository = pedidoRepository;
+        this.platoRepository = platoRepository;
     }
 
     @Override
@@ -46,6 +43,11 @@ public class PedidoService implements IPedidoService {
 
     @Override
     public Pedido insertOrUpdate(Pedido pedido) {
+        if (pedido == null) {
+            throw new IllegalArgumentException("El pedido es obligatorio.");
+        }
+        validarFechaPedido(pedido.getFechaPedido());
+        validarDetalles(pedido);
         return pedidoRepository.save(pedido);
     }
 
@@ -57,30 +59,68 @@ public class PedidoService implements IPedidoService {
     @Override
     @Transactional
     public Pedido registrarPedido(Map<Long, Long> platosConCantidad, UnidadVenta unidadVenta) {
+        if (unidadVenta == null) {
+            throw new IllegalArgumentException("La unidad de venta es obligatoria para registrar el pedido.");
+        }
+        if (platosConCantidad == null) {
+            throw new IllegalArgumentException("Los productos del pedido son obligatorios.");
+        }
+
         Pedido pedido = new Pedido(LocalDate.now(), unidadVenta);
 
         for (Map.Entry<Long, Long> entry : platosConCantidad.entrySet()) {
             Long idPlato = entry.getKey();
             Long cantidad = entry.getValue();
 
-            if (cantidad != null && cantidad > 0) {
-                Plato plato = platoRepository.findById(idPlato).orElse(null);
-
-                if (plato != null) {
-                    BigDecimal subtotal = plato.getPrecioVenta().multiply(BigDecimal.valueOf(cantidad));
-
-                    DetallePedido detalle = new DetallePedido(cantidad, subtotal, plato);
-                    detalle.setPedido(pedido);
-
-                    pedido.getDetalles().add(detalle);
-                }
+            if (cantidad == null || cantidad < 0) {
+                throw new IllegalArgumentException("La cantidad de cada producto debe ser mayor o igual a cero.");
             }
+            if (cantidad == 0) {
+                continue;
+            }
+
+            Plato plato = idPlato == null
+                    ? null
+                    : platoRepository.findById(idPlato).orElse(null);
+            validarPlato(plato, unidadVenta);
+
+            BigDecimal subtotal = plato.getPrecioVenta().multiply(BigDecimal.valueOf(cantidad));
+            DetallePedido detalle = new DetallePedido(cantidad, subtotal, plato);
+            detalle.setPedido(pedido);
+            pedido.getDetalles().add(detalle);
         }
 
         if (!pedido.getDetalles().isEmpty()) {
             return pedidoRepository.save(pedido);
         }
         throw new IllegalArgumentException("No se pudo registrar un pedido sin productos.");
+    }
+
+    private void validarFechaPedido(LocalDate fechaPedido) {
+        if (fechaPedido == null || !fechaPedido.equals(LocalDate.now())) {
+            throw new IllegalArgumentException("La fecha del pedido debe ser la fecha actual.");
+        }
+    }
+
+    private void validarDetalles(Pedido pedido) {
+        if (pedido == null || pedido.getUnidadVenta() == null
+                || pedido.getDetalles() == null || pedido.getDetalles().isEmpty()) {
+            throw new IllegalArgumentException("El pedido debe tener una unidad de venta y al menos un producto.");
+        }
+        for (DetallePedido detalle : pedido.getDetalles()) {
+            if (detalle == null || detalle.getCantidad() <= 0) {
+                throw new IllegalArgumentException("La cantidad de cada producto debe ser mayor que cero.");
+            }
+            validarPlato(detalle.getPlato(), pedido.getUnidadVenta());
+        }
+    }
+
+    private void validarPlato(Plato plato, UnidadVenta unidadVenta) {
+        if (plato == null || !plato.isActivo() || plato.getUnidadVenta() == null
+                || plato.getUnidadVenta().getIdUnidadVenta() != unidadVenta.getIdUnidadVenta()) {
+            throw new IllegalArgumentException(
+                    "Todos los platos del pedido deben estar activos y pertenecer a la unidad de venta.");
+        }
     }
 
     @Override

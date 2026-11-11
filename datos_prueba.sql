@@ -8,11 +8,11 @@ START TRANSACTION;
 -- Usuarios de prueba: administrador, responsables y empleados.
 INSERT INTO usuario (id, nombre, email, contrasenia, rol, activo)
 VALUES
-    (1, 'admin', 'admin@epicentrogourmet.com', '$2a$10$qcfF/FnU8ksf4NBMsTvx/evJqEq9zkLpU4NxdZThViRBS0acXCOZK', 'ADMINISTRADOR', 1),
-    (2, 'Carolina Benítez', 'carolina.benitez@epicentrogourmet.com', '$2a$10$4TQHA0ubcvTAunvORRRY6uboENMg4jYx6XOEPKkw/UyXSVs0mnJ3G', 'RESPONSABLE', 1),
-    (3, 'Santiago Morales', 'santiago.morales@epicentrogourmet.com', '$2a$10$eDHGMYpECwPyTlYc6GdlT.S1WTrPUaZ1WrdmuIHze9KDrcNchscWS', 'RESPONSABLE', 1),
-    (4, 'Lucía', 'lucia.gomez@epicentrogourmet.com', '$2a$10$etE6gPLmbc58nTQ17.2Oj.9bdOKMV.VL6tYZXamDxrg8TOnjvxW1S', 'EMPLEADO', 1),
-    (5, 'Mateo', 'mateo.fernandez@epicentrogourmet.com', '$2a$10$awN/NSLzBXIYQ1DcITTIa.8nHojnK.Jn2Ah6/QSjIHMBPIKTMEjPK', 'EMPLEADO', 1);
+    (1, 'admin', 'admin@epicentrogourmet.com', '$2a$10$w5Fwoev3o8d7qxFuuhzVQeVeUb0rLv3S2ol1C2H2VQ1uBUgm6wV4e', 'ADMINISTRADOR', 1),
+    (2, 'Carolina Benítez', 'carolina.benitez@epicentrogourmet.com', '$2a$10$w5Fwoev3o8d7qxFuuhzVQeVeUb0rLv3S2ol1C2H2VQ1uBUgm6wV4e', 'RESPONSABLE', 1),
+    (3, 'Santiago Morales', 'santiago.morales@epicentrogourmet.com', '$2a$10$w5Fwoev3o8d7qxFuuhzVQeVeUb0rLv3S2ol1C2H2VQ1uBUgm6wV4e', 'RESPONSABLE', 1),
+    (4, 'Lucía', 'lucia.gomez@epicentrogourmet.com', '$2a$10$w5Fwoev3o8d7qxFuuhzVQeVeUb0rLv3S2ol1C2H2VQ1uBUgm6wV4e', 'EMPLEADO', 1),
+    (5, 'Mateo', 'mateo.fernandez@epicentrogourmet.com', '$2a$10$w5Fwoev3o8d7qxFuuhzVQeVeUb0rLv3S2ol1C2H2VQ1uBUgm6wV4e', 'EMPLEADO', 1);
 
 -- Costos utilizados por los festivales.
 INSERT INTO costo (
@@ -65,8 +65,8 @@ INSERT INTO unidad_venta (
     fecha_creacion
 )
 VALUES
-    (1, 'Sabor Rodante', 2, 24, 'FT-001', 1, '2026-10-20'),
-    (2, 'La Esquina Gourmet', 3, 16, 'PD-001', 1, '2026-10-20');
+    (1, 'Sabor Rodante', 2, 24, 'FT-0000001', 1, '2026-10-20'),
+    (2, 'La Esquina Gourmet', 3, 16, 'PD-0000001', 1, '2026-10-20');
 
 INSERT INTO food_truck (
     id_unidad_venta,

@@ -5,6 +5,8 @@ import com.unla.grupo15.services.IPedidoService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
 
 @Controller
 @RequestMapping("/pedidos")
@@ -30,7 +32,11 @@ public class PedidoController {
 
     @PostMapping("/guardar")
     public String guardar(@ModelAttribute("pedido") Pedido pedido) {
-        pedidoService.insertOrUpdate(pedido);
+        try {
+            pedidoService.insertOrUpdate(pedido);
+        } catch (IllegalArgumentException exception) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, exception.getMessage(), exception);
+        }
         return "redirect:/pedidos";
     }
 

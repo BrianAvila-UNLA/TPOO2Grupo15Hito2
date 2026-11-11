@@ -100,6 +100,10 @@ public class CajeroController {
                     Long idPlato = Long.valueOf(key.substring(key.indexOf('[') + 1, key.indexOf(']')));
                     Long cantidad = Long.valueOf(entry.getValue());
 
+                    if (cantidad < 0) {
+                        response.sendRedirect("/cajero/pedido/nuevo?error=pedido-invalido");
+                        return;
+                    }
                     if (cantidad > 0) {
                         platosConCantidad.put(idPlato, cantidad);
                     }
@@ -115,7 +119,13 @@ public class CajeroController {
             return;
         }
 
-        Pedido pedido = pedidoService.registrarPedido(platosConCantidad, cajero.getUnidadVenta());
+        final Pedido pedido;
+        try {
+            pedido = pedidoService.registrarPedido(platosConCantidad, cajero.getUnidadVenta());
+        } catch (IllegalArgumentException exception) {
+            response.sendRedirect("/cajero/pedido/nuevo?error=pedido-invalido");
+            return;
+        }
         response.sendRedirect("/empleado/inicio?pedidoExitoso=true&pedidoId=" + pedido.getId());
     }
 

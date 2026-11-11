@@ -15,4 +15,6 @@ public interface IUnidadVentaRepository extends JpaRepository<UnidadVenta, Long>
 
     public abstract UnidadVenta findByResponsableCargo(Usuario responsableCargo);
 
+    boolean existsByCodigoUnico(String codigoUnico);
+
 }
