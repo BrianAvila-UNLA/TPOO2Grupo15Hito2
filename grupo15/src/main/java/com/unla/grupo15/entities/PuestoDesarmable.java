@@ -11,25 +11,19 @@ import java.math.BigDecimal;
 @Getter @Setter @NoArgsConstructor
 public class PuestoDesarmable extends UnidadVenta{
 
+    private static final BigDecimal DESCUENTO_POR_MINUTO_DE_MONTAJE = new BigDecimal("10");
+
     private long cantidadCarpas;
 
     private long tiempoMontaje; //Tiene que ser en minutos
 
     @Override
     public BigDecimal calcularCanon(){
-        BigDecimal costoSuperficie = festival.getCosto().getCostoPorSuperficie();
-        BigDecimal costoMontaje = festival.getCosto().getCostoPorMontaje();
-
         BigDecimal superficie = BigDecimal.valueOf(getSuperficie());
-        BigDecimal base = superficie.multiply(costoSuperficie);
-
-        BigDecimal tiempo = BigDecimal.valueOf(getTiempoMontaje());
-        BigDecimal montoMontaje = tiempo.multiply(costoMontaje);
-
-        base = base.add(montoMontaje);
-
-        return base;
+        BigDecimal costoSuperficie = superficie.multiply(COSTO_POR_METRO_CUADRADO);
+        BigDecimal montoMontaje = BigDecimal.valueOf(getTiempoMontaje())
+                .multiply(DESCUENTO_POR_MINUTO_DE_MONTAJE);
+        return costoSuperficie.subtract(montoMontaje);
     }
 
 }
-

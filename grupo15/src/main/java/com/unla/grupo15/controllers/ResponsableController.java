@@ -76,8 +76,7 @@ public class ResponsableController {
                             pedidoService.platoEstrella(unidadVenta, festival).orElse(null));
                 }
 
-                boolean canonDisponible = unidadVenta.getFestival() != null
-                        && unidadVenta.getFestival().getCosto() != null;
+                boolean canonDisponible = unidadVenta.getFestival() != null;
                 model.addAttribute("canonDisponible", canonDisponible);
 
                 if (canonDisponible) {
@@ -161,10 +160,8 @@ public class ResponsableController {
         model.addAttribute("reporteVenta", new ReporteVentaDTO(
                 festival.getNombre(),
                 pedidoService.sumarRecaudacionPorUnidadEntreFechas(unidadVenta, fechaDesde, fechaHasta)));
-        model.addAttribute("canonDisponible", festival.getCosto() != null);
-        if (festival.getCosto() != null) {
-            model.addAttribute("canon", unidadVenta.calcularCanon());
-        }
+        model.addAttribute("canonDisponible", true);
+        model.addAttribute("canon", unidadVenta.calcularCanon());
         BigDecimal ventas = pedidoService.sumarRecaudacionPorUnidadEntreFechas(unidadVenta, fechaDesde, fechaHasta);
         BigDecimal costos = pedidoService.sumarCostoPlatosPorUnidadEntreFechas(unidadVenta, fechaDesde, fechaHasta);
         BigDecimal sueldos = personalService.calcularSueldos(unidadVenta, festival, fechaDesde, fechaHasta);

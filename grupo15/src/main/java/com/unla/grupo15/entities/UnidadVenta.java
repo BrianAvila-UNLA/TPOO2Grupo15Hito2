@@ -19,6 +19,7 @@ import java.util.Set;
 public abstract class UnidadVenta {
 
     public static final String FORMATO_CODIGO_UNICO = "^[A-Z]{2}-[0-9]{7}$";
+    public static final BigDecimal COSTO_POR_METRO_CUADRADO = new BigDecimal("500");
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

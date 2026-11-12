@@ -11,20 +11,19 @@ import java.math.BigDecimal;
 @Getter @Setter @NoArgsConstructor
 public class FoodTruck extends UnidadVenta{
 
+    private static final BigDecimal PLUS_CONEXION_ELECTRICA = new BigDecimal("2000");
+
     private String patente;
 
     private boolean conexionElectrica;
 
     @Override
     public BigDecimal calcularCanon(){
-        BigDecimal costoSuperficie = festival.getCosto().getCostoPorSuperficie();
-        BigDecimal costoPlusElectricidad = festival.getCosto().getPlusUsoElectricidad();
-
         BigDecimal superficie = BigDecimal.valueOf(getSuperficie());
-        BigDecimal base = superficie.multiply(costoSuperficie);
+        BigDecimal base = superficie.multiply(COSTO_POR_METRO_CUADRADO);
 
         if(conexionElectrica){
-            base = base.add(costoPlusElectricidad);
+            base = base.add(PLUS_CONEXION_ELECTRICA);
         }
 
         return base;

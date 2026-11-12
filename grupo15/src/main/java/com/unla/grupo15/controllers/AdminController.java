@@ -105,11 +105,6 @@ public class AdminController {
         }
 
         Festival festival = festivalOpt.get();
-        if (festival.getCosto() == null) {
-            response.sendError(HttpServletResponse.SC_CONFLICT,
-                    "El festival no tiene costos configurados para calcular el canon.");
-            return;
-        }
 
         List<UnidadVenta> unidadesDelFestival = unidadVentaService.getAll().stream()
                 .filter(unidad -> unidad.getFestival() != null
