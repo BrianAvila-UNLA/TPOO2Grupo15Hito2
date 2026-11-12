@@ -322,14 +322,7 @@ public class ResponsableController {
     @PostMapping("/empleados/cajero/guardar")
     public String guardarCajero(@Valid @ModelAttribute("empleado") Cajero empleado, BindingResult result, Model model,
             Authentication authentication) {
-        LocalDate fechaLimite = LocalDate.now().minusYears(18);
-        if (empleado.getFechaNacimiento() != null
-                && !empleado.getFechaNacimiento().isBefore(fechaLimite)) {
-            result.rejectValue(
-                    "fechaNacimiento",
-                    "cajero.fechaNacimiento.menorEdad",
-                    "El cajero debe ser mayor de 18 años");
-        }
+        validarEdadMinima(empleado, result, "cajero");
         if (personalService.existsByDni(empleado.getDni())) {
             result.rejectValue(
                     "dni",
@@ -386,14 +379,7 @@ public class ResponsableController {
     @PostMapping("/empleados/cocinero/guardar")
     public String guardarCocinero(@Valid @ModelAttribute("empleado") Cocinero empleado, BindingResult result,
             Model model, Authentication authentication) {
-        LocalDate fechaLimite = LocalDate.now().minusYears(18);
-        if (empleado.getFechaNacimiento() != null
-                && !empleado.getFechaNacimiento().isBefore(fechaLimite)) {
-            result.rejectValue(
-                    "fechaNacimiento",
-                    "cocinero.fechaNacimiento.menorEdad",
-                    "El cocinero debe ser mayor de 18 años");
-        }
+        validarEdadMinima(empleado, result, "cocinero");
         if (personalService.existsByDni(empleado.getDni())) {
             result.rejectValue(
                     "dni",
@@ -528,12 +514,7 @@ public class ResponsableController {
 
     private void validarDatosEmpleado(Personal empleado, org.springframework.validation.Errors result,
             long id, String tipo) {
-        LocalDate fechaLimite = LocalDate.now().minusYears(18);
-        if (empleado.getFechaNacimiento() != null
-                && !empleado.getFechaNacimiento().isBefore(fechaLimite)) {
-            result.rejectValue("fechaNacimiento", tipo + ".fechaNacimiento.menorEdad",
-                    "El empleado debe ser mayor de 18 años");
-        }
+        validarEdadMinima(empleado, result, tipo);
 
         if (personalService.existsByDniExcluding(empleado.getDni(), id)) {
             result.rejectValue("dni", tipo + ".dni.duplicado",
@@ -543,6 +524,18 @@ public class ResponsableController {
             result.rejectValue("email", tipo + ".email.duplicado",
                     "Ya existe un empleado registrado con ese email");
         }
+    }
+
+    private void validarEdadMinima(Personal empleado, org.springframework.validation.Errors result, String tipo) {
+        if (empleado.getFechaNacimiento() != null
+                && !cumpleEdadMinima(empleado.getFechaNacimiento(), LocalDate.now())) {
+            result.rejectValue("fechaNacimiento", tipo + ".fechaNacimiento.menorEdad",
+                    "El empleado debe tener al menos 18 años");
+        }
+    }
+
+    static boolean cumpleEdadMinima(LocalDate fechaNacimiento, LocalDate fechaReferencia) {
+        return fechaNacimiento != null && !fechaNacimiento.isAfter(fechaReferencia.minusYears(18));
     }
 
     private Personal buscarEmpleadoDeResponsable(Long id, Authentication authentication) {
