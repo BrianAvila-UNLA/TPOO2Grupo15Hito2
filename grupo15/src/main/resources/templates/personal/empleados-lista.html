@@ -86,11 +86,14 @@
                         </form>
 
 
-                        <a th:unless="${emp.credenciales != null and emp.credenciales.activo}"
-                            th:href="@{/responsable/empleados/activar/{id}(id=${emp.idPersonal})}" class="boton"
-                            style="background-color: #35d13d; color: white; padding: 6px 12px; font-size: 0.85rem; text-decoration: none; display: inline-block;">
-                            Activar
-                        </a>
+                        <form th:unless="${emp.credenciales != null and emp.credenciales.activo}"
+                            th:action="@{/responsable/empleados/activar/{id}(id=${emp.idPersonal})}" method="post"
+                            style="display: inline;">
+                            <button type="submit" class="boton"
+                                style="background-color: #35d13d; color: white; padding: 6px 12px; font-size: 0.85rem;">
+                                Activar
+                            </button>
+                        </form>
                     </div>
                 </div>
             </article>
@@ -99,7 +102,29 @@
         <p th:if="${#sets.isEmpty(empleados)}" style="color: #766f82; font-style: italic;">
             No hay empleados registrados en esta unidad de venta.
         </p>
+
+        <section th:if="${not #sets.isEmpty(empleadosEliminados)}" style="margin-top: 2rem;">
+            <h3 style="margin-bottom: 1rem;">Empleados dados de baja</h3>
+            <div class="rejilla-festivales">
+                <article class="tarjeta-festival" th:each="emp : ${empleadosEliminados}">
+                    <div class="acento-tarjeta"></div>
+                    <div class="contenido-tarjeta">
+                        <h4 th:text="${emp.nombre + ' ' + emp.apellido}">Nombre Empleado</h4>
+                        <div style="margin-top: 0.8rem; font-size: 0.95rem; color: #5f5269;">
+                            <span>Email: </span><strong th:text="${emp.email}">email@mail.com</strong><br>
+                            <span>DNI: </span><strong th:text="${emp.dni}">00000000</strong>
+                        </div>
+                        <form th:action="@{/responsable/empleados/activar/{id}(id=${emp.idPersonal})}" method="post"
+                            style="margin-top: 1rem;">
+                            <button type="submit" class="boton"
+                                style="background-color: #35d13d; color: white; padding: 6px 12px; font-size: 0.85rem;">
+                                Dar de alta nuevamente
+                            </button>
+                        </form>
+                    </div>
+                </article>
+            </div>
+        </section>
     </main>
 </body>
-
 </html>

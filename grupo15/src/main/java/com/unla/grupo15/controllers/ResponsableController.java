@@ -179,7 +179,14 @@ public class ResponsableController {
             Set<Personal> empleados = unidadVenta.getPersonal().stream()
                     .filter(empleado -> !empleado.isEliminado())
                     .collect(Collectors.toSet());
+            Set<Personal> empleadosEliminados = unidadVenta.getPersonal().stream()
+                    .filter(Personal::isEliminado)
+                    .collect(Collectors.toSet());
             model.addAttribute("empleados", empleados);
+            model.addAttribute("empleadosEliminados", empleadosEliminados);
+        } else {
+            model.addAttribute("empleados", Set.of());
+            model.addAttribute("empleadosEliminados", Set.of());
         }
 
         model.addAttribute("usuario", usuario);
@@ -470,7 +477,7 @@ public class ResponsableController {
         return "redirect:/responsable/empleados";
     }
 
-    @GetMapping("/empleados/activar/{id}")
+    @PostMapping("/empleados/activar/{id}")
     public String activarEmpleado(@PathVariable Long id, Authentication authentication) {
         if (buscarEmpleadoDeResponsable(id, authentication) != null) {
             personalService.darDeAlta(id);

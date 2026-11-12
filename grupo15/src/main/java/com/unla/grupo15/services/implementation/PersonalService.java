@@ -300,9 +300,11 @@ public class PersonalService implements IPersonalService {
     }
 
     @Override
+    @Transactional
     public void darDeAlta(Long id) {
         Personal personal = personalRepository.findById(id).orElse(null);
-        if (personal != null && !personal.isEliminado()) {
+        if (personal != null) {
+            personal.setEliminado(false);
             if (personal.getCredenciales() != null) {
                 personal.getCredenciales().setActivo(true);
                 usuarioRepository.save(personal.getCredenciales());
