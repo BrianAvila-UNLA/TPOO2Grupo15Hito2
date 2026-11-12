@@ -14,6 +14,8 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Locale;
+
 @Controller
 @RequestMapping("/unidades")
 public class UnidadVentaController {
@@ -68,6 +70,15 @@ public class UnidadVentaController {
             result.rejectValue("codigoUnico", "registro.codigoUnico.duplicado",
                     "Ya existe una unidad de venta con ese código.");
         }
+        if (form.email != null && registrationService.existeEmailResponsable(form.email)) {
+            result.rejectValue("email", "registro.email.duplicado",
+                    "Ya existe un usuario registrado con ese correo.");
+        }
+        if (form.nombreResponsable != null
+                && registrationService.existeNombreResponsable(form.nombreResponsable)) {
+            result.rejectValue("nombreResponsable", "registro.nombreResponsable.duplicado",
+                    "Ya existe un usuario registrado con ese nombre.");
+        }
 
         if (result.hasErrors()) {
             return "unidadVenta/registrar";
@@ -88,7 +99,8 @@ public class UnidadVentaController {
                     festival));
             return "redirect:/unidades/registrar?enviado";
         } catch (org.springframework.dao.DataIntegrityViolationException exception) {
-            model.addAttribute("error", "Ya existe una unidad de venta con ese código.");
+            model.addAttribute("error",
+                    "No se pudo registrar la unidad. El código, nombre o correo del responsable podría estar registrado.");
             return "unidadVenta/registrar";
         } catch (IllegalArgumentException | org.springframework.mail.MailException exception) {
             String message = exception.getMessage();
@@ -133,7 +145,7 @@ public class UnidadVentaController {
         private long superficie;
         @jakarta.validation.constraints.NotBlank(message = "El código único es obligatorio")
         @Pattern(regexp = UnidadVenta.FORMATO_CODIGO_UNICO,
-                message = "El código debe tener el formato XX-0000000 (dos letras mayúsculas y siete dígitos)")
+                message = "El código debe tener 10 caracteres: letras, números o guiones")
         private String codigoUnico;
         @jakarta.validation.constraints.NotBlank(message = "El correo del responsable es obligatorio")
         @jakarta.validation.constraints.Email(message = "El correo del responsable no es válido")
@@ -154,7 +166,9 @@ public class UnidadVentaController {
         public long getSuperficie() { return superficie; }
         public void setSuperficie(long superficie) { this.superficie = superficie; }
         public String getCodigoUnico() { return codigoUnico; }
-        public void setCodigoUnico(String codigoUnico) { this.codigoUnico = codigoUnico; }
+        public void setCodigoUnico(String codigoUnico) {
+            this.codigoUnico = codigoUnico == null ? null : codigoUnico.trim().toUpperCase(Locale.ROOT);
+        }
         public String getEmail() { return email; }
         public void setEmail(String email) { this.email = email; }
         public String getPatente() { return patente; }

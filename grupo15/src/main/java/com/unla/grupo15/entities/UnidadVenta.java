@@ -18,7 +18,7 @@ import java.util.Set;
 @Inheritance(strategy = InheritanceType.JOINED)
 public abstract class UnidadVenta {
 
-    public static final String FORMATO_CODIGO_UNICO = "^[A-Z]{2}-[0-9]{7}$";
+    public static final String FORMATO_CODIGO_UNICO = "^[A-Z0-9-]{10}$";
     public static final BigDecimal COSTO_POR_METRO_CUADRADO = new BigDecimal("500");
 
     @Id
@@ -36,7 +36,7 @@ public abstract class UnidadVenta {
 
     @NotBlank(message = "El código único es obligatorio")
     @Pattern(regexp = FORMATO_CODIGO_UNICO,
-            message = "El código debe tener el formato XX-0000000 (dos letras mayúsculas y siete dígitos)")
+            message = "El código debe tener 10 caracteres: letras, números o guiones")
     @Column(length = 10, nullable = false, unique = true)
     protected String codigoUnico;
 

@@ -58,7 +58,7 @@
 
             <label for="codigoUnico">Código único</label>
             <input id="codigoUnico" type="text" th:field="*{codigoUnico}" minlength="10" maxlength="10"
-                pattern="[A-Z]{2}-[0-9]{7}" title="Usá el formato XX-0000000" required>
+                pattern="[A-Za-z0-9-]{10}" title="Usá 10 caracteres: letras, números o guiones" required>
             <small class="mensaje-error" th:if="${#fields.hasErrors('codigoUnico')}" th:errors="*{codigoUnico}"></small>
 
             <label for="festivalId">Festival al que desea unirse</label>

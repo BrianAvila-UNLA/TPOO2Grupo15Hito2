@@ -9,7 +9,6 @@ import com.unla.grupo15.entities.RolUsuario;
 import com.unla.grupo15.repositories.IUnidadVentaRepository;
 import com.unla.grupo15.repositories.IUsuarioRepository;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -17,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.security.SecureRandom;
+import java.util.Locale;
 
 @Service
 public class UnidadVentaRegistrationService {
@@ -43,15 +43,23 @@ public class UnidadVentaRegistrationService {
         this.senderEmail = senderEmail;
     }
 
-    @Transactional(noRollbackFor = MailException.class)
+    @Transactional
     public void register(UnitRegistration registration) {
-        if (registration.codigoUnico() == null
-                || !registration.codigoUnico().matches(UnidadVenta.FORMATO_CODIGO_UNICO)) {
+        String codigoUnico = registration.codigoUnico() == null
+                ? null
+                : registration.codigoUnico().trim().toUpperCase(Locale.ROOT);
+        if (codigoUnico == null || !codigoUnico.matches(UnidadVenta.FORMATO_CODIGO_UNICO)) {
             throw new IllegalArgumentException(
-                    "El código debe tener el formato XX-0000000 (dos letras mayúsculas y siete dígitos).");
+                    "El código debe tener 10 caracteres: letras, números o guiones.");
         }
-        if (existeCodigoUnico(registration.codigoUnico())) {
+        if (existeCodigoUnico(codigoUnico)) {
             throw new IllegalArgumentException("Ya existe una unidad de venta con ese código.");
+        }
+        if (existeEmailResponsable(registration.email())) {
+            throw new IllegalArgumentException("Ya existe un usuario registrado con ese correo.");
+        }
+        if (existeNombreResponsable(registration.nombreResponsable())) {
+            throw new IllegalArgumentException("Ya existe un usuario registrado con ese nombre.");
         }
 
         String password = generatePassword();
@@ -81,7 +89,7 @@ public class UnidadVentaRegistrationService {
 
         unidad.setNombreComercial(registration.nombreComercial());
         unidad.setSuperficie(registration.superficie());
-        unidad.setCodigoUnico(registration.codigoUnico());
+        unidad.setCodigoUnico(codigoUnico);
         unidad.setResponsableCargo(responsable);
         unidad.setFestival(registration.festival());
         unidadVentaRepository.save(unidad);
@@ -90,7 +98,16 @@ public class UnidadVentaRegistrationService {
     }
 
     public boolean existeCodigoUnico(String codigoUnico) {
-        return unidadVentaRepository.existsByCodigoUnico(codigoUnico);
+        return codigoUnico != null && unidadVentaRepository.existsByCodigoUnico(
+                codigoUnico.trim().toUpperCase(Locale.ROOT));
+    }
+
+    public boolean existeEmailResponsable(String email) {
+        return email != null && usuarioRepository.existsByEmail(email.trim());
+    }
+
+    public boolean existeNombreResponsable(String nombre) {
+        return nombre != null && usuarioRepository.existsByNombre(nombre.trim());
     }
 
     private String generatePassword() {
