@@ -36,6 +36,20 @@
                 <h3 th:text="${plato.nombrePlato}">Nombre del plato</h3>
                 <p>Precio de venta: <strong th:text="${'$' + plato.precioVenta}">$0.00</strong></p>
                 <p>Costo de producción: <strong th:text="${'$' + plato.costoProduccion}">$0.00</strong></p>
+                <p>
+                    Estado:
+                    <strong th:text="${plato.activo ? 'Activo' : 'Inactivo'}">Activo</strong>
+                </p>
+                <form th:if="${plato.activo}"
+                      th:action="@{/responsable/menu/inactivar/{id}(id=${plato.id})}"
+                      method="post">
+                    <button class="boton" type="submit">Desactivar</button>
+                </form>
+                <form th:unless="${plato.activo}"
+                      th:action="@{/responsable/menu/activar/{id}(id=${plato.id})}"
+                      method="post">
+                    <button class="boton boton-principal" type="submit">Reactivar</button>
+                </form>
             </div>
         </article>
     </div>
