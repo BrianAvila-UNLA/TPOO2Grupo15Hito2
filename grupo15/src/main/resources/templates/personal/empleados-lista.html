@@ -43,6 +43,34 @@
                 style="text-decoration: none;">Registrar Nuevo Cocinero</a>
         </div>
 
+        <form class="formulario-registro" method="get" th:action="@{/responsable/empleados}"
+            style="margin-bottom: 2rem;">
+            <h3>Filtrar personal asignado</h3>
+            <label for="nombre">Nombre</label>
+            <input id="nombre" name="nombre" type="text" th:value="${filtroNombre}">
+
+            <label for="apellido">Apellido</label>
+            <input id="apellido" name="apellido" type="text" th:value="${filtroApellido}">
+
+            <label for="dni">DNI</label>
+            <input id="dni" name="dni" type="text" inputmode="numeric" th:value="${filtroDni}">
+
+            <label for="email">Email</label>
+            <input id="email" name="email" type="text" th:value="${filtroEmail}">
+
+            <label for="tipo">Tipo de empleado</label>
+            <select id="tipo" name="tipo">
+                <option value="" th:selected="${filtroTipo == ''}">Todos</option>
+                <option value="cajero" th:selected="${filtroTipo == 'cajero'}">Cajero</option>
+                <option value="cocinero" th:selected="${filtroTipo == 'cocinero'}">Cocinero</option>
+            </select>
+
+            <div style="display: flex; gap: 10px; margin-top: 1rem;">
+                <button type="submit" class="boton boton-principal">Aplicar filtros</button>
+                <a th:href="@{/responsable/empleados}" class="boton">Limpiar filtros</a>
+            </div>
+        </form>
+
         <h3 style="margin-bottom: 1rem;">Personal Asignado</h3>
 
         <div class="rejilla-festivales" th:if="${not #sets.isEmpty(empleados)}">
@@ -100,7 +128,8 @@
         </div>
 
         <p th:if="${#sets.isEmpty(empleados)}" style="color: #766f82; font-style: italic;">
-            No hay empleados registrados en esta unidad de venta.
+            <span th:if="${hayFiltros}">No hay empleados que coincidan con los filtros seleccionados.</span>
+            <span th:unless="${hayFiltros}">No hay empleados registrados en esta unidad de venta.</span>
         </p>
 
         <section th:if="${not #sets.isEmpty(empleadosEliminados)}" style="margin-top: 2rem;">

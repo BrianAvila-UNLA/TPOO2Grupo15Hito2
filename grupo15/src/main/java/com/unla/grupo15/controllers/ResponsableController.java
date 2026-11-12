@@ -170,14 +170,33 @@ public class ResponsableController {
     }
 
     @GetMapping("/empleados")
-    public String listarEmpleados(Model model, Authentication authentication) {
-        String email = authentication.getName();
-        Usuario usuario = usuarioService.findByEmail(email).orElse(null);
+    public String listarEmpleados(
+            @RequestParam(required = false) String nombre,
+            @RequestParam(required = false) String apellido,
+            @RequestParam(required = false) String dni,
+            @RequestParam(name = "email", required = false) String filtroEmail,
+            @RequestParam(required = false) String tipo,
+            Model model,
+            Authentication authentication) {
+        String emailUsuario = authentication.getName();
+        Usuario usuario = usuarioService.findByEmail(emailUsuario).orElse(null);
         UnidadVenta unidadVenta = unidadVentaService.findByResponsableCargo(usuario);
 
         if (unidadVenta != null) {
+            String nombreFiltro = normalizarFiltro(nombre);
+            String apellidoFiltro = normalizarFiltro(apellido);
+            String dniFiltro = normalizarFiltro(dni);
+            String emailFiltro = normalizarFiltro(filtroEmail);
+            String tipoFiltro = normalizarFiltro(tipo);
             Set<Personal> empleados = unidadVenta.getPersonal().stream()
                     .filter(empleado -> !empleado.isEliminado())
+                    .filter(empleado -> coincide(empleado.getNombre(), nombreFiltro))
+                    .filter(empleado -> coincide(empleado.getApellido(), apellidoFiltro))
+                    .filter(empleado -> coincide(String.valueOf(empleado.getDni()), dniFiltro))
+                    .filter(empleado -> coincide(empleado.getEmail(), emailFiltro))
+                    .filter(empleado -> tipoFiltro.isEmpty()
+                            || (tipoFiltro.equals("cajero") && empleado instanceof Cajero)
+                            || (tipoFiltro.equals("cocinero") && empleado instanceof Cocinero))
                     .collect(Collectors.toSet());
             Set<Personal> empleadosEliminados = unidadVenta.getPersonal().stream()
                     .filter(Personal::isEliminado)
@@ -190,7 +209,26 @@ public class ResponsableController {
         }
 
         model.addAttribute("usuario", usuario);
+        model.addAttribute("filtroNombre", nombre == null ? "" : nombre);
+        model.addAttribute("filtroApellido", apellido == null ? "" : apellido);
+        model.addAttribute("filtroDni", dni == null ? "" : dni);
+        model.addAttribute("filtroEmail", filtroEmail == null ? "" : filtroEmail);
+        model.addAttribute("filtroTipo", tipo == null ? "" : tipo);
+        model.addAttribute("hayFiltros", !normalizarFiltro(nombre).isEmpty()
+                || !normalizarFiltro(apellido).isEmpty()
+                || !normalizarFiltro(dni).isEmpty()
+                || !normalizarFiltro(filtroEmail).isEmpty()
+                || !normalizarFiltro(tipo).isEmpty());
         return "personal/empleados-lista";
+    }
+
+    private String normalizarFiltro(String filtro) {
+        return filtro == null ? "" : filtro.trim().toLowerCase(java.util.Locale.ROOT);
+    }
+
+    private boolean coincide(String valor, String filtro) {
+        return filtro.isEmpty() || (valor != null
+                && valor.toLowerCase(java.util.Locale.ROOT).contains(filtro));
     }
 
     @GetMapping("/liquidacion-haberes")
