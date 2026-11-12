@@ -25,28 +25,38 @@ public interface IPedidoRepository extends JpaRepository<Pedido, Long> {
     public abstract BigDecimal sumarRecaudacionPorUnidad(@Param("unidad") UnidadVenta unidad);
 
     @Query("SELECT SUM(dp.subtotal) FROM Pedido p JOIN p.detalles dp "
-            + "WHERE p.unidadVenta.festival = :festival")
+            + "WHERE p.festival = :festival")
     BigDecimal sumarRecaudacionPorFestival(@Param("festival") Festival festival);
+
+    @Query("SELECT SUM(dp.subtotal) FROM Pedido p JOIN p.detalles dp "
+            + "WHERE p.unidadVenta = :unidad AND p.festival = :festival")
+    BigDecimal sumarRecaudacionPorUnidadYFestival(
+            @Param("unidad") UnidadVenta unidad,
+            @Param("festival") Festival festival);
 
     @Query("SELECT SUM(dp.cantidad * dp.plato.costoProduccion) FROM Pedido p JOIN p.detalles dp "
             + "WHERE p.unidadVenta = :unidad")
     BigDecimal sumarCostoPlatosPorUnidad(@Param("unidad") UnidadVenta unidad);
 
     @Query("SELECT SUM(dp.subtotal) FROM Pedido p JOIN p.detalles dp "
-            + "WHERE p.unidadVenta = :unidad AND p.fechaPedido BETWEEN :desde AND :hasta")
+            + "WHERE p.unidadVenta = :unidad AND p.festival = :festival "
+            + "AND p.fechaPedido BETWEEN :desde AND :hasta")
     BigDecimal sumarRecaudacionPorUnidadEntreFechas(
-            @Param("unidad") UnidadVenta unidad, @Param("desde") LocalDate desde,
+            @Param("unidad") UnidadVenta unidad, @Param("festival") Festival festival,
+            @Param("desde") LocalDate desde,
             @Param("hasta") LocalDate hasta);
 
     @Query("SELECT SUM(dp.cantidad * dp.plato.costoProduccion) FROM Pedido p JOIN p.detalles dp "
-            + "WHERE p.unidadVenta = :unidad AND p.fechaPedido BETWEEN :desde AND :hasta")
+            + "WHERE p.unidadVenta = :unidad AND p.festival = :festival "
+            + "AND p.fechaPedido BETWEEN :desde AND :hasta")
     BigDecimal sumarCostoPlatosPorUnidadEntreFechas(
-            @Param("unidad") UnidadVenta unidad, @Param("desde") LocalDate desde,
+            @Param("unidad") UnidadVenta unidad, @Param("festival") Festival festival,
+            @Param("desde") LocalDate desde,
             @Param("hasta") LocalDate hasta);
 
     @Query("SELECT dp.plato.nombrePlato, dp.plato.precioVenta, SUM(dp.cantidad) "
             + "FROM Pedido p JOIN p.detalles dp "
-            + "WHERE p.unidadVenta = :unidad AND p.unidadVenta.festival = :festival "
+            + "WHERE p.unidadVenta = :unidad AND p.festival = :festival "
             + "GROUP BY dp.plato.id, dp.plato.nombrePlato, dp.plato.precioVenta "
             + "ORDER BY SUM(dp.cantidad) DESC")
     List<Object[]> buscarPlatosMasVendidos(

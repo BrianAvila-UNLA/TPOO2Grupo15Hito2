@@ -175,11 +175,13 @@ VALUES
 INSERT INTO pedido (
     id,
     fecha_pedido,
-    id_unidad_venta
+    id_unidad_venta,
+    id_festival
 )
 VALUES (
     1,
     '2026-10-24',
+    1,
     1
 );
 
