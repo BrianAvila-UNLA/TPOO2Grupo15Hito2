@@ -57,6 +57,10 @@ public class UnidadVentaController {
                     "registro.puesto.campos.invalidos",
                     "La cantidad de carpas y el tiempo de montaje deben ser mayores que cero para un puesto desarmable.");
         }
+        if ("FOODTRUCK".equals(form.tipo) && !FoodTruck.esPatenteValida(form.patente)) {
+            result.rejectValue("patente", "registro.patente.invalida",
+                    "La patente debe tener formato Mercosur (AA123BB) o anterior (ABC123).");
+        }
 
         Festival festival = form.festivalId == null
                 ? null

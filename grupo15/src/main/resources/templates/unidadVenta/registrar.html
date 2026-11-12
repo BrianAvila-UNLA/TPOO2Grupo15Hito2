@@ -79,6 +79,8 @@
             <div id="foodtruck-fields" th:style="${registro.tipo == 'FOODTRUCK' ? '' : 'display: none;'}">
                 <label for="patente">Patente (Food Truck)</label>
                 <input id="patente" type="text" th:field="*{patente}">
+                <small class="mensaje-error" th:if="${#fields.hasErrors('patente')}"
+                    th:errors="*{patente}"></small>
 
                 <label class="etiqueta-checkbox" for="conexionElectrica">
                     <input id="conexionElectrica" type="checkbox" th:field="*{conexionElectrica}">
@@ -110,6 +112,7 @@
             const esPuesto = tipo.value === 'PUESTO';
             foodtruckFields.style.display = esPuesto ? 'none' : '';
             patente.disabled = esPuesto;
+            patente.required = !esPuesto;
             conexionElectrica.disabled = esPuesto;
             puestoFields.style.display = esPuesto ? '' : 'none';
             cantidadCarpas.required = esPuesto;
