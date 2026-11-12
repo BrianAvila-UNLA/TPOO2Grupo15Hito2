@@ -61,6 +61,10 @@ public class UnidadVentaRegistrationService {
         if (existeNombreResponsable(registration.nombreResponsable())) {
             throw new IllegalArgumentException("Ya existe un usuario registrado con ese nombre.");
         }
+        if ("FOODTRUCK".equals(registration.tipo()) && !FoodTruck.esPatenteValida(registration.patente())) {
+            throw new IllegalArgumentException(
+                    "La patente debe tener formato Mercosur (AA123BB) o anterior (ABC123).");
+        }
 
         String password = generatePassword();
         Usuario responsable = new Usuario(
@@ -74,7 +78,7 @@ public class UnidadVentaRegistrationService {
         UnidadVenta unidad = switch (registration.tipo()) {
             case "FOODTRUCK" -> {
                 FoodTruck foodTruck = new FoodTruck();
-                foodTruck.setPatente(registration.patente());
+                foodTruck.setPatente(FoodTruck.normalizarPatente(registration.patente()));
                 foodTruck.setConexionElectrica(registration.conexionElectrica());
                 yield foodTruck;
             }
