@@ -26,13 +26,17 @@ public interface IPedidoService {
     long countByUnidadVenta(UnidadVenta unidadVenta);
     BigDecimal sumarRecaudacionPorUnidad(UnidadVenta unidadVenta);
 
+    BigDecimal sumarRecaudacionPorUnidadYFestival(UnidadVenta unidadVenta, Festival festival);
+
     BigDecimal sumarRecaudacionPorFestival(Festival festival);
 
     BigDecimal sumarCostoPlatosPorUnidad(UnidadVenta unidadVenta);
 
-    BigDecimal sumarRecaudacionPorUnidadEntreFechas(UnidadVenta unidadVenta, LocalDate desde, LocalDate hasta);
+    BigDecimal sumarRecaudacionPorUnidadEntreFechas(
+            UnidadVenta unidadVenta, Festival festival, LocalDate desde, LocalDate hasta);
 
-    BigDecimal sumarCostoPlatosPorUnidadEntreFechas(UnidadVenta unidadVenta, LocalDate desde, LocalDate hasta);
+    BigDecimal sumarCostoPlatosPorUnidadEntreFechas(
+            UnidadVenta unidadVenta, Festival festival, LocalDate desde, LocalDate hasta);
 
     Optional<PlatoDTO> platoEstrella(UnidadVenta unidadVenta, Festival festival);
 }

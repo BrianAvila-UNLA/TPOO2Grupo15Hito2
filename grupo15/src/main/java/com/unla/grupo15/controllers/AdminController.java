@@ -183,7 +183,7 @@ public class AdminController {
             return BigDecimal.ZERO;
         }
         BigDecimal recaudacion = pedidoService.sumarRecaudacionPorUnidadEntreFechas(
-                unidad, festival.getFechaInicio(), festival.getFechaFin());
+                unidad, festival, festival.getFechaInicio(), festival.getFechaFin());
         return recaudacion == null ? BigDecimal.ZERO : recaudacion;
     }
 

@@ -71,7 +71,7 @@ public class ResponsableController {
                 if (festival != null) {
                     model.addAttribute("reporteVenta", new ReporteVentaDTO(
                             festival.getNombre(),
-                            pedidoService.sumarRecaudacionPorUnidad(unidadVenta)));
+                            pedidoService.sumarRecaudacionPorUnidadYFestival(unidadVenta, festival)));
                     model.addAttribute("platoEstrella",
                             pedidoService.platoEstrella(unidadVenta, festival).orElse(null));
                 }
@@ -159,11 +159,14 @@ public class ResponsableController {
         model.addAttribute("platoEstrella", pedidoService.platoEstrella(unidadVenta, festival).orElse(null));
         model.addAttribute("reporteVenta", new ReporteVentaDTO(
                 festival.getNombre(),
-                pedidoService.sumarRecaudacionPorUnidadEntreFechas(unidadVenta, fechaDesde, fechaHasta)));
+                pedidoService.sumarRecaudacionPorUnidadEntreFechas(
+                        unidadVenta, festival, fechaDesde, fechaHasta)));
         model.addAttribute("canonDisponible", true);
         model.addAttribute("canon", unidadVenta.calcularCanon());
-        BigDecimal ventas = pedidoService.sumarRecaudacionPorUnidadEntreFechas(unidadVenta, fechaDesde, fechaHasta);
-        BigDecimal costos = pedidoService.sumarCostoPlatosPorUnidadEntreFechas(unidadVenta, fechaDesde, fechaHasta);
+        BigDecimal ventas = pedidoService.sumarRecaudacionPorUnidadEntreFechas(
+                unidadVenta, festival, fechaDesde, fechaHasta);
+        BigDecimal costos = pedidoService.sumarCostoPlatosPorUnidadEntreFechas(
+                unidadVenta, festival, fechaDesde, fechaHasta);
         BigDecimal sueldos = personalService.calcularSueldos(unidadVenta, festival, fechaDesde, fechaHasta);
         model.addAttribute("reporteRentabilidad", new ReporteRentabilidadDTO(
                 ventas, costos, sueldos, unidadVenta.calcularCanon(), fechaDesde, fechaHasta));

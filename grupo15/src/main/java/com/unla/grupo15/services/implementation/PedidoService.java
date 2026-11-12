@@ -42,9 +42,19 @@ public class PedidoService implements IPedidoService {
     }
 
     @Override
+    @Transactional
     public Pedido insertOrUpdate(Pedido pedido) {
         if (pedido == null) {
             throw new IllegalArgumentException("El pedido es obligatorio.");
+        }
+        if (pedido.getUnidadVenta() == null) {
+            throw new IllegalArgumentException("La unidad de venta es obligatoria para registrar el pedido.");
+        }
+        if (pedido.getId() == null || pedido.getFestival() == null) {
+            pedido.setFestival(pedido.getUnidadVenta().getFestival());
+        }
+        if (pedido.getFestival() == null) {
+            throw new IllegalArgumentException("La unidad de venta debe estar asignada a un festival.");
         }
         validarFechaPedido(pedido.getFechaPedido());
         validarDetalles(pedido);
@@ -65,8 +75,12 @@ public class PedidoService implements IPedidoService {
         if (platosConCantidad == null) {
             throw new IllegalArgumentException("Los productos del pedido son obligatorios.");
         }
+        Festival festival = unidadVenta.getFestival();
+        if (festival == null) {
+            throw new IllegalArgumentException("La unidad de venta debe estar asignada a un festival.");
+        }
 
-        Pedido pedido = new Pedido(LocalDate.now(), unidadVenta);
+        Pedido pedido = new Pedido(LocalDate.now(), unidadVenta, festival);
 
         for (Map.Entry<Long, Long> entry : platosConCantidad.entrySet()) {
             Long idPlato = entry.getKey();
@@ -104,8 +118,10 @@ public class PedidoService implements IPedidoService {
 
     private void validarDetalles(Pedido pedido) {
         if (pedido == null || pedido.getUnidadVenta() == null
+                || pedido.getFestival() == null
                 || pedido.getDetalles() == null || pedido.getDetalles().isEmpty()) {
-            throw new IllegalArgumentException("El pedido debe tener una unidad de venta y al menos un producto.");
+            throw new IllegalArgumentException(
+                    "El pedido debe tener una unidad de venta, un festival y al menos un producto.");
         }
         for (DetallePedido detalle : pedido.getDetalles()) {
             if (detalle == null || detalle.getCantidad() <= 0) {
@@ -135,6 +151,12 @@ public class PedidoService implements IPedidoService {
     }
 
     @Override
+    public BigDecimal sumarRecaudacionPorUnidadYFestival(UnidadVenta unidadVenta, Festival festival) {
+        BigDecimal recaudacion = pedidoRepository.sumarRecaudacionPorUnidadYFestival(unidadVenta, festival);
+        return recaudacion == null ? BigDecimal.ZERO : recaudacion;
+    }
+
+    @Override
     public BigDecimal sumarRecaudacionPorFestival(Festival festival) {
         BigDecimal recaudacion = pedidoRepository.sumarRecaudacionPorFestival(festival);
         return recaudacion == null ? BigDecimal.ZERO : recaudacion;
@@ -147,14 +169,18 @@ public class PedidoService implements IPedidoService {
     }
 
     @Override
-    public BigDecimal sumarRecaudacionPorUnidadEntreFechas(UnidadVenta unidadVenta, LocalDate desde, LocalDate hasta) {
-        BigDecimal total = pedidoRepository.sumarRecaudacionPorUnidadEntreFechas(unidadVenta, desde, hasta);
+    public BigDecimal sumarRecaudacionPorUnidadEntreFechas(
+            UnidadVenta unidadVenta, Festival festival, LocalDate desde, LocalDate hasta) {
+        BigDecimal total = pedidoRepository.sumarRecaudacionPorUnidadEntreFechas(
+                unidadVenta, festival, desde, hasta);
         return total == null ? BigDecimal.ZERO : total;
     }
 
     @Override
-    public BigDecimal sumarCostoPlatosPorUnidadEntreFechas(UnidadVenta unidadVenta, LocalDate desde, LocalDate hasta) {
-        BigDecimal total = pedidoRepository.sumarCostoPlatosPorUnidadEntreFechas(unidadVenta, desde, hasta);
+    public BigDecimal sumarCostoPlatosPorUnidadEntreFechas(
+            UnidadVenta unidadVenta, Festival festival, LocalDate desde, LocalDate hasta) {
+        BigDecimal total = pedidoRepository.sumarCostoPlatosPorUnidadEntreFechas(
+                unidadVenta, festival, desde, hasta);
         return total == null ? BigDecimal.ZERO : total;
     }
 
