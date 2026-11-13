@@ -50,7 +50,7 @@ VALUES (
     'Sabores de Primavera',
     'PRIMAVERA',
     '2026-10-24',
-    '2026-10-26',
+    '2026-12-31',
     1
 );
 
