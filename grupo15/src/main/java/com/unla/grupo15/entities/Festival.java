@@ -46,6 +46,14 @@ public class Festival {
         this.costo = costo;
     }
 
+    public boolean contieneFecha(LocalDate fecha) {
+        return fecha != null
+                && fechaInicio != null
+                && fechaFin != null
+                && !fecha.isBefore(fechaInicio)
+                && !fecha.isAfter(fechaFin);
+    }
+
     @AssertTrue(message = "La fecha de fin debe ser igual o posterior a la fecha de inicio")
     public boolean isPeriodoValido() {
         return fechaInicio == null || fechaFin == null || !fechaFin.isBefore(fechaInicio);

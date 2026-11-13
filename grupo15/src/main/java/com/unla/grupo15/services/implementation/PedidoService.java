@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -22,6 +23,8 @@ import org.springframework.data.domain.PageRequest;
 @Service("pedidoService")
 @SuppressWarnings("unused")
 public class PedidoService implements IPedidoService {
+
+    private static final ZoneId APPLICATION_ZONE = ZoneId.of("America/Argentina/Buenos_Aires");
 
     private final IPedidoRepository pedidoRepository;
     private final IPlatoRepository platoRepository;
@@ -57,6 +60,7 @@ public class PedidoService implements IPedidoService {
             throw new IllegalArgumentException("La unidad de venta debe estar asignada a un festival.");
         }
         validarFechaPedido(pedido.getFechaPedido());
+        validarFechaDentroDelFestival(pedido.getFechaPedido(), pedido.getFestival());
         validarDetalles(pedido);
         return pedidoRepository.save(pedido);
     }
@@ -80,7 +84,9 @@ public class PedidoService implements IPedidoService {
             throw new IllegalArgumentException("La unidad de venta debe estar asignada a un festival.");
         }
 
-        Pedido pedido = new Pedido(LocalDate.now(), unidadVenta, festival);
+        LocalDate fechaPedido = LocalDate.now(APPLICATION_ZONE);
+        validarFechaDentroDelFestival(fechaPedido, festival);
+        Pedido pedido = new Pedido(fechaPedido, unidadVenta, festival);
 
         for (Map.Entry<Long, Long> entry : platosConCantidad.entrySet()) {
             Long idPlato = entry.getKey();
@@ -111,8 +117,15 @@ public class PedidoService implements IPedidoService {
     }
 
     private void validarFechaPedido(LocalDate fechaPedido) {
-        if (fechaPedido == null || !fechaPedido.equals(LocalDate.now())) {
+        if (fechaPedido == null || !fechaPedido.equals(LocalDate.now(APPLICATION_ZONE))) {
             throw new IllegalArgumentException("La fecha del pedido debe ser la fecha actual.");
+        }
+    }
+
+    private void validarFechaDentroDelFestival(LocalDate fechaPedido, Festival festival) {
+        if (!festival.contieneFecha(fechaPedido)) {
+            throw new IllegalArgumentException(
+                    "Solo se pueden registrar pedidos durante las fechas del festival.");
         }
     }
 

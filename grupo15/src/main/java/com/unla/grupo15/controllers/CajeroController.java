@@ -72,6 +72,8 @@ public class CajeroController {
         model.addAttribute("platos", platoRepository.findByUnidadVentaAndActivoTrue(cajero.getUnidadVenta()));
         model.addAttribute("personal", cajero);
         model.addAttribute("fechaHoraActual", ZonedDateTime.now(APPLICATION_ZONE));
+        model.addAttribute("festivalActivo", cajero.getUnidadVenta().getFestival() != null
+                && cajero.getUnidadVenta().getFestival().contieneFecha(LocalDate.now(APPLICATION_ZONE)));
         return "cajero/nuevo-pedido";
     }
 
@@ -88,6 +90,11 @@ public class CajeroController {
         }
         if (cierreCajaService.estaCerrada(cajero.getUnidadVenta(), LocalDate.now(APPLICATION_ZONE))) {
             response.sendRedirect("/empleado/inicio?error=caja-cerrada");
+            return;
+        }
+        if (cajero.getUnidadVenta().getFestival() != null
+                && !cajero.getUnidadVenta().getFestival().contieneFecha(LocalDate.now(APPLICATION_ZONE))) {
+            response.sendRedirect("/cajero/pedido/nuevo?error=festival-fuera-de-fecha");
             return;
         }
 

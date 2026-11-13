@@ -149,6 +149,9 @@
     <p th:if="${param.error == 'pedido-invalido'}" style="color: #9c356f;">
       El pedido contiene productos inválidos o que no pertenecen a esta unidad de venta.
     </p>
+    <p th:if="${param.error == 'festival-fuera-de-fecha' or !festivalActivo}" style="color: #9c356f;">
+      No se pueden registrar pedidos fuera de las fechas del festival.
+    </p>
     <p>Unidad de Venta: <strong th:text="${unidadVenta.nombreComercial}">Puesto</strong></p>
 
     <form th:action="@{/cajero/pedido/guardar}" method="post">
@@ -182,7 +185,7 @@
         <span class="order-total">Total: <strong id="totalPedido">$0.00</strong></span>
       </div>
 
-      <div th:unless="${platos.empty}">
+      <div th:if="${festivalActivo and !platos.empty}">
         <button type="submit" class="btn-submit">ACEPTAR PEDIDO</button>
       </div>
     </form>
