@@ -68,6 +68,7 @@ http://localhost:8080/
 * https://github.com/BrianAvila-UNLA/TPOO2Grupo15Hito2/pull/12 (Ignacio David Vega)
 * https://github.com/BrianAvila-UNLA/TPOO2Grupo15Hito2/pull/13 (Ignacio David Vega)
 * https://github.com/BrianAvila-UNLA/TPOO2Grupo15Hito2/pull/14 (Romero Gabriel Omar)
+* (https://github.com/BrianAvila-UNLA/TPOO2Grupo15Hito2/commit/52da581487ced0f0b2b35fb6e04c338eea11cfe6) Commit para corregir el código debido a error inesperado. El fix se hizo sobre el main luego del merge.
 * https://github.com/BrianAvila-UNLA/TPOO2Grupo15Hito2/pull/15 (Brian Avila)
 * https://github.com/BrianAvila-UNLA/TPOO2Grupo15Hito2/pull/16 (Brian Avila)
 * https://github.com/BrianAvila-UNLA/TPOO2Grupo15Hito2/pull/17 (Brian Avila)
